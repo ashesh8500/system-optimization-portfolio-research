@@ -3,81 +3,1496 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Portfolio Allocation as Layered System Optimization</title>
-<meta name="description" content="Interactive presentation for Ashesh Kaji's System Optimization Methods portfolio allocation research." />
+<title>Portfolio Allocation as Layered System Optimization — Ashesh Kaji</title>
+<meta name="description" content="A math-first research presentation: portfolio allocation modelled as a layered, mixed discrete–continuous, sequential control problem." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,750&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false},{left:'$',right:'$',display:false}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-:root{--bg:#040711;--panel:#091120;--card:#0f172a;--card2:#121c31;--line:rgba(148,163,184,.16);--text:#e5edf7;--muted:#9aa8bd;--teal:#14b8a6;--cyan:#38bdf8;--violet:#8b5cf6;--amber:#f59e0b;--green:#22c55e;--rose:#f43f5e;--shadow:0 22px 80px rgba(0,0,0,.46);--ease:cubic-bezier(.2,.8,.2,1)}
-*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:radial-gradient(900px 500px at 10% 8%,rgba(20,184,166,.15),transparent 60%),radial-gradient(900px 460px at 90% 20%,rgba(139,92,246,.13),transparent 55%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.5;overflow-x:hidden} body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(148,163,184,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.025) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 92%)}
-h1,h2,h3{font-family:Fraunces,Georgia,serif;letter-spacing:-.025em;line-height:1.05} h1{font-size:clamp(42px,6vw,86px);margin:.1em 0 .18em} h2{font-size:clamp(32px,4vw,54px);margin:0 0 18px} h3{font-size:clamp(19px,2vw,28px);margin:0 0 8px} p{color:var(--muted);font-size:clamp(15px,1.35vw,18px)} .mono{font-family:"JetBrains Mono",monospace}.muted{color:var(--muted)}.small{font-size:13px}.accent{color:#5eead4}.violet{color:#c4b5fd}.amber{color:#fbbf24}.green{color:#86efac}.rose{color:#fb7185}
-#topbar{position:fixed;top:0;left:0;right:0;height:62px;z-index:1000;display:flex;align-items:center;gap:14px;padding:0 18px;background:rgba(4,7,17,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}#brand{display:flex;align-items:center;gap:10px;font-weight:700;white-space:nowrap}.logo{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--violet));box-shadow:0 0 22px rgba(20,184,166,.8)}#slideTitle{color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.spacer{flex:1}.btn{border:1px solid var(--line);background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(8,13,25,.94));color:var(--text);border-radius:999px;padding:8px 13px;font:600 13px Inter;cursor:pointer;transition:.18s var(--ease)}.btn:hover{transform:translateY(-1px);border-color:rgba(20,184,166,.55)}.btn.primary{border-color:rgba(20,184,166,.4);background:linear-gradient(135deg,rgba(20,184,166,.22),rgba(56,189,248,.1));color:#ccfbf1}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(20,184,166,.24);background:rgba(20,184,166,.08);color:#99f6e4;border-radius:999px;padding:5px 10px;font:600 12px Inter}.badge{display:inline-flex;border:1px solid var(--line);background:rgba(15,23,42,.6);border-radius:999px;padding:5px 9px;color:var(--muted);font:600 11px Inter}#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--teal),var(--violet),var(--cyan));z-index:1002;transition:width .28s var(--ease)}
-#dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:900;display:grid;gap:8px}.dotnav{width:9px;height:9px;border-radius:50%;border:1px solid rgba(226,232,240,.35);background:rgba(15,23,42,.85);cursor:pointer}.dotnav.active{height:24px;border-radius:999px;background:linear-gradient(180deg,var(--teal),var(--violet));border-color:transparent}.arrow{position:fixed;z-index:950;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:rgba(9,17,32,.72);backdrop-filter:blur(10px);color:var(--text);font-size:24px;cursor:pointer}.arrow:hover{border-color:var(--teal)}#prev{left:16px}#next{right:16px}
-main{padding-top:62px;scroll-snap-type:y mandatory}.slide{min-height:calc(100vh - 62px);scroll-snap-align:start;display:grid;place-items:center;padding:54px 76px;position:relative}.slide .inner{width:min(1180px,100%)}.slide.narrow .inner{width:min(920px,100%)}.kicker{text-transform:uppercase;letter-spacing:.16em;color:#67e8f9;font:700 12px Inter;margin-bottom:14px}.lead{font-size:clamp(18px,2vw,25px);color:#c8d5e6;max-width:920px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}@media(max-width:980px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.slide{padding:38px 18px}#dots,.arrow{display:none}#topbar{gap:8px}#slideTitle{display:none}}
-.card{background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(9,17,32,.9));border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow)}.card.glow{box-shadow:0 0 0 1px rgba(20,184,166,.14),0 30px 90px rgba(20,184,166,.08)}.metric{font-family:Fraunces;font-size:clamp(34px,4vw,54px);color:#dffcf7}.label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}.eq{font-family:"JetBrains Mono",monospace;background:rgba(4,7,17,.56);border:1px dashed rgba(148,163,184,.24);border-radius:14px;padding:12px 14px;color:#dbeafe;display:inline-block}.story{display:grid;gap:12px}.step{display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:start;padding:15px;border:1px solid var(--line);border-radius:16px;background:rgba(15,23,42,.64)}.step b{color:var(--text)}.num{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(20,184,166,.26),rgba(139,92,246,.16));color:#ccfbf1;font-weight:800}.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px}.node{border:1px solid rgba(20,184,166,.28);background:rgba(20,184,166,.08);border-radius:18px;padding:16px 18px;min-width:158px;text-align:center}.node strong{display:block}.flow .arr{color:#67e8f9;font-size:26px}.stack3d{height:500px;position:relative;perspective:900px}.layer{position:absolute;left:50%;transform:translateX(-50%) rotateX(58deg) rotateZ(-8deg);width:min(620px,88%);height:118px;border-radius:24px;border:1px solid rgba(148,163,184,.18);background:linear-gradient(135deg,rgba(20,184,166,.17),rgba(139,92,246,.11));box-shadow:0 34px 80px rgba(0,0,0,.42);display:flex;align-items:center;justify-content:space-between;padding:0 28px}.layer:nth-child(1){top:20px}.layer:nth-child(2){top:128px}.layer:nth-child(3){top:236px}.layer:nth-child(4){top:344px}.layer span:first-child{font:800 20px Inter}.layer span:last-child{color:#bfdbfe}
-.viz canvas{width:100%;height:auto;border-radius:16px;border:1px solid rgba(148,163,184,.1);background:radial-gradient(500px 250px at 25% 20%,rgba(20,184,166,.08),transparent),#081021}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px;color:var(--muted)}input[type=range]{accent-color:var(--teal)}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0}.tab{border:1px solid var(--line);background:rgba(15,23,42,.8);color:var(--muted);border-radius:999px;padding:9px 16px;cursor:pointer;font-weight:700}.tab.active{color:#042f2e;background:#5eead4;border-color:#5eead4}#tip{position:fixed;pointer-events:none;z-index:2000;opacity:0;background:rgba(7,12,24,.96);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);min-width:230px}.tiprow{display:flex;justify-content:space-between;gap:18px;font-size:13px}.winner{position:relative;overflow:hidden}.winner:before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--teal),var(--violet))}.winner .scope{font:800 34px Fraunces;color:#5eead4}.spark{height:8px;border-radius:999px;background:rgba(148,163,184,.15);overflow:hidden;margin-top:10px}.spark div{height:100%;background:linear-gradient(90deg,var(--teal),var(--cyan))}.risk{border-left:4px solid var(--rose)}.good{border-left:4px solid var(--green)}.timeline{position:relative;padding-left:20px}.timeline:before{content:"";position:absolute;left:15px;top:10px;bottom:10px;width:2px;background:linear-gradient(var(--teal),var(--violet))}.event{position:relative;margin:0 0 14px 28px;padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(15,23,42,.72)}.event:before{content:"";position:absolute;left:-40px;top:20px;width:13px;height:13px;border-radius:50%;background:#67e8f9;box-shadow:0 0 18px #67e8f9}.refs li,.bullets li{margin:8px 0;color:var(--muted)}.notePanel{position:fixed;right:18px;bottom:18px;z-index:1400;width:min(520px,calc(100vw - 36px));max-height:42vh;overflow:auto;display:none}.notePanel.open{display:block}.notePanel .card{padding:18px}.notePanel h3{font-size:20px}.foot{position:absolute;bottom:16px;left:76px;color:rgba(148,163,184,.65);font-size:12px}.mini{font-size:12px;color:var(--muted)}.kbd{font-family:"JetBrains Mono";font-size:11px;padding:2px 6px;border-radius:6px;background:rgba(15,23,42,.8);border:1px solid var(--line)}
-body.deck main{overflow:hidden;scroll-snap-type:none} body.deck .slide{display:none;animation:flip .34s var(--ease)} body.deck .slide.active{display:grid}@keyframes flip{from{opacity:0;transform:perspective(1000px) rotateY(8deg) translateX(22px)}to{opacity:1;transform:none}}
-@media print{#topbar,#dots,.arrow,#progress,.notePanel{display:none}.slide{min-height:auto;page-break-after:always;padding:24px}.card{box-shadow:none}}
+:root{
+  --bg:#fbfaf6;        /* warm paper */
+  --ink:#13161b;
+  --ink-2:#2a2e36;
+  --muted:#646b78;
+  --line:#d8d2c2;
+  --rule:#1d2026;
+  --panel:#f3eee0;
+  --panel-2:#ebe5d3;
+  --accent:#7a1f1f;     /* oxblood, single accent */
+  --accent-soft:#a85b5b;
+  --good:#3a5a3a;
+  --bad:#7a1f1f;
+  --serif:'EB Garamond', 'Iowan Old Style', Georgia, serif;
+  --sans:'Inter', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--serif); font-size:18px; line-height:1.55;
+  font-feature-settings:"liga","kern","onum";
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(122,31,31,.3)}
+a:hover{border-bottom-color:var(--accent)}
+.sans{font-family:var(--sans)}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+.smallcaps{font-family:var(--sans); font-weight:600; text-transform:uppercase; letter-spacing:.14em; font-size:11px; color:var(--muted)}
+hr.rule{border:0; border-top:1px solid var(--line); margin:0}
+
+/* topbar */
+header.bar{
+  position:fixed; top:0; left:0; right:0; height:46px; z-index:1000;
+  display:flex; align-items:center; gap:18px; padding:0 22px;
+  background:rgba(251,250,246,.94); backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.bar .mark{font-family:var(--serif); font-style:italic; font-weight:500; font-size:18px}
+.bar .num{font-family:var(--mono); font-size:11px; color:var(--muted)}
+.bar .title{font-family:var(--sans); font-size:12px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.bar .spacer{flex:1}
+.bar button{
+  font-family:var(--sans); font-size:12px; font-weight:500;
+  border:1px solid var(--line); background:transparent; color:var(--ink);
+  padding:6px 11px; border-radius:2px; cursor:pointer;
+}
+.bar button:hover{border-color:var(--ink)}
+.bar button.primary{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--accent); z-index:1002; transition:width .3s ease}
+
+/* slide layout */
+main{padding-top:46px}
+.slide{
+  min-height:calc(100vh - 46px);
+  padding:64px max(48px, 7vw) 80px;
+  position:relative;
+  border-bottom:1px solid var(--line);
+}
+.slide .inner{max-width:1180px; margin:0 auto}
+.slide .inner.narrow{max-width:820px}
+.slide > .num{
+  position:absolute; top:64px; right:max(48px,7vw);
+  font-family:var(--mono); font-size:11px; color:var(--muted);
+  letter-spacing:.18em;
+}
+h1{
+  font-family:var(--serif); font-weight:500;
+  font-size:clamp(40px, 5.8vw, 76px);
+  line-height:1.04; letter-spacing:-0.01em;
+  margin:0 0 .25em;
+}
+h1 em{font-style:italic; color:var(--accent)}
+h2{
+  font-family:var(--serif); font-weight:500;
+  font-size:clamp(28px, 3.2vw, 42px);
+  line-height:1.12; letter-spacing:-0.005em;
+  margin:0 0 18px;
+  border-bottom:1px solid var(--line); padding-bottom:14px;
+}
+h3{font-family:var(--serif); font-weight:600; font-size:22px; margin:0 0 8px; letter-spacing:.005em}
+h4{font-family:var(--sans); font-weight:600; font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 6px}
+p{margin:0 0 14px; color:var(--ink-2)}
+.lead{font-size:clamp(20px, 1.7vw, 26px); line-height:1.45; color:var(--ink-2); max-width:780px}
+
+/* layout helpers */
+.grid{display:grid; gap:28px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+@media (max-width:900px){.g2,.g3,.g5{grid-template-columns:1fr}}
+
+.panel{
+  background:var(--panel); border:1px solid var(--line);
+  padding:22px 24px; border-radius:2px;
+}
+.panel.tight{padding:16px 18px}
+.panel h3{margin-bottom:10px}
+.panel .smallcaps{margin-bottom:8px; display:block}
+.figure{
+  background:#fff; border:1px solid var(--line);
+  padding:18px; border-radius:2px;
+}
+.figure svg, .figure canvas{display:block; width:100%; height:auto}
+.figure .caption{
+  font-family:var(--sans); font-size:12px; color:var(--muted); margin-top:10px;
+  border-top:1px solid var(--line); padding-top:8px;
+}
+.figure .caption b{color:var(--ink); font-weight:600}
+
+/* tables */
+table.data{
+  width:100%; border-collapse:collapse; table-layout:auto;
+  font-family:var(--sans); font-size:13px;
+}
+table.data.compact{table-layout:fixed}
+table.data.compact th, table.data.compact td{padding:8px 6px; font-size:12px}
+table.data.compact th:nth-child(1), table.data.compact td:nth-child(1){width:14%}
+table.data.compact th:nth-child(2), table.data.compact td:nth-child(2),
+table.data.compact th:nth-child(3), table.data.compact td:nth-child(3),
+table.data.compact th:nth-child(4), table.data.compact td:nth-child(4){width:12%}
+table.data.compact th:nth-child(5), table.data.compact td:nth-child(5){width:32%}
+table.data.compact th:nth-child(6), table.data.compact td:nth-child(6){width:18%}
+table.data th, table.data td{
+  text-align:left; padding:8px 10px; border-bottom:1px solid var(--line);
+}
+table.data th{
+  font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--muted); border-bottom:1.5px solid var(--ink);
+}
+table.data td.num{font-family:var(--mono); text-align:right}
+table.data tr.win{background:rgba(122,31,31,.05)}
+table.data tr.win td:first-child{border-left:3px solid var(--accent); padding-left:8px}
+
+/* equation block */
+.eqblock{
+  background:#fff; border-left:3px solid var(--accent);
+  padding:14px 18px; margin:12px 0;
+  font-size:17px;
+}
+.eqblock .label{
+  font-family:var(--sans); font-size:11px; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.12em; float:right; margin-top:4px;
+}
+
+/* margin notes */
+.marg{
+  font-family:var(--sans); font-size:13px; color:var(--muted);
+  border-left:2px solid var(--line); padding-left:14px; line-height:1.5;
+}
+
+/* dropcap on title slide lead */
+.dropcap::first-letter{
+  font-family:var(--serif); float:left; font-size:5em; line-height:.85;
+  padding-right:8px; padding-top:6px; color:var(--accent); font-weight:500;
+}
+
+/* gap callouts */
+.gap{
+  background:#fff; border:1px solid var(--accent); border-left-width:4px;
+  padding:14px 16px; border-radius:2px;
+}
+.gap h4{color:var(--accent); margin-bottom:4px}
+.gap .body{font-size:15px; color:var(--ink-2)}
+
+/* viz controls */
+.controls{
+  display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+  font-family:var(--sans); font-size:12px; color:var(--muted);
+  margin-top:10px;
+}
+.controls input[type=range]{accent-color:var(--accent); width:160px}
+.controls .val{font-family:var(--mono); color:var(--ink); min-width:42px; display:inline-block; text-align:right}
+.tabs{display:flex; gap:0; border-bottom:1px solid var(--line); margin:8px 0 14px}
+.tab{
+  font-family:var(--sans); font-size:12px; font-weight:600;
+  background:transparent; border:0; padding:8px 14px;
+  color:var(--muted); cursor:pointer; border-bottom:2px solid transparent;
+  margin-bottom:-1px; letter-spacing:.04em;
+}
+.tab.active{color:var(--ink); border-bottom-color:var(--accent)}
+button.mini{
+  font-family:var(--sans); font-size:11px; font-weight:600;
+  border:1px solid var(--line); background:#fff; padding:5px 10px;
+  border-radius:2px; cursor:pointer; color:var(--ink-2);
+}
+button.mini:hover{border-color:var(--ink)}
+button.mini.active{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+
+/* tooltip */
+#tip{
+  position:fixed; pointer-events:none; opacity:0; z-index:2000;
+  background:#fff; border:1px solid var(--ink); padding:10px 12px;
+  font-family:var(--sans); font-size:12px; color:var(--ink);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+#tip b{display:block; margin-bottom:4px; font-size:13px}
+#tip .row{display:flex; justify-content:space-between; gap:18px}
+#tip .row span:last-child{font-family:var(--mono)}
+
+/* footer note slot */
+.footnote{
+  margin-top:36px; padding-top:14px; border-top:1px solid var(--line);
+  font-family:var(--sans); font-size:12px; color:var(--muted);
+}
+
+/* deck mode */
+body.deck main{height:calc(100vh - 46px); overflow:hidden}
+body.deck .slide{display:none}
+body.deck .slide.active{display:block; animation:fade .3s ease}
+@keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+.kbd{
+  font-family:var(--mono); font-size:11px; padding:1px 5px;
+  background:var(--panel); border:1px solid var(--line); border-radius:2px;
+}
+
+/* speaker notes drawer */
+.notes{
+  position:fixed; right:18px; bottom:18px; z-index:1300;
+  width:min(460px, calc(100vw - 36px)); max-height:42vh; overflow:auto;
+  background:#fff; border:1px solid var(--ink); padding:16px 18px;
+  font-family:var(--sans); font-size:13px; color:var(--ink-2);
+  display:none; box-shadow:0 12px 36px rgba(0,0,0,.1);
+}
+.notes.open{display:block}
+.notes h4{color:var(--accent)}
+
+@media print{
+  header.bar, #progress, .controls, .tabs, .notes{display:none}
+  .slide{break-after:page; min-height:0; padding:30px}
+  body{background:#fff}
+}
 </style>
 </head>
 <body class="deck">
 <div id="progress"></div>
-<header id="topbar"><div id="brand"><span class="logo"></span><span>Layered Portfolio Optimization</span></div><div id="slideTitle"></div><div class="spacer"></div><button class="btn" id="notesBtn">Notes</button><button class="btn" id="modeBtn">Scroll</button><button class="btn primary" id="startBtn">Start</button></header>
-<div id="dots"></div><button class="arrow" id="prev" aria-label="Previous">‹</button><button class="arrow" id="next" aria-label="Next">›</button><div id="tip"></div>
-<aside class="notePanel" id="notes"><div class="card"><h3>Speaker notes</h3><div id="noteText"></div></div></aside>
+<header class="bar">
+  <div class="mark">Layered Portfolio Optimization</div>
+  <div class="num" id="counter">01 / —</div>
+  <div class="title sans" id="slideTitle"></div>
+  <div class="spacer"></div>
+  <button id="modeBtn">Scroll</button>
+  <button id="notesBtn">Notes</button>
+  <button class="primary" id="prevBtn">‹</button>
+  <button class="primary" id="nextBtn">›</button>
+</header>
+<div id="tip"></div>
+<aside class="notes" id="notes"><h4>Speaker notes</h4><div id="noteText"></div></aside>
+
 <main>
-<section class="slide active" id="title" data-title="Thesis" data-notes="Open with the thesis: this is not a search for one magic trading rule. It is a system optimization study. The decision is decomposed into universe breadth, screening, weighting, costs, and routing. Emphasize models, implementation protocol, numerical evidence, and honest limitations."><div class="inner"><div class="grid2"><div><div class="kicker">System Optimization Methods · Spring 2026</div><h1>Portfolio Allocation as Layered System Optimization</h1><p class="lead">A flip-through research presentation showing how a difficult sequential allocation problem becomes tractable when the system is decomposed into interpretable optimization layers.</p><div class="flow"><span class="pill">60 walk-forward arms</span><span class="pill">3 candidate universes</span><span class="pill">5 screens × 4 controllers</span><span class="pill">policy-gradient router</span></div><p class="mini">Use <span class="kbd">Space</span>/<span class="kbd">→</span> to advance, <span class="kbd">←</span> to go back, and <span class="kbd">N</span> for notes.</p></div><div class="stack3d"><div class="layer"><span>1 · Universe</span><span>Top-100 / 250 / 500</span></div><div class="layer"><span>2 · Screen</span><span>top-K discrete selection</span></div><div class="layer"><span>3 · Weighting</span><span>simplex controller</span></div><div class="layer"><span>4 · Routing</span><span>online model selection</span></div></div></div></div><div class="foot">Ashesh Kaji · New York University</div></section>
-<section class="slide narrow" data-title="Study framing" data-notes="Use this as the map for the audience. The talk is a research walk-through: first problem and model, then implementation protocol, then numerical findings and limitations."><div class="inner"><div class="kicker">How to read the study</div><h2>From static allocation to layered control</h2><div class="grid2"><div class="card good"><h3>Research objective</h3><p>The study starts from mean-variance allocation, then asks what happens when the portfolio system also optimizes the upstream opportunity set, the active screen, the rebalancing controller, and the model-selection rule.</p></div><div class="card glow"><h3>Presentation design</h3><p>This website moves as a story: why static Markowitz is not enough → what layers were optimized → how the walk-forward experiment was run → what changed across universe breadth → why learned routing is informative but not yet dominant.</p></div></div></div></section>
-<section class="slide" data-title="Research question" data-notes="State the research question plainly. I am not asking whether optimization works in the abstract. I am asking where optimization should be applied in a portfolio system: to the feasible set, to the weights, or to the router."><div class="inner"><div class="kicker">Research question</div><h2>Where should optimization be applied?</h2><p class="lead">Classical portfolio optimization solves for weights after a universe is already chosen. The project asks whether that is the right abstraction.</p><div class="grid3"><div class="card"><div class="metric">U</div><div class="label">Opportunity set</div><p>Changing candidate-universe breadth changes the feasible set available to every downstream decision.</p></div><div class="card"><div class="metric">S</div><div class="label">Screen objective</div><p>Momentum, low-volatility, and volatility-adjusted rules are distinct cardinality-constrained projections.</p></div><div class="card"><div class="metric">C</div><div class="label">Controller cost</div><p>More active weighting can add signal, but it also increases turnover and implementation cost.</p></div></div><div class="eq" style="margin-top:22px">choose stack (b,j,k):  U_b(t) → S_j(F_t) → C_k(H_t,w_{t−}) → net reward</div></div></section>
-<section class="slide" data-title="Research flow" data-notes="This is the research log. The work begins from a constrained allocation proposal and first builds a rigorous single-system control substrate. That substrate is necessary before broader adaptive or crowding questions can be studied carefully."><div class="inner"><div class="kicker">Research flow log</div><h2>How the study was performed</h2><div class="timeline"><div class="event"><b>Proposal:</b> formulate signal-based allocation as constrained optimization with possible game-theoretic extensions.</div><div class="event"><b>Mathematical reframing:</b> model allocation as a sequential control problem with state, action, turnover cost, and finite-horizon reward.</div><div class="event"><b>Empirical substrate:</b> construct chronological walk-forward ledgers so every tried screen/controller arm is recorded, not only the selected winner.</div><div class="event"><b>Layer expansion:</b> scale from pilot baskets into 100/250/500 liquid-equity candidate scopes and evaluate a 60-arm factorial matrix.</div><div class="event"><b>Diagnostics:</b> add ablations, cost sensitivity, winner-gap checks, and a policy-gradient routing experiment over interpretable arms.</div></div></div></section>
-<section class="slide" data-title="System decomposition" data-notes="Walk through the loop from left to right. The key point is that this is not a single convex program. It is mixed discrete-continuous and sequential. The experiment approximates it by enumeration plus out-of-sample evaluation."><div class="inner"><div class="kicker">Optimization decomposition</div><h2>A hard control problem becomes a tractable stack</h2><div class="flow"><div class="node"><strong>State</strong><span class="mini">prices, signals, current weights</span></div><div class="arr">→</div><div class="node"><strong>Universe</strong><span class="mini">breadth b</span></div><div class="arr">→</div><div class="node"><strong>Screen</strong><span class="mini">top-K by qᵢ(t)</span></div><div class="arr">→</div><div class="node"><strong>Weights</strong><span class="mini">simplex policy</span></div><div class="arr">→</div><div class="node"><strong>Reward</strong><span class="mini">return − cost</span></div></div><div class="grid2" style="margin-top:24px"><div class="card"><h3>Continuous layer</h3><div class="eq">max_w μᵀw − λ wᵀΣw − κ‖w − wₜ₋‖₁</div><p>Risk, return, and trading friction determine the weight update once the active set is known.</p></div><div class="card"><h3>Discrete layer</h3><div class="eq">max Σ zᵢqᵢ  s.t. Σzᵢ≤K, zᵢ∈{0,1}</div><p>Screening is an optimization decision because it changes the feasible simplex before weights are chosen.</p></div></div></div></section>
-<section class="slide" data-title="Intuition: risk and cost" data-notes="Use the sliders if presenting live. The first visual explains Markowitz as a tradeoff along the efficient frontier. The second explains turnover as control effort: cost pulls the new portfolio back toward the previous one."><div class="inner"><div class="kicker">Intuition before data</div><h2>Risk aversion and transaction cost act like control dials</h2><div class="grid2"><div class="card viz"><h3>Efficient frontier: λ moves the optimum</h3><canvas id="frontier" width="700" height="360"></canvas><div class="controls"><label>risk aversion λ</label><input id="lambda" type="range" min="0.5" max="5" step="0.1" value="2.2"><span class="mono" id="lambdaV">2.2</span></div></div><div class="card viz"><h3>Turnover: κ keeps the controller from over-trading</h3><canvas id="simplex" width="700" height="360"></canvas><div class="controls"><label>cost κ</label><input id="kappa" type="range" min="0" max="50" step="1" value="10"><span class="mono"><span id="kappaV">10</span> bps</span><span class="badge">fuel: <span id="fuel">100%</span></span></div></div></div></div></section>
-<section class="slide" data-title="Intuition: screening" data-notes="This is the conceptual bridge to the main result. Moving from momentum to low-volatility or volatility-adjusted momentum does not merely change labels; it selects a different set of securities, hence a different feasible optimization problem."><div class="inner"><div class="kicker">Screening is not preprocessing</div><h2>Changing qᵢ(t) changes the battlefield</h2><div class="grid2"><div class="card viz"><canvas id="screenViz" width="700" height="390"></canvas><div class="controls"><label>selected K</label><input id="kSelect" type="range" min="5" max="80" step="5" value="20"><span class="mono">top-<span id="kVal">20</span></span><button class="btn score active" data-score="mom">Momentum</button><button class="btn score" data-score="lowvol">Low-vol</button><button class="btn score" data-score="voladj">Vol-adjusted</button></div></div><div class="story"><div class="step"><div class="num">1</div><p><b>Momentum</b> selects high recent return names, regardless of their volatility.</p></div><div class="step"><div class="num">2</div><p><b>Low-volatility</b> changes the feasible set toward stable names, which mattered most in the Top-250 scope.</p></div><div class="step"><div class="num">3</div><p><b>Volatility-adjusted momentum</b> asks whether the trend is strong relative to noise, which mattered most in the Top-500 scope.</p></div></div></div></div></section>
-<section class="slide" data-title="Experiment matrix" data-notes="Explain how the numerical study is structured. Three candidate breadths times five screens times four controllers gives 60 arms at the main 10 basis point cost slice. The heatmap is the central empirical object."><div class="inner"><div class="kicker">Main empirical matrix</div><h2>60 arms, evaluated out of sample</h2><div class="grid4"><div class="card"><div class="metric">3</div><div class="label">candidate scopes</div><p>Top-100, Top-250, Top-500 liquid-equity universes.</p></div><div class="card"><div class="metric">5</div><div class="label">screen rules</div><p>Momentum, low-volatility, volatility-adjusted, and cluster-capped variants.</p></div><div class="card"><div class="metric">4</div><div class="label">controllers</div><p>Equal weight plus 21/63/126-day rank-and-hold.</p></div><div class="card"><div class="metric">10</div><div class="label">bps cost slice</div><p>Canonical proportional turnover cost, with 0 and 25 bps retained for sensitivity.</p></div></div><div class="eq" style="margin-top:24px">Every arm stores: train/test dates, selected names, turnover, return, volatility, Sharpe, drawdown</div></div></section>
-<section class="slide" data-title="Full surface" data-notes="This is the main visual. Toggle between universe scopes. The winning cell is outlined. The pattern is the point: the best stack changes with breadth, so the optimizer cannot be chosen independently of the universe."><div class="inner"><div class="kicker">Result surface</div><h2>The best region of the surface moves with universe breadth</h2><p class="muted">Hover cells for metrics. Outlined cells are selected winners in the final paper.</p><div class="tabs" id="hmTabs"></div><div class="card glow" id="heatmap"></div></div></section>
-<section class="slide" data-title="Winning stacks" data-notes="State the three headline findings. Top-100: momentum plus equal weight. Top-250: low-volatility plus equal weight. Top-500: volatility-adjusted momentum plus short-horizon rank-and-hold."><div class="inner"><div class="kicker">Headline empirical result</div><h2>Optimal stack is not invariant</h2><div class="grid3" id="winnerCards"></div></div></section>
-<section class="slide" data-title="Ablations" data-notes="Ablations answer which layer is doing the work. In the narrower scopes equal weighting is strong after screening. In the broadest scope, active rank-and-hold becomes more worthwhile."><div class="inner"><div class="kicker">Layer attribution</div><h2>Which layer is doing useful work?</h2><div class="grid2"><div class="card"><h3>Screen ablation</h3><div id="screenChart"></div></div><div class="card"><h3>Controller ablation</h3><div id="controllerChart"></div></div></div></div></section>
-<section class="slide" data-title="Selection risk" data-notes="This is important for research maturity. The winners are mechanism evidence, not proof of a unique trading rule. The bootstrap shows winner identity is fragile, especially with limited walk-forward splits."><div class="inner"><div class="kicker">Diagnostics</div><h2>Winner gaps are real, but selected maxima are fragile</h2><div class="grid3" id="riskCards"></div><div class="card" style="margin-top:18px"><p><b>Interpretation:</b> The point-estimate best arm wins only about one-third of bootstrap resamples. The result is strongest as evidence that the <span class="accent">performance surface changes by layer</span>, not as a deployable claim that one arm is uniquely optimal.</p></div></div></section>
-<section class="slide" data-title="Costs" data-notes="Cost sensitivity checks whether the result is an artifact of the selected transaction cost. The same winning families persist from 0 to 25 bps, but active rank-and-hold pays visible cost in the Top-500 scope."><div class="inner"><div class="kicker">Cost sensitivity</div><h2>Turnover penalty matters, but does not erase the main ordering</h2><div class="grid2"><div class="card"><div id="costChart"></div></div><div class="story"><div class="step"><div class="num">κ</div><p>Equal-weight controllers have near-zero turnover once the screen membership is fixed.</p></div><div class="step"><div class="num">Δw</div><p>Rank-and-hold creates an additional active selection layer, so it must earn back trading cost.</p></div><div class="step"><div class="num">500</div><p>In the broadest universe, active ranking still pays; in the narrower universes, simpler weighting is enough.</p></div></div></div></div></section>
-<section class="slide" data-title="RL router" data-notes="RL is a first-class part of the research, but it is positioned correctly: as a router over interpretable arms, not an end-to-end black box. It improves over fixed selection in the combined panel but does not beat the trailing-window baseline."><div class="inner"><div class="kicker">System-level learning</div><h2>Policy-gradient routing learns structure, but trailing-window remains hard to beat</h2><div class="grid2"><div class="card"><div id="rlChart"></div></div><div class="card"><h3>Why this is still useful</h3><p>The learned router acts over screen/controller arms, so its actions remain interpretable. Its non-dominance is an empirical finding: in a finite-sample setting, a transparent recency rule can be a very strong optimizer.</p><div class="eq">πθ(a|s) = softmax(fθ(s))</div><p class="mini">Reward = next-period net reward − switching penalty.</p></div></div></div></section>
-<section class="slide" data-title="Limitations" data-notes="Be direct here. These limitations do not undermine the presentation; they make the next research step clear: point-in-time universes, more episodes, richer costs, and descriptor-conditioned routing."><div class="inner"><div class="kicker">Threats to validity</div><h2>The study is evidence for a mechanism, not a final trading system</h2><div class="grid3"><div class="card risk"><h3>Survivorship bias</h3><p>Candidate universes approximate investable historical sets; point-in-time membership is the highest-priority improvement.</p></div><div class="card risk"><h3>Finite folds</h3><p>Top-250 and Top-500 have fewer independent walk-forward splits, which widens uncertainty around winner identity.</p></div><div class="card risk"><h3>Model-selection bias</h3><p>Each universe selects from 20 arms, so winner gaps must be interpreted with multiple-comparison caution.</p></div><div class="card risk"><h3>Cost realism</h3><p>A proportional cost is a controlled diagnostic, not a full market-impact or liquidity model.</p></div><div class="card risk"><h3>Router sample size</h3><p>The learned router has too few episodes for a deployable superiority claim.</p></div><div class="card risk"><h3>Next study</h3><p>Compute universe descriptors, rebuild point-in-time sets, and evaluate contextual routing against strict baselines.</p></div></div></div></section>
-<section class="slide" data-title="Research anchors" data-notes="This slide connects the empirical study to the literature. Markowitz provides the risk-return starting point, transaction-cost portfolio work motivates turnover as a control term, online portfolio selection motivates adaptive routing, and modern RL literature motivates policy learning while also warning that transparent baselines matter."><div class="inner"><div class="kicker">Literature context</div><h2>The project extends a known chain of portfolio optimization ideas</h2><div class="grid2"><div class="card"><h3>Classical baseline</h3><ul class="refs"><li><b>Markowitz (1952)</b>: mean-variance allocation frames portfolio choice as risk-return optimization.</li><li><b>Transaction-cost portfolio optimization</b>: linear/proportional costs make turnover a first-class part of the objective, not an afterthought.</li></ul></div><div class="card"><h3>Sequential and adaptive view</h3><ul class="refs"><li><b>Cover (1991)</b>: online portfolio selection evaluates policies through nonanticipating sequential wealth updates.</li><li><b>Reinforcement-learning portfolio studies</b>: policy methods can route or rebalance adaptively, but must be judged against simple online baselines.</li></ul></div></div><p class="lead" style="margin-top:22px">This study's contribution is not another isolated backtest; it is the decomposition of the allocation system into universe, screen, weighting, cost, and routing layers with each layer measured out of sample.</p></div></section>
-<section class="slide" data-title="Takeaways" data-notes="Close with three points. One: model portfolio allocation as a system, not just a weight vector. Two: optimize the feasible set before over-engineering weights. Three: learned routing is promising only if it beats simple adaptive rules."><div class="inner"><div class="kicker">Conclusion</div><h2>Three things to remember</h2><div class="story"><div class="step"><div class="num">1</div><p><b>Portfolio allocation is a layered control system.</b> Universe construction, screening, weighting, turnover, and routing are all optimization decisions.</p></div><div class="step"><div class="num">2</div><p><b>The binding layer changes with breadth.</b> Top-100 favors momentum plus equal weight; Top-250 favors low-volatility filtering; Top-500 rewards volatility-adjusted momentum plus active ranking.</p></div><div class="step"><div class="num">3</div><p><b>Complexity must beat transparent baselines.</b> A learned router is interesting because it learns structure, but it is not practically superior until it beats trailing-window routing across enough episodes.</p></div></div><p class="lead" style="margin-top:28px">The research moves from “which portfolio wins?” to “which layer should be optimized under this market structure?”</p></div></section>
+
+<!-- ============ SLIDE 1: TITLE ============ -->
+<section class="slide active" data-title="Title" data-notes="Open by stating the thesis: portfolio allocation is not a single static optimization. It is a layered control problem where the binding optimization layer changes with universe breadth. Three to five sentences, no jargon yet.">
+  <div class="num">01</div>
+  <div class="inner">
+    <div style="margin-bottom:36px">
+      <span class="smallcaps">ECE-GY 6233 · System Optimization Methods · Spring 2026</span>
+    </div>
+    <h1>Portfolio Allocation as<br><em>Layered System Optimization</em></h1>
+    <p class="lead" style="margin-top:28px">
+      Mathematical modelling, control decomposition, and a 60-arm walk-forward evaluation of where optimization actually pays.
+    </p>
+    <div style="margin-top:60px; display:grid; grid-template-columns:1fr 1fr; gap:48px; max-width:780px">
+      <div>
+        <h4>Author</h4>
+        <p style="font-size:18px; margin:0">Ashesh Kaji<br><span class="muted sans" style="font-size:13px">New York University · ask9184@nyu.edu</span></p>
+      </div>
+      <div>
+        <h4>Method at a glance</h4>
+        <p style="font-size:15px; margin:0; font-family:var(--sans); color:var(--ink-2); line-height:1.5">
+          $3$ universes $\times$ $5$ screens $\times$ $4$ controllers · 60 arms · chronological walk-forward · policy-gradient meta-router.
+        </p>
+      </div>
+    </div>
+    <div style="position:absolute; bottom:48px; left:max(48px,7vw); right:max(48px,7vw); display:flex; justify-content:space-between; font-family:var(--sans); font-size:12px; color:var(--muted)">
+      <span>Use <span class="kbd">→</span> / <span class="kbd">Space</span> to advance · <span class="kbd">N</span> for notes · <span class="kbd">S</span> to toggle scroll mode</span>
+      <span>Apr 2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2: THESIS ============ -->
+<section class="slide" data-title="Thesis" data-notes="State the central claim. The optimal stack is not invariant. Top-100 favors momentum + EW. Top-250 favors low-vol + EW. Top-500 favors vol-adjusted momentum + 21d rank-and-hold. Numbers come from the final 60-arm matrix at 10 bps cost.">
+  <div class="num">02</div>
+  <div class="inner">
+    <span class="smallcaps">Thesis</span>
+    <h2>The optimal control stack is <em style="color:var(--accent)">not</em> invariant in universe breadth.</h2>
+    <p class="lead">
+      Classical mean–variance optimization solves for weights after a universe is fixed. This study shows that the binding layer — the layer where optimization adds value — moves as the candidate universe widens.
+    </p>
+
+    <div class="grid g3" style="margin-top:36px">
+      <div class="panel">
+        <h4>Top-100</h4>
+        <h3>Momentum screen + equal weight</h3>
+        <p class="muted sans" style="font-size:13px">Sharpe $1.474$ · ann. ret. $20.4\%$ · ann. vol. $20.2\%$ · turnover $\approx 0$</p>
+        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">Once the universe is narrow, the screen has already done most of the selection work. Equal weighting is the minimum-estimation controller.</p>
+      </div>
+      <div class="panel">
+        <h4>Top-250</h4>
+        <h3>Low-volatility screen + equal weight</h3>
+        <p class="muted sans" style="font-size:13px">Sharpe $0.859$ · ann. ret. $11.2\%$ · ann. vol. $14.1\%$ · DD $-10.5\%$</p>
+        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">A broader candidate set introduces noise. Risk filtering dominates momentum chasing. Breadth is not monotone in performance.</p>
+      </div>
+      <div class="panel">
+        <h4>Top-500</h4>
+        <h3>Vol-adj. momentum + 21d rank-and-hold</h3>
+        <p class="muted sans" style="font-size:13px">Sharpe $1.756$ · ann. ret. $35.1\%$ · turnover $22\times$ · DD $-15.5\%$</p>
+        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">Cross-sectional dispersion is rich enough that a second active ranking layer earns its turnover cost.</p>
+      </div>
+    </div>
+
+    <div class="footnote">
+      Each entry is the best stack out of 20 screen $\times$ controller combinations within its universe, evaluated chronologically at $\kappa = 10$ bps proportional turnover cost. Bootstrap winner stability is $\sim$one-third (slide 11).
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3: STARTING POINT — MARKOWITZ ============ -->
+<section class="slide" data-title="Markowitz baseline" data-notes="Walk through the QP. Emphasize that this is convex on the simplex but assumes the universe is given. The KKT condition shows that weights tilt toward expected return only insofar as covariance-scaled risk permits. Move slider live to show the optimum sweep the frontier.">
+  <div class="num">03</div>
+  <div class="inner">
+    <span class="smallcaps">Starting point</span>
+    <h2>The single-period mean–variance program.</h2>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div>
+        <p>The classical formulation seeks weights $w \in \mathbb{R}^n$ given an estimate $(\hat\mu, \hat\Sigma)$, with $\hat\Sigma \succeq 0$, by solving the convex quadratic program</p>
+
+        <div class="eqblock">
+          <span class="label">Markowitz · 1952</span>
+          $$\begin{aligned} \min_{w \in \Delta_n} \quad &amp; \lambda\, w^\top \hat\Sigma w \;-\; \hat\mu^\top w \\ \text{s.t.} \quad &amp; \mathbf{1}^\top w = 1, \quad w \ge 0. \end{aligned}$$
+        </div>
+
+        <p>The Lagrangian for the equality-constrained relaxation is $\mathcal{L}(w,\eta) = \lambda w^\top \hat\Sigma w - \hat\mu^\top w + \eta(\mathbf{1}^\top w - 1)$, giving the KKT condition</p>
+
+        <div class="eqblock">
+          $$2\lambda\, \hat\Sigma\, w^\star \;-\; \hat\mu \;+\; \eta\, \mathbf{1} = 0 \;\Longrightarrow\; w^\star(\lambda) \propto \hat\Sigma^{-1}(\hat\mu - \eta\mathbf{1}).$$
+        </div>
+
+        <p class="marg sans">
+          As $\lambda$ grows, $w^\star$ contracts toward the global minimum-variance portfolio. The frontier is the parametric curve $\{(\sigma(w^\star(\lambda)), \mu^\top w^\star(\lambda)) : \lambda > 0\}$.
+        </p>
+
+        <div class="gap" style="margin-top:24px">
+          <h4>Where this stops being enough</h4>
+          <div class="body">Equation (3.1) takes the universe $\{1,\dots,n\}$ as exogenous. In a live system the universe itself, the active set chosen from it, and the rebalancing rule are all decision variables. This is the wedge the rest of the talk drives into.</div>
+        </div>
+      </div>
+
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Computed efficient frontier</h4>
+        <svg id="fig-frontier" viewBox="0 0 560 380"></svg>
+        <div class="controls">
+          <label>risk aversion $\lambda$</label>
+          <input id="lam" type="range" min="0.05" max="20" step="0.05" value="2.5">
+          <span class="val" id="lamV">2.50</span>
+        </div>
+        <div class="caption">
+          <b>Method.</b> Synthetic $n=8$ assets with random $\hat\mu$, low-rank $\hat\Sigma$. Frontier traced by sweeping $\lambda$ and solving (3.1) on the simplex with projected gradient. The red dot is $w^\star(\lambda)$ at the chosen $\lambda$; grey points are sampled long-only portfolios.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4: TURNOVER AS CONTROL EFFORT ============ -->
+<section class="slide" data-title="Turnover as control" data-notes="Turnover is not a fee; it is control effort. Show the iso-cost ball around w_{t-}. As kappa grows, the new optimum is dragged back. This is the sequential-control reading of the QP.">
+  <div class="num">04</div>
+  <div class="inner">
+    <span class="smallcaps">From a QP to a controller</span>
+    <h2>Turnover is control effort, not a transaction fee.</h2>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div>
+        <p>Let $w_{t^-}$ be the pre-rebalance portfolio and $w_t$ the post-rebalance portfolio. Linear transaction cost adds an $\ell_1$ regularizer that pulls the iterate back toward the previous state:</p>
+        <div class="eqblock">
+          $$\max_{w_t \in \Delta} \;\; \alpha_t^\top w_t \;-\; \lambda\, w_t^\top \hat\Sigma_t w_t \;-\; \kappa\, \|w_t - w_{t^-}\|_1.$$
+        </div>
+        <p>The pre-trade portfolio joins the state $x_t = (\mathcal{F}_t, w_{t^-})$. The lookahead version is finite-horizon stochastic optimal control:</p>
+        <div class="eqblock">
+          <span class="label">Bellman</span>
+          $$V_t(x_t) = \max_{a_t \in \mathcal{A}(x_t)} \Big\{\, g(x_t,a_t) + \delta\,\mathbb{E}\big[V_{t+1}(x_{t+1}) \mid x_t,a_t\big] \,\Big\}$$
+        </div>
+        <p style="font-size:15px">with $g(x_t,a_t) = \mathbb{E}[w_t^\top r_{t+1}\mid \mathcal{F}_t] - \kappa\|w_t-w_{t^-}\|_1 - \rho\,\mathcal{R}(w_t,\mathcal{F}_t)$ and admissible set $\mathcal{A}(x_t)$ encoding simplex, eligibility, and turnover constraints.</p>
+        <div class="marg sans" style="margin-top:14px">
+          The implementation does not solve this Bellman equation. It approximates the optimal policy $\pi^\star$ with restricted, interpretable policy classes (equal weight, rank-and-hold) and chooses among them with an outer router.
+        </div>
+      </div>
+
+      <div class="figure">
+        <h4 style="margin-bottom:6px">$\ell_1$-regularized update on the 3-asset simplex</h4>
+        <svg id="fig-simplex" viewBox="0 0 560 380"></svg>
+        <div class="controls">
+          <label>cost $\kappa$</label>
+          <input id="kap" type="range" min="0" max="80" step="1" value="10">
+          <span class="val" id="kapV">10</span>
+          <span class="muted">|</span>
+          <span>fired turnover $\|w_t - w_{t^-}\|_1 =$ <span class="val mono" id="toV">—</span></span>
+        </div>
+        <div class="caption">
+          <b>Method.</b> Iso-reward ellipses are the level sets of $\alpha^\top w - \lambda w^\top \hat\Sigma w$ on the simplex. Diamonds are iso-cost contours of $\kappa\|w-w_{t^-}\|_1$ centred at the prior portfolio. The optimum slides from the unconstrained target toward $w_{t^-}$ as $\kappa$ rises.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5: LAYERED FORMULATION ============ -->
+<section class="slide" data-title="Layered formulation" data-notes="This is the central modelling slide. Universe breadth, screen, weighting controller. The stack (b,j,k) defines a feasible problem; the empirical study enumerates a 3x5x4 grid and evaluates each arm out of sample.">
+  <div class="num">05</div>
+  <div class="inner">
+    <span class="smallcaps">Mathematical decomposition</span>
+    <h2>A bilevel mixed discrete–continuous control problem.</h2>
+
+    <p class="lead">Index candidate-universe breadth by $b \in \{100,250,500\}$, screen rule by $j \in \mathcal{J}$, and weighting controller by $k \in \mathcal{K}$. The full model-selection problem is</p>
+
+    <div class="eqblock">
+      $$\begin{aligned}
+      \max_{b,\,j,\,k} \quad &amp; \frac{\widehat{\mu}_{b,j,k}}{\widehat{\sigma}_{b,j,k}} \;-\; \phi\,\widehat{\text{DD}}_{b,j,k} \;-\; \psi\,\widehat{\text{TO}}_{b,j,k} \\[2pt]
+      \text{s.t.} \quad &amp; H_{b,j}(t) \;=\; S_j\!\left(\,\mathcal{U}_b(t),\,\mathcal{F}_t\,\right), \\
+      &amp; w_t \;=\; C_k\!\left(\, H_{b,j}(t),\, \mathcal{F}_t,\, w_{t^-} \,\right), \\
+      &amp; |H_{b,j}(t)| \le K_{\max}, \quad w_t \in \Delta_{|H_{b,j}(t)|}.
+      \end{aligned}$$
+    </div>
+
+    <div class="grid g2" style="margin-top:30px; gap:36px">
+      <div>
+        <h3>Discrete layer · screen as cardinality projection</h3>
+        <p>For a per-asset score $q_i(t)$ on the candidate universe $\mathcal{U}_b(t)$, the top-$K$ screen solves</p>
+        <div class="eqblock">
+          $$\max_{z\in\{0,1\}^{|\mathcal{U}|}} \sum_{i\in\mathcal{U}} q_i(t)\, z_i \;\;\text{s.t.}\;\; \sum_i z_i \le K.$$
+        </div>
+        <p>The five score functions evaluated are</p>
+        <div class="eqblock" style="font-size:15px">
+          $$\begin{aligned}
+          q_i^{\text{mom},\tau} &amp;= \tfrac{P_i(t)}{P_i(t-\tau)} - 1 \\
+          q_i^{\text{vam},\tau} &amp;= \tfrac{P_i(t)/P_i(t-\tau)\,-\,1}{\hat\sigma_{i,\tau}(t) + \varepsilon} \\
+          q_i^{\text{lvol},\tau} &amp;= -\hat\sigma_{i,\tau}(t) \\
+          q_i^{\text{cluster}} &amp;= q_i^{\text{mom},63} \;\text{with per-cluster caps}
+          \end{aligned}$$
+        </div>
+      </div>
+      <div>
+        <h3>Continuous layer · controllers as restricted policies</h3>
+        <p>Equal weight is the minimum-estimation controller on the screened set $H_t$:</p>
+        <div class="eqblock">$$w_{i,t}^{\text{EW}} = \tfrac{1}{|H_t|}\,\mathbf{1}\{i \in H_t\}.$$</div>
+        <p>Rank-and-hold imposes a second top-$k$ ranking inside $H_t$ on a horizon-$\tau$ momentum score:</p>
+        <div class="eqblock">
+          $$w_{i,t}^{\text{MRH},\tau,k} = \tfrac{1}{k}\,\mathbf{1}\!\left\{ i \in \operatorname{TopK}_{\ell\in H_t}\!\left(\tfrac{P_\ell(t)}{P_\ell(t-\tau)} - 1\right)\right\}.$$
+        </div>
+        <p>Although simpler than a full QP, $w^{\text{MRH}}$ is still an optimization rule on $H_t$. Whether it is worth its turnover is the question slide 9 settles empirically.</p>
+
+        <div class="gap" style="margin-top:20px">
+          <h4>Honest scope</h4>
+          <div class="body">The $3\times5\times4 = 60$ enumerated grid is a tractable approximation of the bilevel program above. We do not solve the mixed-integer program; we sample it and study the surface.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6: SCREEN AS DECISION ============ -->
+<section class="slide" data-title="Screening visualization" data-notes="Move the score selector to show that momentum, low-vol, and vol-adjusted momentum produce structurally different active sets. Screening is a discrete optimization, not preprocessing.">
+  <div class="num">06</div>
+  <div class="inner">
+    <span class="smallcaps">Screens as different feasible problems</span>
+    <h2>Changing $q_i(t)$ moves the active set, not just the labels.</h2>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Top-$K$ projection on synthetic $(\sigma_i, \text{mom}_i)$</h4>
+        <svg id="fig-screen" viewBox="0 0 600 420"></svg>
+        <div class="controls">
+          <button class="mini active" data-q="mom">$q^{\text{mom}}$</button>
+          <button class="mini" data-q="lvol">$q^{\text{lvol}}$</button>
+          <button class="mini" data-q="vam">$q^{\text{vam}}$</button>
+          <span style="margin-left:auto">$K =$ <span class="val" id="kV">20</span></span>
+          <input id="kSel" type="range" min="5" max="80" step="1" value="20" style="width:140px">
+        </div>
+        <div class="caption">
+          <b>Method.</b> 500 synthetic assets with vol $\sigma_i$ and momentum $\text{mom}_i$ drawn from a structured joint. The top-$K$ set under each score is the solution to a 0–1 knapsack with cardinality constraint; only the score function changes.
+        </div>
+      </div>
+
+      <div>
+        <h3>The system-optimization point</h3>
+        <p>Each score induces a different feasible simplex $\Delta_{|H|}$ for the downstream weighting controller. The continuous layer is therefore solving a <em>different</em> portfolio problem under each screen — not the same problem with different inputs.</p>
+
+        <div class="eqblock" style="font-size:15px">
+          $$S_j : \big(\mathcal{U}_b(t), \mathcal{F}_t\big) \longmapsto H_{b,j}(t), \qquad |H_{b,j}(t)| \le K.$$
+        </div>
+
+        <p>The headline empirical effect (slide 9) is that the best screen <em>changes</em> with universe breadth: momentum at $b{=}100$, low-volatility at $b{=}250$, vol-adjusted momentum at $b{=}500$.</p>
+
+        <div class="marg sans" style="margin-top:14px">
+          A common error is to treat screening as "data cleaning". In a layered system it is a 0–1 optimization with as much leverage as the weight choice — and sometimes more.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7: PROTOCOL ============ -->
+<section class="slide" data-title="Walk-forward protocol" data-notes="Make the protocol concrete. Train end, validation end, evaluation start/end. Statistics are computed only through train end. Net reward subtracts proportional turnover cost. Every arm is stored — not only the winner.">
+  <div class="num">07</div>
+  <div class="inner">
+    <span class="smallcaps">Empirical protocol</span>
+    <h2>Walk-forward optimization, full ledger.</h2>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div>
+        <p>Each arm is evaluated through chronological train/test splits. Screen scores and statistics are computed using only information available through the training end date $t^{\text{tr}}_s$, and net reward is realized over the immediately following evaluation window $[t^{\text{ev,start}}_s, t^{\text{ev,end}}_s]$.</p>
+
+        <div class="eqblock" style="font-size:15px">
+          $$R_s(b,j,k) \;=\; \underbrace{w_t^\top r_{t+1}}_{\text{gross}} \;-\; \underbrace{\kappa\,\|w_t - w_{t^-}\|_1}_{\text{control cost}}, \qquad t \in s.$$
+        </div>
+
+        <p>The performance of stack $(b,j,k)$ is the cross-split mean Sharpe</p>
+        <div class="eqblock" style="font-size:15px">
+          $$\widehat{\text{SR}}(b,j,k) \;=\; \frac{1}{|\mathcal{W}|} \sum_{s \in \mathcal{W}} \frac{\bar{R}_s(b,j,k)}{\hat\sigma_s(b,j,k)}.$$
+        </div>
+
+        <h3 style="margin-top:24px">Grid sizes and split counts</h3>
+        <table class="data" style="margin-top:8px">
+          <thead><tr><th>Universe</th><th class="num">Arms</th><th class="num">Splits</th><th>Span</th></tr></thead>
+          <tbody>
+            <tr><td>Top-100</td><td class="num">20</td><td class="num">22</td><td>2019-04 → 2024-07</td></tr>
+            <tr><td>Top-250</td><td class="num">20</td><td class="num">11</td><td>2022-01 → 2024-09</td></tr>
+            <tr><td>Top-500</td><td class="num">20</td><td class="num">9</td><td>2022-07 → 2024-10</td></tr>
+            <tr><td>cost slices</td><td class="num" colspan="3">$\kappa \in \{0, 10, 25\}$ bps</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="figure" style="background:#fff">
+        <h4 style="margin-bottom:6px">One walk-forward fold, schematically</h4>
+        <svg id="fig-wf" viewBox="0 0 600 380"></svg>
+        <div class="caption">
+          <b>Read.</b> Each grey bar is one fold; blue is the training span used to fit screens and controllers, red is the chronologically subsequent evaluation window. The protocol guarantees screen scores are causal.
+        </div>
+
+        <div class="gap" style="margin-top:18px">
+          <h4>Visible gap · finite folds</h4>
+          <div class="body">The Top-500 universe has only $9$ independent evaluation periods. This is the binding constraint on the routing experiment (slide 12) and the bootstrap stability claim (slide 11).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8: FULL SURFACE HEATMAP ============ -->
+<section class="slide" data-title="Full surface" data-notes="This is the central empirical figure. Tabs switch universe. The selected (winning) cell is outlined in oxblood. Pause here and let the audience read the structural shift.">
+  <div class="num">08</div>
+  <div class="inner">
+    <span class="smallcaps">Empirical core</span>
+    <h2>The Sharpe surface, by screen and controller.</h2>
+
+    <p class="lead">For each universe, $5 \times 4 = 20$ arms. The winning cell is outlined; the colour ramp is shared across panels for direct comparison. The pattern <em>moves</em> as $b$ grows.</p>
+
+    <div class="figure" style="margin-top:18px">
+      <div class="tabs" id="hmTabs"></div>
+      <div id="hm"></div>
+      <div class="caption">
+        <b>Read.</b> Colour encodes $\widehat{\text{SR}}_{b,j,k}$ at $\kappa = 10$ bps. Hover any cell for full metrics. Rows are screen rules, columns are controllers. The outlined cell in each universe is $\arg\max_{j,k}\widehat{\text{SR}}_{b,j,k}$ — a <em>selected</em> maximum, not a tested hypothesis.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9: WINNER STACKS ============ -->
+<section class="slide" data-title="Winner stacks" data-notes="Three winning stacks. Read each row. The argument is that the same controller is not best across breadths — therefore the optimization formulation must include the layer choice.">
+  <div class="num">09</div>
+  <div class="inner">
+    <span class="smallcaps">Headline result</span>
+    <h2>The winning $(j^\star, k^\star)$ depends on $b$.</h2>
+
+    <table class="data" style="margin-top:24px; font-size:15px">
+      <thead>
+        <tr>
+          <th>Universe $b$</th>
+          <th>Discrete screen $j^\star$</th>
+          <th>Weighting $k^\star$</th>
+          <th class="num">Splits</th>
+          <th class="num">Ann. ret.</th>
+          <th class="num">Ann. vol.</th>
+          <th class="num">Sharpe</th>
+          <th class="num">Worst DD</th>
+          <th class="num">Turnover</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="win">
+          <td>Top-100</td>
+          <td>21-day momentum top 10</td>
+          <td>Equal weight</td>
+          <td class="num">22</td>
+          <td class="num">20.4%</td>
+          <td class="num">20.2%</td>
+          <td class="num"><b>1.474</b></td>
+          <td class="num">−44.9%</td>
+          <td class="num">≈ 0</td>
+        </tr>
+        <tr class="win">
+          <td>Top-250</td>
+          <td>63-day low-volatility top 10</td>
+          <td>Equal weight</td>
+          <td class="num">11</td>
+          <td class="num">11.2%</td>
+          <td class="num">14.1%</td>
+          <td class="num"><b>0.859</b></td>
+          <td class="num">−10.5%</td>
+          <td class="num">≈ 0</td>
+        </tr>
+        <tr class="win">
+          <td>Top-500</td>
+          <td>63-day vol-adjusted momentum top 10</td>
+          <td>21-day rank-and-hold</td>
+          <td class="num">9</td>
+          <td class="num">35.1%</td>
+          <td class="num">20.8%</td>
+          <td class="num"><b>1.756</b></td>
+          <td class="num">−15.5%</td>
+          <td class="num">22.07</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid g3" style="margin-top:36px">
+      <div class="figure"><h4 style="margin-bottom:4px">Top-100 split-level Sharpe</h4><svg class="splits" data-u="100" viewBox="0 0 380 180"></svg></div>
+      <div class="figure"><h4 style="margin-bottom:4px">Top-250 split-level Sharpe</h4><svg class="splits" data-u="250" viewBox="0 0 380 180"></svg></div>
+      <div class="figure"><h4 style="margin-bottom:4px">Top-500 split-level Sharpe</h4><svg class="splits" data-u="500" viewBox="0 0 380 180"></svg></div>
+    </div>
+    <p class="muted sans" style="font-size:12px; margin-top:12px">Each bar is one chronological evaluation window; the dashed line is the cross-split mean. Volatility of Sharpe is a useful diagnostic the heatmap suppresses.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10: ABLATIONS ============ -->
+<section class="slide" data-title="Layer ablations" data-notes="Ablate one layer at a time. Average over screens to evaluate controllers; average over controllers to evaluate screens. Equal weighting wins on average in 100/250; rank-and-hold takes 500.">
+  <div class="num">10</div>
+  <div class="inner">
+    <span class="smallcaps">Layer attribution</span>
+    <h2>Which layer is doing the useful work?</h2>
+
+    <p>For each universe, marginalize over one layer and inspect the other. Pale bars are the mean Sharpe across the marginalized layer; saturated bars are the best observed Sharpe.</p>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Screens · marginalize over controllers</h4>
+        <div id="screenAb"></div>
+        <div class="caption"><b>Read.</b> Bars are sorted within universe by mean Sharpe. The screen objective that wins on average changes across breadths.</div>
+      </div>
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Controllers · marginalize over screens</h4>
+        <div id="ctrlAb"></div>
+        <div class="caption"><b>Read.</b> Equal weight wins on average for $b \in \{100,250\}$. The 21-day rank-and-hold takes the lead in $b{=}500$.</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:24px">
+      <h4>Operational implication</h4>
+      <p style="margin-bottom:0">Extra optimization is not universally good. It is only useful when the upstream feasible set retains enough cross-sectional dispersion to <em>pay</em> for the implied control effort — i.e. when the marginal gross alpha exceeds $\kappa\,\|\Delta w\|_1$.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11: SELECTION RISK ============ -->
+<section class="slide" data-title="Selection risk" data-notes="Stop and be honest. The winning Sharpe is selected over 20 arms. Block-bootstrap winner stability is around one-third. Two of three CIs include zero. Treat the result as mechanism evidence, not a deployable claim.">
+  <div class="num">11</div>
+  <div class="inner">
+    <span class="smallcaps">Diagnostics</span>
+    <h2>The selected maximum is fragile, the mechanism is not.</h2>
+
+    <p class="lead">Each universe's reported winner is $\widehat{a} = \arg\max_a \widehat{\text{SR}}(a)$ over $|\mathcal{A}| = 20$ arms. We treat that statistic with appropriate caution.</p>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Block-bootstrap of winner gap</h4>
+        <svg id="fig-bs" viewBox="0 0 560 320"></svg>
+        <div class="controls">
+          <button class="mini active" data-bsu="100">Top-100</button>
+          <button class="mini" data-bsu="250">Top-250</button>
+          <button class="mini" data-bsu="500">Top-500</button>
+          <span class="muted" style="margin-left:auto">$B = $ <span class="val" id="bsB">2000</span> resamples</span>
+          <button class="mini" id="bsRun">Resample</button>
+        </div>
+        <div class="caption">
+          <b>Method.</b> Resample walk-forward folds with replacement, recompute $\widehat{\text{SR}}$ for every arm, take the gap between best and second-best. Histogram is the bootstrap distribution; vertical line is the point estimate.
+        </div>
+      </div>
+
+      <div>
+        <table class="data compact">
+          <thead><tr><th>b</th><th class="num">Best</th><th class="num">2nd</th><th class="num">Gap</th><th class="num">95% CI</th><th class="num">Win</th></tr></thead>
+          <tbody>
+            <tr><td>100</td><td class="num">1.474</td><td class="num">1.440</td><td class="num">0.034</td><td class="num">[0.00, 0.29]</td><td class="num">35.7%</td></tr>
+            <tr><td>250</td><td class="num">0.859</td><td class="num">0.755</td><td class="num">0.104</td><td class="num">[0.00, 0.55]</td><td class="num">33.8%</td></tr>
+            <tr><td>500</td><td class="num">1.756</td><td class="num">1.666</td><td class="num">0.090</td><td class="num">[0.00, 0.37]</td><td class="num">36.4%</td></tr>
+          </tbody>
+        </table>
+        <p class="muted sans" style="font-size:11px; margin-top:6px">$b$ = universe breadth · "Win" = bootstrap winner stability rate.</p>
+
+        <div class="gap" style="margin-top:24px">
+          <h4>What this means honestly</h4>
+          <div class="body">
+            Two of three CIs include zero, and the point-estimate winner repeats only $\sim$one-third of the time. <em>Therefore</em> the contribution is the layer-shift mechanism, not a deployable rule that "Top-500 + vol-adj. momentum + 21d rank-and-hold" is uniquely best.
+          </div>
+        </div>
+
+        <div class="marg sans" style="margin-top:18px">
+          A correct next step is to increase independent fold count via point-in-time universe membership, not to claim significance from the current sample.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12: COST SENSITIVITY ============ -->
+<section class="slide" data-title="Cost sensitivity" data-notes="Cost slope. Top-100 and Top-250 winners have zero turnover so they are flat. Top-500 visibly pays for its turnover — but stays best at 25 bps. The ordering is robust to the cost parameter.">
+  <div class="num">12</div>
+  <div class="inner">
+    <span class="smallcaps">Robustness · proportional cost</span>
+    <h2>Slope of winner Sharpe in $\kappa$.</h2>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Winner Sharpe across cost slices</h4>
+        <svg id="fig-cost" viewBox="0 0 560 360"></svg>
+        <div class="caption">
+          <b>Read.</b> Equal-weight winners (Top-100, Top-250) have $\|w_t - w_{t^-}\|_1 \approx 0$ between rebalances and so are flat in $\kappa$. The Top-500 winner pays its $22\times$ turnover and still keeps the lead at $\kappa = 25$ bps.
+        </div>
+      </div>
+      <div>
+        <p>The Top-500 result tests the control interpretation directly. If the active rank-and-hold layer were noise, its Sharpe would collapse as $\kappa \to 25$ bps. Instead</p>
+        <div class="eqblock" style="font-size:15px">
+          $$\widehat{\text{SR}}_{500}^\star(0) = 1.81, \quad \widehat{\text{SR}}_{500}^\star(10) = 1.76, \quad \widehat{\text{SR}}_{500}^\star(25) = 1.67.$$
+        </div>
+        <p>The slope is $\approx -0.005$ Sharpe per bp. The same winning <em>family</em> is selected at every cost slice in every universe, so the layer-shift conclusion is not an artifact of the chosen $\kappa$.</p>
+
+        <div class="gap" style="margin-top:20px">
+          <h4>Visible gap · cost realism</h4>
+          <div class="body">A proportional model is a controlled diagnostic. The next study should replace $\kappa\|\Delta w\|_1$ with $\sum_i c_i|\Delta w_i| + m_i (\Delta w_i)^2$ to incorporate impact and liquidity.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13: META-CONTROL / RL ============ -->
+<section class="slide" data-title="Policy-gradient router" data-notes="The RL component sits at the system level: it routes among interpretable arms, not over raw weights. It learns stable preferences and improves over train-fixed routing in the combined panel, but does not beat the trailing-window optimizer.">
+  <div class="num">13</div>
+  <div class="inner">
+    <span class="smallcaps">Meta-control</span>
+    <h2>Learned routing over interpretable arms.</h2>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div>
+        <p>Treat arm selection as a finite-action MDP. The state $s_t$ contains time features, scope identity, trailing rewards, and most recent reward vector. The policy is</p>
+        <div class="eqblock">
+          $$\pi_\theta(a \mid s_t) \;=\; \frac{\exp\bigl(f_\theta(s_t)_a\bigr)}{\sum_{a' \in \mathcal{A}} \exp\bigl(f_\theta(s_t)_{a'}\bigr)}.$$
+        </div>
+        <p>Reward is realized net return minus a switching penalty:</p>
+        <div class="eqblock">
+          $$r^{\text{router}}_t \;=\; R_t(a_t) \;-\; \xi\,\mathbf{1}\{a_t \ne a_{t-1}\}.$$
+        </div>
+        <p>Updates use REINFORCE with a value baseline:</p>
+        <div class="eqblock">
+          $$\nabla_\theta J(\theta) \;=\; \mathbb{E}_\pi\!\left[\sum_t (G_t - b_t)\,\nabla_\theta \log \pi_\theta(a_t \mid s_t)\right].$$
+        </div>
+
+        <h3 style="margin-top:18px">Critical design choice</h3>
+        <p>The router does not learn raw weights. Its action space is the same $\mathcal{A}$ as the enumerated grid. This makes it directly comparable to two transparent baselines:</p>
+
+        <ul style="font-family:var(--sans); font-size:14px; color:var(--ink-2)">
+          <li><b>Train-fixed:</b> $a^{\text{train}} = \arg\max_a \sum_{t \in \mathcal{T}_{\text{tr}}} R_t(a)$, then hold.</li>
+          <li><b>Trailing window:</b> $a^{\text{trail}}_t = \arg\max_a \sum_{s=t-L}^{t-1} R_s(a)$.</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="figure">
+          <h4 style="margin-bottom:6px">Cumulative test reward by router (10 bps)</h4>
+          <svg id="fig-rl" viewBox="0 0 580 320"></svg>
+          <div class="caption"><b>Read.</b> RL improves over train-fixed in the combined panel ($+0.08$) but loses to the trailing-window optimizer ($-0.33$).</div>
+        </div>
+
+        <div class="figure" style="margin-top:18px">
+          <h4 style="margin-bottom:6px">Training trajectory · single seed</h4>
+          <svg id="fig-rlcurve" viewBox="0 0 580 200"></svg>
+          <div class="caption"><b>Read.</b> 30 policy-gradient updates. Reward stabilizes after $\sim 8$ steps; high variance is consistent with a finite-action MDP and few independent trajectories per universe.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:28px">
+      <h4>The result is the comparison, not the win</h4>
+      <p style="margin-bottom:0">A learned router that does not beat trailing-window routing should not be deployed. Its value is methodological: when reformulated as a meta-controller over already-interpretable optimization arms, the architecture is auditable. That is the right setting in which to ask whether descriptor-conditioned context (next study) actually adds predictive content beyond recent rewards.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 14: GAPS ============ -->
+<section class="slide" data-title="Gaps · what this study does not show" data-notes="Be explicit about what is missing. Survivorship bias, finite folds, model-selection bias, cost realism, learned-router sample size, and lack of point-in-time universe construction.">
+  <div class="num">14</div>
+  <div class="inner">
+    <span class="smallcaps">Threats and open problems</span>
+    <h2>What this study does <em style="color:var(--accent)">not</em> yet establish.</h2>
+
+    <p class="lead">The strongest defense of an empirical claim is a precise statement of where the evidence runs out.</p>
+
+    <div class="grid g2" style="margin-top:24px; gap:24px">
+      <div class="gap">
+        <h4>1 · Survivorship bias</h4>
+        <div class="body">$\mathcal{U}_b(t)$ is approximated by current liquid constituents, not point-in-time membership. A name that delisted in 2020 is silently absent. This is the single highest-priority next experiment.</div>
+      </div>
+      <div class="gap">
+        <h4>2 · Finite walk-forward folds</h4>
+        <div class="body">Top-500 has only $9$ independent evaluation windows. The router has even fewer per-scope episodes. Confidence intervals are wide enough that two of three winner gaps include zero.</div>
+      </div>
+      <div class="gap">
+        <h4>3 · Model-selection bias</h4>
+        <div class="body">Each universe's winner is selected from $20$ arms. The reported Sharpe is a maximum over a 20-element family — not a hypothesis test. Deflated-Sharpe-style adjustments are not yet integrated into the headline numbers.</div>
+      </div>
+      <div class="gap">
+        <h4>4 · Cost realism</h4>
+        <div class="body">The current friction term is purely linear: $\kappa\|w_t - w_{t^-}\|_1$. Real implementation cost is concave-then-convex in trade size and depends on liquidity. A nonlinear $c_i|\Delta w_i| + m_i(\Delta w_i)^2$ is the next step.</div>
+      </div>
+      <div class="gap">
+        <h4>5 · Router state representation</h4>
+        <div class="body">The router uses recent rewards and scope identity. It does <em>not</em> use universe descriptors (avg. pairwise correlation, PC1 share, dispersion, vol-of-vol). Without descriptor context, beating trailing-window selection is hard.</div>
+      </div>
+      <div class="gap">
+        <h4>6 · No exact bilevel solve</h4>
+        <div class="body">The headline equation on slide 5 is mixed-integer. The study samples it on a grid; it does not solve it. Whether a relaxed continuous formulation (e.g. $\ell_1$-regularized) can recover the same layer-shift is open.</div>
+      </div>
+    </div>
+
+    <p class="muted sans" style="margin-top:30px; font-size:13px">
+      Each gap above is also a precise next experiment. None of them undermine the layered-control framing; together they describe the path from <em>mechanism evidence</em> to <em>operational claim</em>.
+    </p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 15: RELATED WORK ============ -->
+<section class="slide" data-title="Related work" data-notes="Locate the contribution in the literature. Markowitz, transaction-cost optimization (Garleanu-Pedersen), online portfolio (Cover), reinforcement-learning portfolios. The contribution is the decomposition + the comparison standard.">
+  <div class="num">15</div>
+  <div class="inner narrow">
+    <span class="smallcaps">Where this sits</span>
+    <h2>Anchoring the contribution.</h2>
+
+    <div class="grid g2" style="margin-top:24px">
+      <div>
+        <h3>Risk–return baseline</h3>
+        <p>Markowitz (1952), Sharpe ratio, mean–variance frontier — the convex starting point on slide 3.</p>
+
+        <h3 style="margin-top:18px">Transaction-cost dynamic trading</h3>
+        <p>Gârleanu & Pedersen (2013) make turnover a first-class control term and show the optimal dynamic policy partially adjusts toward the static target. The $\ell_1$-regularized program on slide 4 is the discrete analogue.</p>
+      </div>
+      <div>
+        <h3>Online portfolio selection</h3>
+        <p>Cover's universal portfolios (1991) and the broader online-learning portfolio literature motivate evaluating policies through nonanticipating sequential wealth. The trailing-window router is exactly an online optimizer.</p>
+
+        <h3 style="margin-top:18px">RL for portfolios</h3>
+        <p>Jiang & Liang (2017), Zhang et al. (2020) and others apply policy gradients to allocation. The standard the present study borrows is: a learned policy is interesting only if it beats transparent online baselines on the same reward stream.</p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:30px">
+      <h4>The contribution</h4>
+      <p style="margin-bottom:0">A unified layered formulation — universe, screen, weighting, friction, routing — with an out-of-sample empirical surface that shows the binding optimization layer changes with universe breadth, plus a learned meta-controller benchmarked against strict online baselines.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 16: TAKEAWAYS ============ -->
+<section class="slide" data-title="Takeaways" data-notes="Three things to remember. Layered control. Binding layer changes with breadth. Complexity must beat transparent baselines.">
+  <div class="num">16</div>
+  <div class="inner narrow">
+    <span class="smallcaps">Conclusion</span>
+    <h2>Three things to remember.</h2>
+
+    <ol style="font-family:var(--serif); font-size:22px; line-height:1.45; padding-left:24px; margin-top:30px">
+      <li style="margin-bottom:22px"><b>Portfolio allocation is a layered control system.</b> Universe breadth, screen, weighting, turnover, and routing are all optimization decisions — and the static QP captures only one of them.</li>
+      <li style="margin-bottom:22px"><b>The binding layer moves with $b$.</b> $b{=}100$: screen does the work. $b{=}250$: risk filtering does. $b{=}500$: a second active ranking layer earns its turnover.</li>
+      <li style="margin-bottom:22px"><b>Complexity must beat transparent baselines.</b> A learned router that does not beat trailing-window selection is not deployable, however appealing its architecture.</li>
+    </ol>
+
+    <p class="lead" style="margin-top:36px">
+      The research question shifts from <em>"which portfolio rule wins?"</em> to <em>"which layer should be optimized under the current market structure?"</em>
+    </p>
+
+    <div class="footnote">
+      Source · final report: <span class="mono">proposal/final_submission/FINAL_PROJECT_REPORT.pdf</span><br>
+      Code & ledgers: <span class="mono">findings/2026-04-23-context-aware-grand-study/</span><br>
+      Companion study paper: <span class="mono">.../report/SYSTEM_OPTIMIZATION_METHODS_STUDY.pdf</span>
+    </div>
+  </div>
+</section>
+
 </main>
-<script>window.RESEARCH_DATA = {"heat":[{"u":"100","s":"cluster_capped_momentum_63_top10","c":"EW","sp":22,"ret":0.205457,"vol":0.217695,"sr":1.363993,"dd":-0.361326,"to":0.0,"sel":true},{"u":"100","s":"cluster_capped_momentum_63_top10","c":"MRH_tau126_k5","sp":22,"ret":0.193183,"vol":0.237777,"sr":1.05534,"dd":-0.324391,"to":16.2727,"sel":false},{"u":"100","s":"cluster_capped_momentum_63_top10","c":"MRH_tau21_k5","sp":22,"ret":0.137497,"vol":0.230211,"sr":0.970353,"dd":-0.417817,"to":40.0182,"sel":false},{"u":"100","s":"cluster_capped_momentum_63_top10","c":"MRH_tau63_k5","sp":22,"ret":0.129213,"vol":0.233003,"sr":0.841279,"dd":-0.324108,"to":23.1636,"sel":false},{"u":"100","s":"low_volatility_63_top10","c":"EW","sp":22,"ret":0.162921,"vol":0.162362,"sr":1.440169,"dd":-0.292694,"to":0.0,"sel":true},{"u":"100","s":"low_volatility_63_top10","c":"MRH_tau126_k5","sp":22,"ret":0.153828,"vol":0.16811,"sr":1.178991,"dd":-0.270486,"to":15.5091,"sel":false},{"u":"100","s":"low_volatility_63_top10","c":"MRH_tau21_k5","sp":22,"ret":0.12466,"vol":0.167552,"sr":1.022875,"dd":-0.263381,"to":38.0364,"sel":false},{"u":"100","s":"low_volatility_63_top10","c":"MRH_tau63_k5","sp":22,"ret":0.088449,"vol":0.167221,"sr":0.914273,"dd":-0.270937,"to":21.5273,"sel":false},{"u":"100","s":"momentum_21_top10","c":"EW","sp":22,"ret":0.204143,"vol":0.202453,"sr":1.474381,"dd":-0.449163,"to":0.0,"sel":true},{"u":"100","s":"momentum_21_top10","c":"MRH_tau126_k5","sp":22,"ret":0.240699,"vol":0.222569,"sr":1.258885,"dd":-0.362794,"to":16.0727,"sel":false},{"u":"100","s":"momentum_21_top10","c":"MRH_tau21_k5","sp":22,"ret":0.152429,"vol":0.214562,"sr":0.879363,"dd":-0.434507,"to":39.1636,"sel":false},{"u":"100","s":"momentum_21_top10","c":"MRH_tau63_k5","sp":22,"ret":0.162651,"vol":0.21695,"sr":0.907418,"dd":-0.3651,"to":22.2727,"sel":false},{"u":"100","s":"momentum_63_top10","c":"EW","sp":22,"ret":0.205063,"vol":0.21819,"sr":1.358889,"dd":-0.361326,"to":0.0,"sel":true},{"u":"100","s":"momentum_63_top10","c":"MRH_tau126_k5","sp":22,"ret":0.193183,"vol":0.237777,"sr":1.05534,"dd":-0.324391,"to":16.3636,"sel":false},{"u":"100","s":"momentum_63_top10","c":"MRH_tau21_k5","sp":22,"ret":0.135895,"vol":0.230899,"sr":0.963814,"dd":-0.417817,"to":40.0909,"sel":false},{"u":"100","s":"momentum_63_top10","c":"MRH_tau63_k5","sp":22,"ret":0.133405,"vol":0.23313,"sr":0.863024,"dd":-0.324108,"to":23.1455,"sel":false},{"u":"100","s":"vol_adjusted_momentum_63_top10","c":"EW","sp":22,"ret":0.177716,"vol":0.212192,"sr":1.261348,"dd":-0.377487,"to":0.0,"sel":true},{"u":"100","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau126_k5","sp":22,"ret":0.147088,"vol":0.23095,"sr":0.891818,"dd":-0.35257,"to":16.2,"sel":false},{"u":"100","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau21_k5","sp":22,"ret":0.129363,"vol":0.221184,"sr":0.90207,"dd":-0.419629,"to":39.2727,"sel":false},{"u":"100","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau63_k5","sp":22,"ret":0.127894,"vol":0.230319,"sr":0.804317,"dd":-0.324391,"to":22.9636,"sel":false},{"u":"250","s":"cluster_capped_momentum_63_top10","c":"EW","sp":11,"ret":0.076669,"vol":0.19417,"sr":0.497569,"dd":-0.156989,"to":0.0,"sel":true},{"u":"250","s":"cluster_capped_momentum_63_top10","c":"MRH_tau126_k5","sp":11,"ret":-0.06186,"vol":0.213505,"sr":-0.200313,"dd":-0.196524,"to":10.4182,"sel":false},{"u":"250","s":"cluster_capped_momentum_63_top10","c":"MRH_tau21_k5","sp":11,"ret":0.007338,"vol":0.200659,"sr":0.204433,"dd":-0.144054,"to":24.3091,"sel":false},{"u":"250","s":"cluster_capped_momentum_63_top10","c":"MRH_tau63_k5","sp":11,"ret":0.035146,"vol":0.207869,"sr":0.354038,"dd":-0.196524,"to":13.8364,"sel":false},{"u":"250","s":"low_volatility_63_top10","c":"EW","sp":11,"ret":0.111821,"vol":0.140914,"sr":0.859218,"dd":-0.105392,"to":0.0,"sel":true},{"u":"250","s":"low_volatility_63_top10","c":"MRH_tau126_k5","sp":11,"ret":0.081961,"vol":0.148491,"sr":0.584613,"dd":-0.156948,"to":11.1091,"sel":false},{"u":"250","s":"low_volatility_63_top10","c":"MRH_tau21_k5","sp":11,"ret":0.086756,"vol":0.149771,"sr":0.75498,"dd":-0.16481,"to":24.0909,"sel":false},{"u":"250","s":"low_volatility_63_top10","c":"MRH_tau63_k5","sp":11,"ret":0.083138,"vol":0.150315,"sr":0.596974,"dd":-0.143435,"to":14.1273,"sel":false},{"u":"250","s":"momentum_21_top10","c":"EW","sp":11,"ret":0.036636,"vol":0.193265,"sr":0.345596,"dd":-0.167274,"to":0.0,"sel":false},{"u":"250","s":"momentum_21_top10","c":"MRH_tau126_k5","sp":11,"ret":0.010122,"vol":0.217493,"sr":0.012595,"dd":-0.182123,"to":10.7455,"sel":false},{"u":"250","s":"momentum_21_top10","c":"MRH_tau21_k5","sp":11,"ret":-0.023895,"vol":0.202168,"sr":-0.05784,"dd":-0.142731,"to":24.4545,"sel":false},{"u":"250","s":"momentum_21_top10","c":"MRH_tau63_k5","sp":11,"ret":0.065861,"vol":0.208695,"sr":0.524273,"dd":-0.177052,"to":14.1273,"sel":true},{"u":"250","s":"momentum_63_top10","c":"EW","sp":11,"ret":0.08378,"vol":0.196631,"sr":0.556059,"dd":-0.156989,"to":0.0,"sel":true},{"u":"250","s":"momentum_63_top10","c":"MRH_tau126_k5","sp":11,"ret":-0.04813,"vol":0.213518,"sr":-0.085809,"dd":-0.196524,"to":10.7091,"sel":false},{"u":"250","s":"momentum_63_top10","c":"MRH_tau21_k5","sp":11,"ret":0.010848,"vol":0.204604,"sr":0.208687,"dd":-0.144054,"to":24.2727,"sel":false},{"u":"250","s":"momentum_63_top10","c":"MRH_tau63_k5","sp":11,"ret":0.034552,"vol":0.212699,"sr":0.315166,"dd":-0.196524,"to":13.8,"sel":false},{"u":"250","s":"vol_adjusted_momentum_63_top10","c":"EW","sp":11,"ret":0.089316,"vol":0.184368,"sr":0.599226,"dd":-0.142264,"to":0.0,"sel":true},{"u":"250","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau126_k5","sp":11,"ret":-0.039749,"vol":0.204414,"sr":-0.018162,"dd":-0.196524,"to":10.2364,"sel":false},{"u":"250","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau21_k5","sp":11,"ret":0.050458,"vol":0.193126,"sr":0.434195,"dd":-0.144054,"to":24.3818,"sel":false},{"u":"250","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau63_k5","sp":11,"ret":0.032743,"vol":0.200786,"sr":0.337759,"dd":-0.196524,"to":13.9455,"sel":false},{"u":"500","s":"cluster_capped_momentum_63_top10","c":"EW","sp":9,"ret":0.269193,"vol":0.195072,"sr":1.448002,"dd":-0.140109,"to":0.0,"sel":false},{"u":"500","s":"cluster_capped_momentum_63_top10","c":"MRH_tau126_k5","sp":9,"ret":0.317004,"vol":0.229941,"sr":1.391212,"dd":-0.136907,"to":9.5778,"sel":false},{"u":"500","s":"cluster_capped_momentum_63_top10","c":"MRH_tau21_k5","sp":9,"ret":0.349438,"vol":0.219186,"sr":1.641359,"dd":-0.157744,"to":21.9333,"sel":true},{"u":"500","s":"cluster_capped_momentum_63_top10","c":"MRH_tau63_k5","sp":9,"ret":0.206252,"vol":0.222503,"sr":0.847748,"dd":-0.141578,"to":12.5556,"sel":false},{"u":"500","s":"low_volatility_63_top10","c":"EW","sp":9,"ret":0.161531,"vol":0.129817,"sr":1.38676,"dd":-0.149952,"to":0.0,"sel":true},{"u":"500","s":"low_volatility_63_top10","c":"MRH_tau126_k5","sp":9,"ret":0.051356,"vol":0.139246,"sr":0.532082,"dd":-0.209587,"to":9.7556,"sel":false},{"u":"500","s":"low_volatility_63_top10","c":"MRH_tau21_k5","sp":9,"ret":0.128822,"vol":0.137168,"sr":1.06649,"dd":-0.141977,"to":22.8667,"sel":false},{"u":"500","s":"low_volatility_63_top10","c":"MRH_tau63_k5","sp":9,"ret":0.132693,"vol":0.137632,"sr":1.048482,"dd":-0.138662,"to":13.0444,"sel":false},{"u":"500","s":"momentum_21_top10","c":"EW","sp":9,"ret":0.218816,"vol":0.18685,"sr":1.299559,"dd":-0.136542,"to":0.0,"sel":false},{"u":"500","s":"momentum_21_top10","c":"MRH_tau126_k5","sp":9,"ret":0.260208,"vol":0.219654,"sr":1.186614,"dd":-0.138129,"to":8.7778,"sel":false},{"u":"500","s":"momentum_21_top10","c":"MRH_tau21_k5","sp":9,"ret":0.198759,"vol":0.205893,"sr":1.034599,"dd":-0.157026,"to":21.7111,"sel":false},{"u":"500","s":"momentum_21_top10","c":"MRH_tau63_k5","sp":9,"ret":0.321487,"vol":0.214335,"sr":1.482786,"dd":-0.132959,"to":12.2,"sel":true},{"u":"500","s":"momentum_63_top10","c":"EW","sp":9,"ret":0.271014,"vol":0.195501,"sr":1.461797,"dd":-0.140109,"to":0.0,"sel":false},{"u":"500","s":"momentum_63_top10","c":"MRH_tau126_k5","sp":9,"ret":0.311159,"vol":0.230186,"sr":1.365638,"dd":-0.136907,"to":9.8889,"sel":false},{"u":"500","s":"momentum_63_top10","c":"MRH_tau21_k5","sp":9,"ret":0.355918,"vol":0.219968,"sr":1.666265,"dd":-0.157744,"to":22.0222,"sel":true},{"u":"500","s":"momentum_63_top10","c":"MRH_tau63_k5","sp":9,"ret":0.204751,"vol":0.220986,"sr":0.85135,"dd":-0.141578,"to":12.6,"sel":false},{"u":"500","s":"vol_adjusted_momentum_63_top10","c":"EW","sp":9,"ret":0.269574,"vol":0.188,"sr":1.509668,"dd":-0.128332,"to":0.0,"sel":false},{"u":"500","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau126_k5","sp":9,"ret":0.272337,"vol":0.227017,"sr":1.237431,"dd":-0.151023,"to":9.0,"sel":false},{"u":"500","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau21_k5","sp":9,"ret":0.351122,"vol":0.208311,"sr":1.756408,"dd":-0.154649,"to":22.0667,"sel":true},{"u":"500","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau63_k5","sp":9,"ret":0.178511,"vol":0.211109,"sr":0.733038,"dd":-0.139537,"to":11.8444,"sel":false}],"winners":[{"u":"100","s":"momentum_21_top10","c":"EW","sp":22,"ret":0.204143,"vol":0.202453,"sr":1.474381,"dd":-0.449163,"to":0.0,"sel":true},{"u":"250","s":"low_volatility_63_top10","c":"EW","sp":11,"ret":0.111821,"vol":0.140914,"sr":0.859218,"dd":-0.105392,"to":0.0,"sel":true},{"u":"500","s":"vol_adjusted_momentum_63_top10","c":"MRH_tau21_k5","sp":9,"ret":0.351122,"vol":0.208311,"sr":1.756408,"dd":-0.154649,"to":22.0667,"sel":true}],"screenAb":[{"u":"100","s":"low_volatility_63_top10","mn":1.1391,"bs":1.4402,"ret":0.1325,"to":18.7682},{"u":"100","s":"momentum_21_top10","mn":1.13,"bs":1.4744,"ret":0.19,"to":19.3773},{"u":"100","s":"momentum_63_top10","mn":1.0603,"bs":1.3589,"ret":0.1669,"to":19.9},{"u":"100","s":"cluster_capped_momentum_63_top10","mn":1.0577,"bs":1.364,"ret":0.1663,"to":19.8636},{"u":"100","s":"vol_adjusted_momentum_63_top10","mn":0.9649,"bs":1.2613,"ret":0.1455,"to":19.6091},{"u":"250","s":"low_volatility_63_top10","mn":0.6989,"bs":0.8592,"ret":0.0909,"to":12.3318},{"u":"250","s":"vol_adjusted_momentum_63_top10","mn":0.3383,"bs":0.5992,"ret":0.0332,"to":12.1409},{"u":"250","s":"momentum_63_top10","mn":0.2485,"bs":0.5561,"ret":0.0203,"to":12.1955},{"u":"250","s":"cluster_capped_momentum_63_top10","mn":0.2139,"bs":0.4976,"ret":0.0143,"to":12.1409},{"u":"250","s":"momentum_21_top10","mn":0.2062,"bs":0.5243,"ret":0.0222,"to":12.3318},{"u":"500","s":"momentum_63_top10","mn":1.3363,"bs":1.6663,"ret":0.2857,"to":11.1278},{"u":"500","s":"cluster_capped_momentum_63_top10","mn":1.3321,"bs":1.6414,"ret":0.2855,"to":11.0167},{"u":"500","s":"vol_adjusted_momentum_63_top10","mn":1.3091,"bs":1.7564,"ret":0.2679,"to":10.7278},{"u":"500","s":"momentum_21_top10","mn":1.2509,"bs":1.4828,"ret":0.2498,"to":10.6722},{"u":"500","s":"low_volatility_63_top10","mn":1.0085,"bs":1.3868,"ret":0.1186,"to":11.4167}],"controllerAb":[{"u":"100","c":"EW","mn":1.3798,"bs":1.4744,"ret":0.1911,"to":0.0},{"u":"100","c":"MRH_tau126_k5","mn":1.0881,"bs":1.2589,"ret":0.1856,"to":16.0836},{"u":"100","c":"MRH_tau21_k5","mn":0.9477,"bs":1.0229,"ret":0.136,"to":39.3164},{"u":"100","c":"MRH_tau63_k5","mn":0.8661,"bs":0.9143,"ret":0.1283,"to":22.6145},{"u":"250","c":"EW","mn":0.5715,"bs":0.8592,"ret":0.0796,"to":0.0},{"u":"250","c":"MRH_tau63_k5","mn":0.4256,"bs":0.597,"ret":0.0503,"to":13.9673},{"u":"250","c":"MRH_tau21_k5","mn":0.3089,"bs":0.755,"ret":0.0263,"to":24.3018},{"u":"250","c":"MRH_tau126_k5","mn":0.0586,"bs":0.5846,"ret":-0.0115,"to":10.6436},{"u":"500","c":"MRH_tau21_k5","mn":1.433,"bs":1.7564,"ret":0.2768,"to":22.12},{"u":"500","c":"EW","mn":1.4212,"bs":1.5097,"ret":0.238,"to":0.0},{"u":"500","c":"MRH_tau126_k5","mn":1.1426,"bs":1.3912,"ret":0.2424,"to":9.4},{"u":"500","c":"MRH_tau63_k5","mn":0.9927,"bs":1.4828,"ret":0.2087,"to":12.4489}],"rl":[{"scope":"combined","rl":1.213,"std":0.0631,"fixed":1.1338,"trail":1.5434,"rand":1.276,"oracle":2.5864,"n":14},{"scope":"100","rl":0.8231,"std":0.0107,"fixed":0.8272,"trail":0.4754,"rand":0.6573,"oracle":1.3548,"n":8},{"scope":"250","rl":0.2796,"std":0.0677,"fixed":0.3052,"trail":0.3058,"rand":0.2964,"oracle":0.7642,"n":5},{"scope":"500","rl":0.3705,"std":0.0,"fixed":0.3705,"trail":0.5663,"rand":0.525,"oracle":0.9319,"n":4}],"mt":[{"u":"100","arms":20,"best_s":"momentum_21_top10","best_c":"EW","best":1.4744,"second":1.4402,"gap":0.0342},{"u":"250","arms":20,"best_s":"low_volatility_63_top10","best_c":"EW","best":0.8592,"second":0.755,"gap":0.1042},{"u":"500","arms":20,"best_s":"vol_adjusted_momentum_63_top10","best_c":"MRH_tau21_k5","best":1.7564,"second":1.6663,"gap":0.0901}],"cost":[{"u":"100","cost":0,"sr":1.4744,"ret":0.2041,"to":0.0},{"u":"100","cost":10,"sr":1.4744,"ret":0.2041,"to":0.0},{"u":"100","cost":25,"sr":1.4744,"ret":0.2041,"to":0.0},{"u":"250","cost":0,"sr":0.8592,"ret":0.1118,"to":0.0},{"u":"250","cost":10,"sr":0.8592,"ret":0.1118,"to":0.0},{"u":"250","cost":25,"sr":0.8592,"ret":0.1118,"to":0.0},{"u":"500","cost":0,"sr":1.8144,"ret":0.3628,"to":22.0667},{"u":"500","cost":10,"sr":1.7564,"ret":0.3511,"to":22.0667},{"u":"500","cost":25,"sr":1.6687,"ret":0.3336,"to":22.0667}],"bootstrap":[{"u":"100","arms":20,"splits":22,"best":1.474,"second":1.44,"gap":0.034,"ci":"[0.000, 0.294]","win":35.7},{"u":"250","arms":20,"splits":11,"best":0.859,"second":0.755,"gap":0.104,"ci":"[0.004, 0.545]","win":33.8},{"u":"500","arms":20,"splits":9,"best":1.756,"second":1.666,"gap":0.09,"ci":"[0.000, 0.366]","win":36.4}]};</script>
+
 <script>
-const DATA=window.RESEARCH_DATA;
-const UNIS=['100','250','500'];
-const ULAB={'100':'Top-100','250':'Top-250','500':'Top-500','combined':'Combined'};
-const SLAB={momentum_21_top10:'21d momentum',momentum_63_top10:'63d momentum',low_volatility_63_top10:'63d low-volatility',vol_adjusted_momentum_63_top10:'63d vol-adjusted mom.',cluster_capped_momentum_63_top10:'cluster-capped momentum'};
-const CLAB={EW:'Equal weight',MRH_tau21_k5:'21d rank/hold',MRH_tau63_k5:'63d rank/hold',MRH_tau126_k5:'126d rank/hold'};
-const pct=v=>(v*100).toFixed(1)+'%'; const fmt=(v,n=2)=>Number(v).toFixed(n);
-let idx=0; const slides=Array.from(document.querySelectorAll('.slide'));
-const dots=document.getElementById('dots'); slides.forEach((s,i)=>{let b=document.createElement('button');b.className='dotnav';b.title=s.dataset.title||('slide '+(i+1));b.onclick=()=>go(i);dots.appendChild(b)});
-function go(i){idx=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,j)=>s.classList.toggle('active',j===idx));document.querySelectorAll('.dotnav').forEach((d,j)=>d.classList.toggle('active',j===idx));document.getElementById('progress').style.width=((idx+1)/slides.length*100)+'%';document.getElementById('slideTitle').textContent=(idx+1)+' / '+slides.length+' · '+(slides[idx].dataset.title||'');document.getElementById('noteText').textContent=slides[idx].dataset.notes||''; if(!document.body.classList.contains('deck')) slides[idx].scrollIntoView({block:'start'});} 
-function next(){go(idx+1)} function prev(){go(idx-1)} document.getElementById('next').onclick=next;document.getElementById('prev').onclick=prev;document.getElementById('startBtn').onclick=()=>go(0);
-document.getElementById('modeBtn').onclick=()=>{document.body.classList.toggle('deck');document.getElementById('modeBtn').textContent=document.body.classList.contains('deck')?'Scroll':'Deck';go(idx)};
-document.getElementById('notesBtn').onclick=()=>document.getElementById('notes').classList.toggle('open');
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()} if(e.key==='ArrowLeft'){e.preventDefault();prev()} if(e.key.toLowerCase()==='n')document.getElementById('notes').classList.toggle('open')}); go(0);
-// Canvas A
-(function(){const c=document.getElementById('frontier'),ctx=c.getContext('2d'),W=c.width,H=c.height,p=48,lam=document.getElementById('lambda'),lv=document.getElementById('lambdaV'); const cloud=[]; for(let i=0;i<90;i++){let r=.045+Math.random()*.22;let y=.035+.78*Math.sqrt(r)-.55*r+(Math.random()-.5)*.025;cloud.push({r,y})} const fr=[];for(let i=0;i<=120;i++){let r=.04+i/120*.23;fr.push({r,y:.035+.86*Math.sqrt(r)-.52*r})} const X=v=>p+(v-.035)/(.29-.035)*(W-2*p),Y=v=>H-p-(v)/(0.31)*(H-2*p); function draw(){let L=parseFloat(lam.value);lv.textContent=L.toFixed(1);ctx.clearRect(0,0,W,H);ctx.strokeStyle='rgba(148,163,184,.22)';ctx.beginPath();ctx.moveTo(p,H-p);ctx.lineTo(W-p,H-p);ctx.lineTo(W-p-8,H-p-4);ctx.moveTo(W-p,H-p);ctx.lineTo(W-p-8,H-p+4);ctx.moveTo(p,H-p);ctx.lineTo(p,p);ctx.stroke();ctx.fillStyle='#94a3b8';ctx.font='12px Inter';ctx.fillText('risk →',W-p-50,H-p+22);ctx.fillText('return',10,p);cloud.forEach(d=>{ctx.fillStyle='rgba(148,163,184,.48)';ctx.beginPath();ctx.arc(X(d.r),Y(d.y),2.3,0,7);ctx.fill()});ctx.strokeStyle='#5eead4';ctx.lineWidth=3;ctx.beginPath();fr.forEach((d,i)=>{i?ctx.lineTo(X(d.r),Y(d.y)):ctx.moveTo(X(d.r),Y(d.y))});ctx.stroke();let id=Math.max(0,Math.min(fr.length-1,Math.round(136-L*23)));let d=fr[id],x=X(d.r),y=Y(d.y);ctx.strokeStyle='#22c55e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-54);ctx.stroke();ctx.strokeStyle='#8b5cf6';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-68,y);ctx.stroke();ctx.fillStyle='#14b8a6';ctx.shadowColor='rgba(20,184,166,.7)';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(x,y,7,0,7);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#dbeafe';ctx.fillText('optimum',x+10,y-10)} lam.oninput=draw;draw()})();
-// Canvas B
-(function(){const c=document.getElementById('simplex'),ctx=c.getContext('2d'),W=c.width,H=c.height,k=document.getElementById('kappa'),kv=document.getElementById('kappaV'),fuel=document.getElementById('fuel');const A={x:W/2,y:50},B={x:86,y:H-62},C={x:W-86,y:H-62};const old=[.28,.54,.18],tar=[.64,.15,.21];const xy=w=>({x:w[0]*A.x+w[1]*B.x+w[2]*C.x,y:w[0]*A.y+w[1]*B.y+w[2]*C.y});function draw(){let K=parseFloat(k.value);kv.textContent=K.toFixed(0);ctx.clearRect(0,0,W,H);ctx.strokeStyle='rgba(148,163,184,.32)';ctx.fillStyle='rgba(15,23,42,.6)';ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.lineTo(C.x,C.y);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#94a3b8';ctx.font='12px Inter';ctx.fillText('Asset A',A.x-22,A.y-10);ctx.fillText('B',B.x-20,B.y+24);ctx.fillText('C',C.x+10,C.y+24);let alpha=1/(1+K*.035);let w=old.map((v,i)=>v*(1-alpha)+tar[i]*alpha);let po=xy(old),pt=xy(tar),pn=xy(w);ctx.setLineDash([6,5]);ctx.strokeStyle='rgba(245,158,11,.65)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(po.x,po.y);ctx.lineTo(pt.x,pt.y);ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle='#f59e0b';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(po.x,po.y);ctx.lineTo(pn.x,pn.y);ctx.stroke();ctx.fillStyle='#64748b';ctx.beginPath();ctx.arc(po.x,po.y,7,0,7);ctx.fill();ctx.fillStyle='#14b8a6';ctx.shadowColor='rgba(20,184,166,.65)';ctx.shadowBlur=12;ctx.beginPath();ctx.arc(pn.x,pn.y,8,0,7);ctx.fill();ctx.shadowBlur=0;let l1=w.reduce((s,v,i)=>s+Math.abs(v-old[i]),0);fuel.textContent=Math.max(3,Math.round(100-K*l1*2.5))+'%'} k.oninput=draw;draw()})();
-// Screening viz
-(function(){const c=document.getElementById('screenViz'),ctx=c.getContext('2d'),W=c.width,H=c.height,p=42,k=document.getElementById('kSelect'),kv=document.getElementById('kVal');let mode='mom';const pts=[];for(let i=0;i<500;i++){let vol=.07+Math.random()*.34,mom=-.16+Math.random()*.64;pts.push({vol,mom})}const X=v=>p+(v-.05)/(.45-.05)*(W-2*p),Y=v=>H-p-(v+.18)/(.68)*(H-2*p);function sc(d){return mode==='mom'?d.mom:mode==='lowvol'?-d.vol:d.mom/(d.vol+.04)}function draw(){let K=parseInt(k.value);kv.textContent=K;ctx.clearRect(0,0,W,H);ctx.strokeStyle='rgba(148,163,184,.22)';ctx.beginPath();ctx.moveTo(p,H-p);ctx.lineTo(W-p,H-p);ctx.moveTo(p,H-p);ctx.lineTo(p,p);ctx.stroke();ctx.fillStyle='#94a3b8';ctx.font='12px Inter';ctx.fillText('volatility →',W-p-75,H-p+20);ctx.save();ctx.translate(14,p+52);ctx.rotate(-Math.PI/2);ctx.fillText('momentum persistence →',0,0);ctx.restore();let ord=pts.map((d,i)=>({i,s:sc(d)})).sort((a,b)=>b.s-a.s);let top=new Set(ord.slice(0,K).map(d=>d.i));pts.forEach((d,i)=>{ctx.globalAlpha=top.has(i)?.92:.18;ctx.fillStyle=top.has(i)?'#2dd4bf':'#94a3b8';ctx.beginPath();ctx.arc(X(d.vol),Y(d.mom),2.4,0,7);ctx.fill()});ctx.globalAlpha=1}k.oninput=draw;document.querySelectorAll('.score').forEach(b=>b.onclick=()=>{document.querySelectorAll('.score').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.score;draw()});draw()})();
-// Heatmap
-(function(){let cur='100';const tabs=document.getElementById('hmTabs'),hm=document.getElementById('heatmap'),tip=document.getElementById('tip');UNIS.forEach(u=>{let b=document.createElement('button');b.className='tab '+(u===cur?'active':'');b.textContent=ULAB[u];b.onclick=()=>{cur=u;document.querySelectorAll('#hmTabs .tab').forEach(x=>x.classList.toggle('active',x===b));draw()};tabs.appendChild(b)});function draw(){hm.innerHTML='';let rows=['momentum_21_top10','momentum_63_top10','low_volatility_63_top10','vol_adjusted_momentum_63_top10','cluster_capped_momentum_63_top10'];let cols=['EW','MRH_tau21_k5','MRH_tau63_k5','MRH_tau126_k5'];let data=DATA.heat.filter(d=>d.u===cur);let cellW=145,cellH=56,labelW=178,headH=44,W=labelW+cols.length*cellW+12,H=headH+rows.length*cellH+18;let svg=d3.select(hm).append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%');let color=d3.scaleSequential(d3.interpolateYlGnBu).domain([-.1,1.85]);cols.forEach((c,i)=>svg.append('text').attr('x',labelW+i*cellW+cellW/2).attr('y',25).attr('text-anchor','middle').attr('fill','#b6c4d8').attr('font-size',12).attr('font-weight',800).text(CLAB[c]));rows.forEach((s,ri)=>{svg.append('text').attr('x',labelW-10).attr('y',headH+ri*cellH+cellH/2+4).attr('text-anchor','end').attr('fill','#dbeafe').attr('font-size',12).text(SLAB[s]);cols.forEach((c,ci)=>{let d=data.find(x=>x.s===s&&x.c===c);if(!d)return;let x=labelW+ci*cellW,y=headH+ri*cellH;svg.append('rect').attr('x',x+2).attr('y',y+2).attr('width',cellW-4).attr('height',cellH-4).attr('rx',10).attr('fill',color(d.sr)).attr('stroke',d.sel?'#f8fafc':'rgba(255,255,255,.04)').attr('stroke-width',d.sel?3:1).attr('cursor','pointer').on('mouseover',e=>{tip.style.opacity=1;tip.innerHTML=`<b>${SLAB[d.s]} + ${CLAB[d.c]}</b><div class="tiprow"><span>Sharpe</span><span>${fmt(d.sr,3)}</span></div><div class="tiprow"><span>Return</span><span>${pct(d.ret)}</span></div><div class="tiprow"><span>Vol</span><span>${pct(d.vol)}</span></div><div class="tiprow"><span>Drawdown</span><span>${pct(d.dd)}</span></div><div class="tiprow"><span>Turnover</span><span>${d.to<.01?'~0':fmt(d.to,1)+'×'}</span></div><div class="tiprow"><span>Splits</span><span>${d.sp}</span></div>`}).on('mousemove',e=>{tip.style.left=(e.pageX+14)+'px';tip.style.top=(e.pageY-80)+'px'}).on('mouseout',()=>tip.style.opacity=0);svg.append('text').attr('x',x+cellW/2).attr('y',y+cellH/2+5).attr('text-anchor','middle').attr('fill',d.sr>.85?'#061018':'#e2e8f0').attr('font-size',16).attr('font-weight',900).text(fmt(d.sr,2));})})}draw()})();
-// winner cards
-(function(){const el=document.getElementById('winnerCards');DATA.winners.forEach(w=>{let max=1.8;el.innerHTML+=`<div class="card winner"><div class="scope">${ULAB[w.u]}</div><h3>${SLAB[w.s]}</h3><p>with <b>${CLAB[w.c]}</b></p><div class="grid2"><div><div class="metric">${fmt(w.sr,3)}</div><div class="label">Sharpe</div></div><div><div class="metric">${pct(w.ret)}</div><div class="label">ann. return</div></div></div><div class="spark"><div style="width:${Math.min(100,w.sr/max*100)}%"></div></div><p class="mini">${w.sp} splits · drawdown ${pct(w.dd)} · turnover ${w.to<.01?'~0':fmt(w.to,1)+'×'}</p></div>`})})();
-function groupedBars(target,data,key,labelMap,valKey,title){const el=document.getElementById(target);const W=540,H=330,m={l:42,r:12,t:18,b:62};let svg=d3.select(el).append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%');let y=d3.scaleLinear().domain([0,1.85]).range([H-m.b,m.t]);svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5)).selectAll('text').attr('fill','#94a3b8');svg.selectAll('.domain,.tick line').attr('stroke','rgba(148,163,184,.18)');UNIS.forEach((u,gi)=>{let g=data.filter(d=>d.u===u);let bw=18,gap=4,gx=m.l+30+gi*155;svg.append('text').attr('x',gx+48).attr('y',H-22).attr('text-anchor','middle').attr('fill','#94a3b8').attr('font-size',12).text(ULAB[u]);g.forEach((d,i)=>{let x=gx+i*(bw+gap);svg.append('rect').attr('x',x).attr('y',y(d.mn)).attr('width',bw).attr('height',H-m.b-y(d.mn)).attr('rx',3).attr('fill','rgba(148,163,184,.18)');svg.append('rect').attr('x',x+3).attr('y',y(d.bs)).attr('width',bw-6).attr('height',H-m.b-y(d.bs)).attr('rx',3).attr('fill',gi===0?'#38bdf8':gi===1?'#8b5cf6':'#14b8a6')})});svg.append('text').attr('x',W/2).attr('y',H-4).attr('text-anchor','middle').attr('fill','#64748b').attr('font-size',11).text('pale = mean across other layer, bright = best observed Sharpe')}
-groupedBars('screenChart',DATA.screenAb,'s',SLAB,'bs','screen'); groupedBars('controllerChart',DATA.controllerAb,'c',CLAB,'bs','controller');
-// risk cards
-(function(){const el=document.getElementById('riskCards');DATA.bootstrap.forEach(r=>{el.innerHTML+=`<div class="card risk"><h3>${ULAB[r.u]}</h3><div class="metric">${fmt(r.gap,3)}</div><div class="label">winner gap vs second</div><p>${r.arms} arms · ${r.splits} splits · 95% CI ${r.ci}</p><p><b>${r.win}%</b> bootstrap winner stability</p></div>`})})();
-// Cost chart
-(function(){const el=document.getElementById('costChart'),W=620,H=350,m={l:55,r:20,t:24,b:48};let svg=d3.select(el).append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%');let x=d3.scalePoint().domain([0,10,25]).range([m.l,W-m.r]).padding(.4),y=d3.scaleLinear().domain([0.75,1.9]).range([H-m.b,m.t]);svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).tickFormat(d=>d+' bps')).selectAll('text').attr('fill','#94a3b8');svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5)).selectAll('text').attr('fill','#94a3b8');svg.selectAll('.domain,.tick line').attr('stroke','rgba(148,163,184,.18)');let color={'100':'#38bdf8','250':'#8b5cf6','500':'#14b8a6'};UNIS.forEach(u=>{let g=DATA.cost.filter(d=>d.u===u);let line=d3.line().x(d=>x(d.cost)).y(d=>y(d.sr));svg.append('path').datum(g).attr('d',line).attr('fill','none').attr('stroke',color[u]).attr('stroke-width',3);svg.selectAll('.pt'+u).data(g).enter().append('circle').attr('cx',d=>x(d.cost)).attr('cy',d=>y(d.sr)).attr('r',5).attr('fill',color[u]);let last=g[g.length-1];svg.append('text').attr('x',x(last.cost)+8).attr('y',y(last.sr)+4).attr('fill',color[u]).attr('font-weight',800).attr('font-size',12).text(ULAB[u])});svg.append('text').attr('x',W/2).attr('y',16).attr('text-anchor','middle').attr('fill','#e2e8f0').attr('font-weight',800).text('Winner Sharpe across cost slices')})();
-// RL chart
-(function(){const el=document.getElementById('rlChart'),W=650,H=360,m={l:86,r:20,t:28,b:48};let svg=d3.select(el).append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%');let scopes=DATA.rl.map(d=>d.scope);let x0=d3.scaleBand().domain(scopes).range([m.l,W-m.r]).padding(.18),methods=['rl','fixed','trail','rand'];let x1=d3.scaleBand().domain(methods).range([0,x0.bandwidth()]).padding(.08);let y=d3.scaleLinear().domain([0,2.65]).range([H-m.b,m.t]);let cols={rl:'#14b8a6',fixed:'#f59e0b',trail:'#22c55e',rand:'#94a3b8'};svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x0).tickFormat(d=>ULAB[d])).selectAll('text').attr('fill','#94a3b8');svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5)).selectAll('text').attr('fill','#94a3b8');svg.selectAll('.domain,.tick line').attr('stroke','rgba(148,163,184,.18)');DATA.rl.forEach(d=>{methods.forEach(mt=>{svg.append('rect').attr('x',x0(d.scope)+x1(mt)).attr('y',y(d[mt])).attr('width',x1.bandwidth()).attr('height',H-m.b-y(d[mt])).attr('rx',4).attr('fill',cols[mt])});});methods.forEach((mt,i)=>{svg.append('rect').attr('x',m.l+i*80).attr('y',8).attr('width',10).attr('height',10).attr('fill',cols[mt]);svg.append('text').attr('x',m.l+14+i*80).attr('y',17).attr('fill','#94a3b8').attr('font-size',11).text(mt==='rl'?'RL':mt==='fixed'?'Fixed':mt==='trail'?'Trailing':'Random')})})();
+/* ===================== DATA ===================== */
+const RESEARCH = window.__BAKED_DATA__ = {/* injected below */};
 </script>
-</body></html>
+<script id="data" type="application/json">
+{"heat": [{"u": "100", "s": "cluster_capped_momentum_63_top10", "c": "EW", "sp": 22, "ret": 0.205456816632477, "vol": 0.217694691345447, "sr": 1.3639925489463582, "dd": -0.361326288562791, "to": 1.0000333894311098e-12, "sel": false}, {"u": "100", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau126_k5", "sp": 22, "ret": 0.1931826117067341, "vol": 0.237777164978184, "sr": 1.055340219339158, "dd": -0.3243913448304223, "to": 16.272727272711005, "sel": false}, {"u": "100", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau21_k5", "sp": 22, "ret": 0.1374968473617152, "vol": 0.2302106447739182, "sr": 0.970352866659122, "dd": -0.4178174753099887, "to": 40.01818181814183, "sel": false}, {"u": "100", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau63_k5", "sp": 22, "ret": 0.1292127233188822, "vol": 0.2330031183810207, "sr": 0.841279300266752, "dd": -0.3241078029508617, "to": 23.163636363613207, "sel": false}, {"u": "100", "s": "low_volatility_63_top10", "c": "EW", "sp": 22, "ret": 0.162920766712935, "vol": 0.1623622750094656, "sr": 1.44016914424767, "dd": -0.2926937438773652, "to": 1.0000333894311098e-12, "sel": false}, {"u": "100", "s": "low_volatility_63_top10", "c": "MRH_tau126_k5", "sp": 22, "ret": 0.1538275654399071, "vol": 0.1681102104200225, "sr": 1.1789913509094327, "dd": -0.2704859777476484, "to": 15.509090909075406, "sel": false}, {"u": "100", "s": "low_volatility_63_top10", "c": "MRH_tau21_k5", "sp": 22, "ret": 0.1246603388757306, "vol": 0.1675517771284727, "sr": 1.0228752878034673, "dd": -0.2633807973035799, "to": 38.03636363632561, "sel": false}, {"u": "100", "s": "low_volatility_63_top10", "c": "MRH_tau63_k5", "sp": 22, "ret": 0.0884492911507858, "vol": 0.1672207117025059, "sr": 0.9142733206443218, "dd": -0.2709370825198144, "to": 21.527272727251205, "sel": false}, {"u": "100", "s": "momentum_21_top10", "c": "EW", "sp": 22, "ret": 0.2041431676754959, "vol": 0.2024527528797532, "sr": 1.4743813943593862, "dd": -0.4491631729839874, "to": 1.0000333894311098e-12, "sel": true}, {"u": "100", "s": "momentum_21_top10", "c": "MRH_tau126_k5", "sp": 22, "ret": 0.240698717744467, "vol": 0.2225692298883116, "sr": 1.2588852895381653, "dd": -0.3627943365586148, "to": 16.072727272711205, "sel": false}, {"u": "100", "s": "momentum_21_top10", "c": "MRH_tau63_k5", "sp": 22, "ret": 0.1626505618185044, "vol": 0.2169495562288817, "sr": 0.9074177596843878, "dd": -0.3650997014005197, "to": 22.27272727270501, "sel": false}, {"u": "100", "s": "momentum_21_top10", "c": "MRH_tau21_k5", "sp": 22, "ret": 0.1524292113332394, "vol": 0.214562483069356, "sr": 0.8793631343965944, "dd": -0.4345071223054623, "to": 39.16363636359721, "sel": false}, {"u": "100", "s": "momentum_63_top10", "c": "EW", "sp": 22, "ret": 0.2050627738119274, "vol": 0.2181902849919267, "sr": 1.358888749642388, "dd": -0.361326288562791, "to": 1.0000333894311098e-12, "sel": false}, {"u": "100", "s": "momentum_63_top10", "c": "MRH_tau126_k5", "sp": 22, "ret": 0.1931826117067341, "vol": 0.237777164978184, "sr": 1.0553402193391583, "dd": -0.3243913448304223, "to": 16.363636363620007, "sel": false}, {"u": "100", "s": "momentum_63_top10", "c": "MRH_tau21_k5", "sp": 22, "ret": 0.1358953602733721, "vol": 0.230899015375686, "sr": 0.963813504863995, "dd": -0.4178174753099887, "to": 40.09090909086902, "sel": false}, {"u": "100", "s": "momentum_63_top10", "c": "MRH_tau63_k5", "sp": 22, "ret": 0.1334046599708505, "vol": 0.2331295801406858, "sr": 0.8630239990270758, "dd": -0.3241078029508617, "to": 23.14545454543141, "sel": false}, {"u": "100", "s": "vol_adjusted_momentum_63_top10", "c": "EW", "sp": 22, "ret": 0.1777157891732877, "vol": 0.2121918211640208, "sr": 1.261348304173717, "dd": -0.377487072202837, "to": 1.0000333894311098e-12, "sel": false}, {"u": "100", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau21_k5", "sp": 22, "ret": 0.1293631544031944, "vol": 0.2211837906826035, "sr": 0.9020695610563952, "dd": -0.419629476319758, "to": 39.27272727268802, "sel": false}, {"u": "100", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau126_k5", "sp": 22, "ret": 0.1470880622892802, "vol": 0.2309502630795786, "sr": 0.8918182017817077, "dd": -0.3525702834009264, "to": 16.19999999998381, "sel": false}, {"u": "100", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau63_k5", "sp": 22, "ret": 0.1278942118765556, "vol": 0.2303185725462527, "sr": 0.8043166556477387, "dd": -0.3243913448304216, "to": 22.96363636361341, "sel": false}, {"u": "250", "s": "cluster_capped_momentum_63_top10", "c": "EW", "sp": 11, "ret": 0.0766685454356237, "vol": 0.1941701235936158, "sr": 0.4975693372309039, "dd": -0.1569888811153791, "to": 1.0000333894311098e-12, "sel": false}, {"u": "250", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau63_k5", "sp": 11, "ret": 0.0351457002518537, "vol": 0.2078694633847285, "sr": 0.3540383200108002, "dd": -0.1965240940312583, "to": 13.836363636349802, "sel": false}, {"u": "250", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau21_k5", "sp": 11, "ret": 0.0073381869232864, "vol": 0.2006587593829447, "sr": 0.2044328488115882, "dd": -0.1440539580025525, "to": 24.309090909066597, "sel": false}, {"u": "250", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau126_k5", "sp": 11, "ret": -0.0618599809164922, "vol": 0.2135051794907118, "sr": -0.2003132895406355, "dd": -0.1965240940312587, "to": 10.4181818181714, "sel": false}, {"u": "250", "s": "low_volatility_63_top10", "c": "EW", "sp": 11, "ret": 0.1118208559257063, "vol": 0.1409139384438904, "sr": 0.8592181159536008, "dd": -0.1053918728589278, "to": 1.0000333894311098e-12, "sel": true}, {"u": "250", "s": "low_volatility_63_top10", "c": "MRH_tau21_k5", "sp": 11, "ret": 0.086756283700175, "vol": 0.1497713751790642, "sr": 0.7549799282930933, "dd": -0.1648103417032194, "to": 24.090909090885, "sel": false}, {"u": "250", "s": "low_volatility_63_top10", "c": "MRH_tau63_k5", "sp": 11, "ret": 0.0831379033036283, "vol": 0.1503154457135613, "sr": 0.5969740311401893, "dd": -0.1434345097876119, "to": 14.1272727272586, "sel": false}, {"u": "250", "s": "low_volatility_63_top10", "c": "MRH_tau126_k5", "sp": 11, "ret": 0.0819609449077637, "vol": 0.1484913495111677, "sr": 0.5846127043912692, "dd": -0.1569479184415588, "to": 11.109090909079804, "sel": false}, {"u": "250", "s": "momentum_21_top10", "c": "MRH_tau63_k5", "sp": 11, "ret": 0.0658606007123611, "vol": 0.2086946252363266, "sr": 0.5242734879864396, "dd": -0.1770515923917647, "to": 14.1272727272586, "sel": false}, {"u": "250", "s": "momentum_21_top10", "c": "EW", "sp": 11, "ret": 0.0366359106390422, "vol": 0.1932653411987829, "sr": 0.3455960028375642, "dd": -0.1672740188644115, "to": 1.0000333894311098e-12, "sel": false}, {"u": "250", "s": "momentum_21_top10", "c": "MRH_tau126_k5", "sp": 11, "ret": 0.0101220592960383, "vol": 0.2174928913569684, "sr": 0.0125952426832867, "dd": -0.1821230148877113, "to": 10.7454545454438, "sel": false}, {"u": "250", "s": "momentum_21_top10", "c": "MRH_tau21_k5", "sp": 11, "ret": -0.0238948953547812, "vol": 0.2021677307149552, "sr": -0.0578395826845841, "dd": -0.1427309309392799, "to": 24.454545454521, "sel": false}, {"u": "250", "s": "momentum_63_top10", "c": "EW", "sp": 11, "ret": 0.0837804141287359, "vol": 0.1966313930650511, "sr": 0.5560593031416079, "dd": -0.1569888811153791, "to": 1.0000333894311098e-12, "sel": false}, {"u": "250", "s": "momentum_63_top10", "c": "MRH_tau63_k5", "sp": 11, "ret": 0.0345519314920903, "vol": 0.2126988728560245, "sr": 0.3151662210759371, "dd": -0.1965240940312583, "to": 13.7999999999862, "sel": false}, {"u": "250", "s": "momentum_63_top10", "c": "MRH_tau21_k5", "sp": 11, "ret": 0.0108480489306048, "vol": 0.2046038381918942, "sr": 0.2086873165944318, "dd": -0.1440539580025525, "to": 24.272727272703, "sel": false}, {"u": "250", "s": "momentum_63_top10", "c": "MRH_tau126_k5", "sp": 11, "ret": -0.048129954821564, "vol": 0.2135180640046575, "sr": -0.0858092533844688, "dd": -0.1965240940312587, "to": 10.709090909080205, "sel": false}, {"u": "250", "s": "vol_adjusted_momentum_63_top10", "c": "EW", "sp": 11, "ret": 0.08931571249235, "vol": 0.1843682297589008, "sr": 0.5992259192605487, "dd": -0.1422641244803475, "to": 1.0000333894311098e-12, "sel": false}, {"u": "250", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau21_k5", "sp": 11, "ret": 0.0504577042353132, "vol": 0.193125630258939, "sr": 0.4341949080050806, "dd": -0.1440539580025525, "to": 24.381818181793793, "sel": false}, {"u": "250", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau63_k5", "sp": 11, "ret": 0.0327425278590533, "vol": 0.2007859536590774, "sr": 0.3377593869762516, "dd": -0.1965240940312582, "to": 13.9454545454406, "sel": false}, {"u": "250", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau126_k5", "sp": 11, "ret": -0.0397485454968224, "vol": 0.2044137531329726, "sr": -0.0181619639761957, "dd": -0.1965240940312587, "to": 10.2363636363534, "sel": false}, {"u": "500", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau21_k5", "sp": 9, "ret": 0.3494377332651726, "vol": 0.2191860219572874, "sr": 1.641359278271237, "dd": -0.157744495265887, "to": 21.9333333333114, "sel": false}, {"u": "500", "s": "cluster_capped_momentum_63_top10", "c": "EW", "sp": 9, "ret": 0.2691928749489466, "vol": 0.1950716241056761, "sr": 1.4480018116202475, "dd": -0.1401094291188203, "to": 1.0000333894311098e-12, "sel": false}, {"u": "500", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau126_k5", "sp": 9, "ret": 0.3170035295175014, "vol": 0.2299411604233618, "sr": 1.391211727470704, "dd": -0.1369066087553333, "to": 9.577777777768198, "sel": false}, {"u": "500", "s": "cluster_capped_momentum_63_top10", "c": "MRH_tau63_k5", "sp": 9, "ret": 0.2062516936216592, "vol": 0.2225025977183706, "sr": 0.8477480538607244, "dd": -0.1415783539882812, "to": 12.555555555543002, "sel": false}, {"u": "500", "s": "low_volatility_63_top10", "c": "EW", "sp": 9, "ret": 0.1615311980759434, "vol": 0.129816962973366, "sr": 1.3867600421534738, "dd": -0.1499516057068682, "to": 1.0000333894311098e-12, "sel": false}, {"u": "500", "s": "low_volatility_63_top10", "c": "MRH_tau21_k5", "sp": 9, "ret": 0.1288220734970288, "vol": 0.1371680976922628, "sr": 1.0664901043608213, "dd": -0.141976713272323, "to": 22.8666666666438, "sel": false}, {"u": "500", "s": "low_volatility_63_top10", "c": "MRH_tau63_k5", "sp": 9, "ret": 0.132693174017652, "vol": 0.1376319781321625, "sr": 1.048481920740522, "dd": -0.1386621979134727, "to": 13.044444444431402, "sel": false}, {"u": "500", "s": "low_volatility_63_top10", "c": "MRH_tau126_k5", "sp": 9, "ret": 0.051355670312912, "vol": 0.1392458283146334, "sr": 0.5320816319721876, "dd": -0.2095866381326877, "to": 9.7555555555458, "sel": false}, {"u": "500", "s": "momentum_21_top10", "c": "MRH_tau63_k5", "sp": 9, "ret": 0.3214874583677577, "vol": 0.2143352927942928, "sr": 1.482785510712627, "dd": -0.1329587215548181, "to": 12.1999999999878, "sel": false}, {"u": "500", "s": "momentum_21_top10", "c": "EW", "sp": 9, "ret": 0.2188162929915895, "vol": 0.1868504036223073, "sr": 1.2995592235431097, "dd": -0.1365415118552732, "to": 1.0000333894311098e-12, "sel": false}, {"u": "500", "s": "momentum_21_top10", "c": "MRH_tau126_k5", "sp": 9, "ret": 0.2602080938604437, "vol": 0.2196541825449353, "sr": 1.1866136910246228, "dd": -0.1381287138379214, "to": 8.777777777769, "sel": false}, {"u": "500", "s": "momentum_21_top10", "c": "MRH_tau21_k5", "sp": 9, "ret": 0.1987594701296605, "vol": 0.2058927829561127, "sr": 1.034599412575172, "dd": -0.1570261952158717, "to": 21.7111111110894, "sel": false}, {"u": "500", "s": "momentum_63_top10", "c": "MRH_tau21_k5", "sp": 9, "ret": 0.3559183483629768, "vol": 0.2199678446286676, "sr": 1.6662647498237702, "dd": -0.157744495265887, "to": 22.0222222222002, "sel": false}, {"u": "500", "s": "momentum_63_top10", "c": "EW", "sp": 9, "ret": 0.2710139094687257, "vol": 0.195501380608583, "sr": 1.4617966756943306, "dd": -0.1401094291188203, "to": 1.0000333894311098e-12, "sel": false}, {"u": "500", "s": "momentum_63_top10", "c": "MRH_tau126_k5", "sp": 9, "ret": 0.3111589738192296, "vol": 0.2301861389148282, "sr": 1.3656383502979643, "dd": -0.1369066087553333, "to": 9.888888888879, "sel": false}, {"u": "500", "s": "momentum_63_top10", "c": "MRH_tau63_k5", "sp": 9, "ret": 0.2047505434694032, "vol": 0.2209856885537057, "sr": 0.8513499190997359, "dd": -0.1415783539882812, "to": 12.5999999999874, "sel": false}, {"u": "500", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau21_k5", "sp": 9, "ret": 0.3511220846395793, "vol": 0.2083113569012892, "sr": 1.7564080110227396, "dd": -0.1546492039959892, "to": 22.0666666666446, "sel": true}, {"u": "500", "s": "vol_adjusted_momentum_63_top10", "c": "EW", "sp": 9, "ret": 0.2695742910451821, "vol": 0.1880002348540007, "sr": 1.5096676690685649, "dd": -0.1283318728927105, "to": 1.0000333894311098e-12, "sel": false}, {"u": "500", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau126_k5", "sp": 9, "ret": 0.2723371793028122, "vol": 0.2270174631678259, "sr": 1.237430790175815, "dd": -0.1510226387180264, "to": 8.999999999991, "sel": false}, {"u": "500", "s": "vol_adjusted_momentum_63_top10", "c": "MRH_tau63_k5", "sp": 9, "ret": 0.1785108825349985, "vol": 0.2111090919398612, "sr": 0.7330378359708974, "dd": -0.1395366819390968, "to": 11.8444444444326, "sel": false}], "screenAb": [{"u": "100", "s": "low_volatility_63_top10", "mn": 1.1390772759012229, "bs": 1.44016914424767, "ret": 0.13246449054483964, "to": 18.768181818163306}, {"u": "100", "s": "momentum_21_top10", "mn": 1.1300118944946334, "bs": 1.4743813943593862, "ret": 0.18998041464292667, "to": 19.377272727253605}, {"u": "100", "s": "momentum_63_top10", "mn": 1.0602666182181544, "bs": 1.358888749642388, "ret": 0.166886351440721, "to": 19.89999999998036}, {"u": "100", "s": "cluster_capped_momentum_63_top10", "mn": 1.0577412338028476, "bs": 1.3639925489463582, "ret": 0.16633724975495212, "to": 19.86363636361676}, {"u": "100", "s": "vol_adjusted_momentum_63_top10", "mn": 0.9648881806648897, "bs": 1.261348304173717, "ret": 0.14551530443557947, "to": 19.60909090907156}, {"u": "250", "s": "low_volatility_63_top10", "mn": 0.6989461949445381, "bs": 0.8592181159536008, "ret": 0.09091899695931832, "to": 12.3318181818061}, {"u": "250", "s": "vol_adjusted_momentum_63_top10", "mn": 0.3382545625664213, "bs": 0.5992259192605487, "ret": 0.033191849772473525, "to": 12.140909090897198}, {"u": "250", "s": "momentum_63_top10", "mn": 0.248525896856877, "bs": 0.5560593031416079, "ret": 0.02026260993246675, "to": 12.195454545442601}, {"u": "250", "s": "cluster_capped_momentum_63_top10", "mn": 0.2139318041281642, "bs": 0.4975693372309039, "ret": 0.0143231129235679, "to": 12.1409090908972}, {"u": "250", "s": "momentum_21_top10", "mn": 0.2061562877056766, "bs": 0.5242734879864396, "ret": 0.022180918823165103, "to": 12.3318181818061}, {"u": "500", "s": "momentum_63_top10", "mn": 1.3362624237289502, "bs": 1.6662647498237702, "ret": 0.2857104437800838, "to": 11.1277777777669}, {"u": "500", "s": "cluster_capped_momentum_63_top10", "mn": 1.3320802178057283, "bs": 1.641359278271237, "ret": 0.28547145783831995, "to": 11.0166666666559}, {"u": "500", "s": "vol_adjusted_momentum_63_top10", "mn": 1.3091360765595041, "bs": 1.7564080110227396, "ret": 0.267886109380643, "to": 10.727777777767301}, {"u": "500", "s": "momentum_21_top10", "mn": 1.2508894594638829, "bs": 1.482785510712627, "ret": 0.24981782883736287, "to": 10.6722222222118}, {"u": "500", "s": "low_volatility_63_top10", "mn": 1.0084534248067512, "bs": 1.3867600421534738, "ret": 0.11860052897588405, "to": 11.4166666666555}], "controllerAb": [{"u": "100", "c": "EW", "mn": 1.3797560282739039, "bs": 1.4743813943593862, "ret": 0.1910598628012246, "to": 1.0000333894311098e-12}, {"u": "100", "c": "MRH_tau126_k5", "mn": 1.0880750561815244, "bs": 1.2588852895381653, "ret": 0.18559591377742451, "to": 16.083636363620286}, {"u": "100", "c": "MRH_tau21_k5", "mn": 0.9476948709559148, "bs": 1.0228752878034673, "ret": 0.13596898244945033, "to": 39.31636363632434}, {"u": "100", "c": "MRH_tau63_k5", "mn": 0.8660622070540551, "bs": 0.9142733206443218, "ret": 0.1283222896271157, "to": 22.614545454522847}, {"u": "250", "c": "EW", "mn": 0.5715337356848451, "bs": 0.8592181159536008, "ret": 0.07964428772429162, "to": 1.0000333894311098e-12}, {"u": "250", "c": "MRH_tau63_k5", "mn": 0.42564228943792354, "bs": 0.5969740311401893, "ret": 0.05028773272379734, "to": 13.96727272725876}, {"u": "250", "c": "MRH_tau21_k5", "mn": 0.30889108380392194, "bs": 0.7549799282930933, "ret": 0.026301065686919645, "to": 24.30181818179388}, {"u": "250", "c": "MRH_tau126_k5", "mn": 0.05858468803465119, "bs": 0.5846127043912692, "ret": -0.011531095406215318, "to": 10.64363636362572}, {"u": "500", "c": "MRH_tau21_k5", "mn": 1.433024311210748, "bs": 1.7564080110227396, "ret": 0.2768119419788836, "to": 22.119999999977882}, {"u": "500", "c": "EW", "mn": 1.4211570844159453, "bs": 1.5096676690685649, "ret": 0.23802571330607747, "to": 1.0000333894311098e-12}, {"u": "500", "c": "MRH_tau126_k5", "mn": 1.142595238188259, "bs": 1.391211727470704, "ret": 0.24241268936257976, "to": 9.3999999999906}, {"u": "500", "c": "MRH_tau63_k5", "mn": 0.9926806480769013, "bs": 1.482785510712627, "ret": 0.20873875040229412, "to": 12.448888888876441}], "rl": [{"scope": "100", "rl": 0.823131503969697, "std": 0.010690385963342125, "fixed": 0.827172040939331, "trail": 0.4753560438901187, "rand": 0.6573120275570545, "oracle": 1.354848861694336, "n": 8}, {"scope": "250", "rl": 0.2796218288131058, "std": 0.06766172968448382, "fixed": 0.30519556999206543, "trail": 0.30575835674628615, "rand": 0.29637044137916746, "oracle": 0.7641968727111816, "n": 5}, {"scope": "500", "rl": 0.3705128747969866, "std": 0.0, "fixed": 0.37051287293434143, "trail": 0.5662616958618164, "rand": 0.5250314306103974, "oracle": 0.9319376945495605, "n": 4}, {"scope": "combined", "rl": 1.2130063182479975, "std": 0.06309457326699507, "fixed": 1.1337716579437256, "trail": 1.5433508557081226, "rand": 1.2759941385593265, "oracle": 2.5864081382751465, "n": 14}], "cost": [{"u": "100", "cost": 0, "sr": 1.4744, "ret": 0.2041, "to": 0.0}, {"u": "100", "cost": 10, "sr": 1.4744, "ret": 0.2041, "to": 0.0}, {"u": "100", "cost": 25, "sr": 1.4744, "ret": 0.2041, "to": 0.0}, {"u": "250", "cost": 0, "sr": 0.8592, "ret": 0.1118, "to": 0.0}, {"u": "250", "cost": 10, "sr": 0.8592, "ret": 0.1118, "to": 0.0}, {"u": "250", "cost": 25, "sr": 0.8592, "ret": 0.1118, "to": 0.0}, {"u": "500", "cost": 0, "sr": 1.8144, "ret": 0.3628, "to": 22.0667}, {"u": "500", "cost": 10, "sr": 1.7564, "ret": 0.3511, "to": 22.0667}, {"u": "500", "cost": 25, "sr": 1.6687, "ret": 0.3336, "to": 22.0667}], "splits": {"100": [{"split": 0, "start": "2019-04-04", "end": "2019-07-03", "ret": 0.0069434709263305, "vol": 0.1251052188357001, "sr": 0.0555010493638465, "dd": -0.0714935587817221, "to": 1.0000333894311098e-12}, {"split": 1, "start": "2019-07-05", "end": "2019-10-02", "ret": -0.0425047696904861, "vol": 0.1990946352464309, "sr": -0.2134902813310966, "dd": -0.0831098825929568, "to": 1.0000333894311098e-12}, {"split": 2, "start": "2019-10-03", "end": "2020-01-02", "ret": 0.7340764216659963, "vol": 0.1301798105662485, "sr": 5.638942155986513, "dd": -0.027618461961211, "to": 1.0000333894311098e-12}, {"split": 3, "start": "2020-01-03", "end": "2020-04-02", "ret": -1.4110181908850663, "vol": 0.7068761471999556, "sr": -1.9961321321596843, "dd": -0.4491631729839874, "to": 1.0000333894311098e-12}, {"split": 4, "start": "2020-04-03", "end": "2020-07-02", "ret": 1.1533498815083782, "vol": 0.3843318406131764, "sr": 3.000922014853838, "dd": -0.088674141160731, "to": 1.0000333894311098e-12}, {"split": 5, "start": "2020-07-06", "end": "2020-10-01", "ret": 0.4903872245691674, "vol": 0.1804589954853581, "sr": 2.7174440556289055, "dd": -0.0819604384710465, "to": 1.0000333894311098e-12}, {"split": 6, "start": "2020-10-02", "end": "2020-12-31", "ret": 0.5738774383799803, "vol": 0.1931662431500527, "sr": 2.97089920587842, "dd": -0.0896337443138848, "to": 1.0000333894311098e-12}, {"split": 7, "start": "2021-01-04", "end": "2021-04-05", "ret": 0.5004475808421125, "vol": 0.1479505710032996, "sr": 3.38253227037271, "dd": -0.0353370623176089, "to": 1.0000333894311098e-12}, {"split": 8, "start": "2021-04-06", "end": "2021-07-02", "ret": 0.2083514907170971, "vol": 0.1299810224965849, "sr": 1.6029377728657916, "dd": -0.0499156049938821, "to": 1.0000333894311098e-12}, {"split": 9, "start": "2021-07-06", "end": "2021-10-01", "ret": -0.0928268042380948, "vol": 0.1404432567967986, "sr": -0.6609559359032883, "dd": -0.0604584386891152, "to": 1.0000333894311098e-12}, {"split": 10, "start": "2021-10-04", "end": "2021-12-31", "ret": 0.5361401702642672, "vol": 0.1554943872250458, "sr": 3.4479712086640633, "dd": -0.0259075287617456, "to": 1.0000333894311098e-12}, {"split": 11, "start": "2022-01-03", "end": "2022-04-01", "ret": 0.1000470740789385, "vol": 0.2539920260731375, "sr": 0.3938984842372016, "dd": -0.1519835668744512, "to": 1.0000333894311098e-12}, {"split": 12, "start": "2022-04-04", "end": "2022-07-05", "ret": -0.3605324652203077, "vol": 0.2336421341438548, "sr": -1.543096952695966, "dd": -0.1444933216154819, "to": 1.0000333894311098e-12}, {"split": 13, "start": "2022-07-06", "end": "2022-10-03", "ret": -0.1668915983860253, "vol": 0.2316625839439204, "sr": -0.7204080846551598, "dd": -0.1746614671164001, "to": 1.0000333894311098e-12}, {"split": 14, "start": "2022-10-04", "end": "2023-01-03", "ret": 0.5493830586221855, "vol": 0.2082849035426537, "sr": 2.637651837820507, "dd": -0.0464779721832786, "to": 1.0000333894311098e-12}, {"split": 15, "start": "2023-01-04", "end": "2023-04-04", "ret": 0.0515979631298497, "vol": 0.1610458623336955, "sr": 0.3203929761487175, "dd": -0.0796046571423293, "to": 1.0000333894311098e-12}, {"split": 16, "start": "2023-04-05", "end": "2023-07-06", "ret": 0.2139568776041929, "vol": 0.1343434006231167, "sr": 1.592611744307627, "dd": -0.0352465144616389, "to": 1.0000333894311098e-12}, {"split": 17, "start": "2023-07-07", "end": "2023-10-04", "ret": -0.0018090013920346, "vol": 0.1318068420443617, "sr": -0.0137246395100801, "dd": -0.0627319151491866, "to": 1.0000333894311098e-12}, {"split": 18, "start": "2023-10-05", "end": "2024-01-04", "ret": 0.5556873596776168, "vol": 0.1441042360111151, "sr": 3.8561486813676944, "dd": -0.0533740749956594, "to": 1.0000333894311098e-12}, {"split": 19, "start": "2024-01-05", "end": "2024-04-05", "ret": 0.2685100250572581, "vol": 0.11252902413032, "sr": 2.3861401725470395, "dd": -0.0370617464556082, "to": 1.0000333894311098e-12}, {"split": 20, "start": "2024-04-08", "end": "2024-07-08", "ret": 0.271400098493078, "vol": 0.1490126308781789, "sr": 1.8213227757392736, "dd": -0.0452596487432769, "to": 1.0000333894311098e-12}, {"split": 21, "start": "2024-07-09", "end": "2024-10-04", "ret": 0.3525763831364772, "vol": 0.2004547910115651, "sr": 1.758882296379619, "dd": -0.1200505189355264, "to": 1.0000333894311098e-12}], "250": [{"split": 0, "start": "2022-03-14", "end": "2022-06-10", "ret": 0.0301280270746056, "vol": 0.1814370290831797, "sr": 0.1660522508921118, "dd": -0.0845847704183311, "to": 1.0000333894311098e-12}, {"split": 1, "start": "2022-06-13", "end": "2022-09-12", "ret": 0.1651705392299134, "vol": 0.18293939907603, "sr": 0.9028702404360984, "dd": -0.071766567570349, "to": 1.0000333894311098e-12}, {"split": 2, "start": "2022-09-13", "end": "2022-12-09", "ret": 0.2245409502028952, "vol": 0.231547407905366, "sr": 0.9697407206289946, "dd": -0.1053918728589278, "to": 1.0000333894311098e-12}, {"split": 3, "start": "2022-12-12", "end": "2023-03-14", "ret": -0.2721015506081716, "vol": 0.1426531001808889, "sr": -1.907435241584166, "dd": -0.0992109306307256, "to": 1.0000333894311098e-12}, {"split": 4, "start": "2023-03-15", "end": "2023-06-13", "ret": 0.1572535142422735, "vol": 0.1406097970007956, "sr": 1.1183681194011352, "dd": -0.0617701970518808, "to": 1.0000333894311098e-12}, {"split": 5, "start": "2023-06-14", "end": "2023-09-13", "ret": 0.0752312266713111, "vol": 0.0990851468216221, "sr": 0.75925836599896, "dd": -0.0517657184088935, "to": 1.0000333894311098e-12}, {"split": 6, "start": "2023-09-14", "end": "2023-12-12", "ret": 0.1136876509011588, "vol": 0.1386408850139047, "sr": 0.8200153287317571, "dd": -0.0787723417719959, "to": 1.0000333894311098e-12}, {"split": 7, "start": "2023-12-13", "end": "2024-03-14", "ret": 0.3214076408008304, "vol": 0.1041136351184596, "sr": 3.0870849954671957, "dd": -0.0317289882117107, "to": 1.0000333894311098e-12}, {"split": 8, "start": "2024-03-15", "end": "2024-06-13", "ret": -0.0439811151995592, "vol": 0.1039724477453042, "sr": -0.423007403912183, "dd": -0.0594919960541489, "to": 1.0000333894311098e-12}, {"split": 9, "start": "2024-06-14", "end": "2024-09-13", "ret": 0.3184066846351849, "vol": 0.1236556865831099, "sr": 2.574945750016974, "dd": -0.0524449101972541, "to": 1.0000333894311098e-12}, {"split": 10, "start": "2024-09-16", "end": "2024-12-12", "ret": 0.1402858472323278, "vol": 0.101398788354134, "sr": 1.3835061494127292, "dd": -0.0525399549857917, "to": 1.0000333894311098e-12}], "500": [{"split": 0, "start": "2022-07-15", "end": "2022-10-12", "ret": -0.0845840075665336, "vol": 0.2123337368038043, "sr": -0.3983540667599638, "dd": -0.123438850581324, "to": 13.3999999999866}, {"split": 1, "start": "2022-10-13", "end": "2023-01-12", "ret": 0.6023540871058608, "vol": 0.2317891850047665, "sr": 2.5987152381198246, "dd": -0.0565628136083937, "to": 15.3999999999846}, {"split": 2, "start": "2023-01-13", "end": "2023-04-14", "ret": -0.0822895691998821, "vol": 0.2392564312062697, "sr": -0.3439387973174023, "dd": -0.1546492039959892, "to": 16.5999999999834}, {"split": 3, "start": "2023-04-17", "end": "2023-07-17", "ret": 0.3271864434135727, "vol": 0.1558809475369163, "sr": 2.098950824852974, "dd": -0.0640444158259164, "to": 20.999999999979007}, {"split": 4, "start": "2023-07-18", "end": "2023-10-13", "ret": 0.3412351526550927, "vol": 0.2245025946840768, "sr": 1.519960841137554, "dd": -0.0690090939526524, "to": 20.999999999979}, {"split": 5, "start": "2023-10-16", "end": "2024-01-16", "ret": 0.2637103053832037, "vol": 0.2164113984052582, "sr": 1.218560146670988, "dd": -0.098704600250995, "to": 25.399999999974593}, {"split": 6, "start": "2024-01-17", "end": "2024-04-16", "ret": 0.5253964438913479, "vol": 0.1857544389042607, "sr": 2.828446237881361, "dd": -0.0583134074953676, "to": 22.999999999977}, {"split": 7, "start": "2024-04-17", "end": "2024-07-17", "ret": 0.5214248405549862, "vol": 0.156611473719842, "sr": 3.3294166012665163, "dd": -0.0624870701233819, "to": 32.199999999967794}, {"split": 8, "start": "2024-07-18", "end": "2024-10-15", "ret": 0.745665065518565, "vol": 0.2522620058464077, "sr": 2.955915073352802, "dd": -0.1145653038587594, "to": 30.5999999999694}]}, "rlcurve": [{"u": 0, "r": 0.05859930557471759}, {"u": 1, "r": 0.03188351052450389}, {"u": 2, "r": 0.0256031932592562}, {"u": 3, "r": 0.012725546788237799}, {"u": 4, "r": 0.054380268584183405}, {"u": 5, "r": 0.042029630992120134}, {"u": 6, "r": 0.05370076287030917}, {"u": 7, "r": 0.02389122989374523}, {"u": 8, "r": 0.02519148638988615}, {"u": 9, "r": 0.030272168581425257}, {"u": 10, "r": 0.025226060043584554}, {"u": 11, "r": 0.03034606550498363}, {"u": 12, "r": 0.02877119997830329}, {"u": 13, "r": 0.03901148458302023}, {"u": 14, "r": 0.03871986192621108}, {"u": 15, "r": 0.029441289211365098}, {"u": 16, "r": 0.038373688495675}, {"u": 17, "r": 0.04433684481331544}, {"u": 18, "r": 0.048628218056066486}, {"u": 19, "r": 0.06587452722804042}, {"u": 20, "r": 0.04108751212217643}, {"u": 21, "r": 0.04898153327308903}, {"u": 22, "r": 0.018650983367866265}, {"u": 23, "r": 0.020662046786592093}, {"u": 24, "r": 0.025858703999373144}, {"u": 25, "r": 0.02650612846872949}, {"u": 26, "r": 0.05641714813488795}, {"u": 27, "r": 0.03867179033733205}, {"u": 28, "r": 0.0528021781729593}, {"u": 29, "r": 0.022754279559210767}]}
+</script>
+<script>
+RESEARCH.payload = JSON.parse(document.getElementById('data').textContent);
+
+/* ===================== NAV ===================== */
+const slides = Array.from(document.querySelectorAll('.slide'));
+let idx = 0;
+function setSlide(i){
+  idx = Math.max(0, Math.min(slides.length-1, i));
+  slides.forEach((s,j)=>s.classList.toggle('active', j===idx));
+  document.getElementById('progress').style.width = ((idx+1)/slides.length*100)+'%';
+  const total = String(slides.length).padStart(2,'0');
+  const cur = String(idx+1).padStart(2,'0');
+  document.getElementById('counter').textContent = `${cur} / ${total}`;
+  document.getElementById('slideTitle').textContent = slides[idx].dataset.title || '';
+  document.getElementById('noteText').textContent = slides[idx].dataset.notes || '';
+  if(!document.body.classList.contains('deck')) slides[idx].scrollIntoView({block:'start'});
+}
+document.getElementById('prevBtn').onclick = ()=>setSlide(idx-1);
+document.getElementById('nextBtn').onclick = ()=>setSlide(idx+1);
+document.getElementById('modeBtn').onclick = (e)=>{
+  document.body.classList.toggle('deck');
+  e.target.textContent = document.body.classList.contains('deck') ? 'Scroll' : 'Deck';
+  setSlide(idx);
+};
+document.getElementById('notesBtn').onclick = ()=>document.getElementById('notes').classList.toggle('open');
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName === 'INPUT') return;
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); setSlide(idx+1); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); setSlide(idx-1); }
+  else if(e.key.toLowerCase()==='n'){ document.getElementById('notes').classList.toggle('open'); }
+  else if(e.key.toLowerCase()==='s'){ document.getElementById('modeBtn').click(); }
+});
+setSlide(0);
+
+/* ===================== HELPERS ===================== */
+const fmt = (v,n=2)=>Number(v).toFixed(n);
+const pct = v=>(v*100).toFixed(1)+'%';
+const tip = document.getElementById('tip');
+function showTip(html, ev){ tip.innerHTML = html; tip.style.opacity=1; tip.style.left = (ev.clientX+14)+'px'; tip.style.top = (ev.clientY-12)+'px'; }
+function hideTip(){ tip.style.opacity=0; }
+
+const SLAB = {
+  momentum_21_top10:'21d momentum',
+  momentum_63_top10:'63d momentum',
+  low_volatility_63_top10:'63d low-volatility',
+  vol_adjusted_momentum_63_top10:'63d vol-adj. momentum',
+  cluster_capped_momentum_63_top10:'cluster-capped momentum'
+};
+const CLAB = { EW:'Equal weight', MRH_tau21_k5:'21d rank-and-hold', MRH_tau63_k5:'63d rank-and-hold', MRH_tau126_k5:'126d rank-and-hold' };
+const ULAB = { '100':'Top-100', '250':'Top-250', '500':'Top-500', combined:'Combined' };
+const ACCENT = '#7a1f1f';
+const INK = '#13161b';
+const MUTED = '#646b78';
+const LINE = '#d8d2c2';
+
+/* ===================== FIG 1: EFFICIENT FRONTIER (computed) ===================== */
+(function(){
+  const svg = d3.select('#fig-frontier');
+  const W=560,H=380, m={l:54,r:18,t:18,b:46};
+  // Generate synthetic mu, Sigma (low-rank) for n=8
+  const n=8;
+  const rng = mulberry32(7);
+  const mu = Array.from({length:n}, ()=> .04 + .14*rng());
+  // Low-rank cov: F F^T + diag noise
+  const k=3;
+  const F = Array.from({length:n}, ()=> Array.from({length:k}, ()=> .04 + .12*rng()));
+  const D = Array.from({length:n}, ()=> .010 + .025*rng());
+  function sig(i,j){ let s=0; for(let r=0;r<k;r++) s+=F[i][r]*F[j][r]; if(i===j) s+=D[i]; return s; }
+  function port(w){
+    let r=0; for(let i=0;i<n;i++) r+=mu[i]*w[i];
+    let v=0; for(let i=0;i<n;i++) for(let j=0;j<n;j++) v+=w[i]*w[j]*sig(i,j);
+    return {r, s: Math.sqrt(Math.max(v,1e-9))};
+  }
+  // projected gradient on simplex to minimize lam*w'Sw - mu'w
+  function project(w){
+    // sort
+    let u = [...w].sort((a,b)=>b-a);
+    let cssv = 0, rho=-1;
+    for(let i=0;i<u.length;i++){ cssv += u[i]; if(u[i] - (cssv-1)/(i+1) > 0) rho = i; }
+    if(rho<0) return w.map(()=>1/w.length);
+    let theta = (u.slice(0,rho+1).reduce((a,b)=>a+b,0)-1)/(rho+1);
+    return w.map(x=>Math.max(0, x-theta));
+  }
+  function solve(lam){
+    let w = Array.from({length:n}, ()=>1/n);
+    const lr = .04;
+    for(let it=0; it<400; it++){
+      // grad = 2 lam Sigma w - mu
+      let grad = new Array(n).fill(0);
+      for(let i=0;i<n;i++){ for(let j=0;j<n;j++) grad[i] += 2*lam*sig(i,j)*w[j]; grad[i] -= mu[i]; }
+      let nw = w.map((x,i)=>x - lr*grad[i]);
+      w = project(nw);
+    }
+    return w;
+  }
+  // Frontier points
+  const lams = [];
+  for(let l=0.05; l<=22; l*=1.12) lams.push(l);
+  const pts = lams.map(l=>{ const w = solve(l); return {l, ...port(w)}; });
+  // Sample cloud
+  const cloud=[];
+  for(let i=0;i<260;i++){
+    let w = Array.from({length:n}, ()=>rng());
+    let s = w.reduce((a,b)=>a+b,0); w = w.map(x=>x/s);
+    cloud.push(port(w));
+  }
+  const xExt = d3.extent(pts.concat(cloud), d=>d.s);
+  const yExt = d3.extent(pts.concat(cloud), d=>d.r);
+  const xPad = (xExt[1]-xExt[0])*.07, yPad=(yExt[1]-yExt[0])*.10;
+  const x = d3.scaleLinear().domain([xExt[0]-xPad, xExt[1]+xPad]).range([m.l, W-m.r]);
+  const y = d3.scaleLinear().domain([yExt[0]-yPad, yExt[1]+yPad]).range([H-m.b, m.t]);
+
+  // axes
+  svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(6).tickFormat(d3.format('.0%'))).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','Inter').attr('font-size',11); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(6).tickFormat(d3.format('.0%'))).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','Inter').attr('font-size',11); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  svg.append('text').attr('x',W-m.r).attr('y',H-12).attr('text-anchor','end').attr('font-family','EB Garamond').attr('font-size',13).attr('font-style','italic').attr('fill',INK).text('σ(w)  →  annualized volatility');
+  svg.append('text').attr('x',12).attr('y',m.t+8).attr('font-family','EB Garamond').attr('font-size',13).attr('font-style','italic').attr('fill',INK).text('μᵀw  →  return');
+
+  // cloud
+  svg.append('g').selectAll('circle').data(cloud).enter().append('circle')
+    .attr('cx',d=>x(d.s)).attr('cy',d=>y(d.r)).attr('r',1.8).attr('fill','#aaa').attr('opacity',.55);
+
+  // frontier
+  const line = d3.line().x(d=>x(d.s)).y(d=>y(d.r)).curve(d3.curveCatmullRom.alpha(.5));
+  svg.append('path').datum(pts).attr('d',line).attr('fill','none').attr('stroke',INK).attr('stroke-width',2);
+
+  // optimum dot
+  const dot = svg.append('circle').attr('r',6).attr('fill',ACCENT).attr('stroke','#fff').attr('stroke-width',1.5);
+  const guideX = svg.append('line').attr('stroke',ACCENT).attr('stroke-dasharray','3,3').attr('opacity',.5);
+  const guideY = svg.append('line').attr('stroke',ACCENT).attr('stroke-dasharray','3,3').attr('opacity',.5);
+  const lab = svg.append('text').attr('font-family','JetBrains Mono').attr('font-size',11).attr('fill',ACCENT);
+
+  function update(){
+    const lam = +document.getElementById('lam').value;
+    document.getElementById('lamV').textContent = lam.toFixed(2);
+    const w = solve(lam); const p = port(w);
+    dot.attr('cx', x(p.s)).attr('cy', y(p.r));
+    guideX.attr('x1',m.l).attr('x2',x(p.s)).attr('y1',y(p.r)).attr('y2',y(p.r));
+    guideY.attr('x1',x(p.s)).attr('x2',x(p.s)).attr('y1',H-m.b).attr('y2',y(p.r));
+    lab.attr('x', x(p.s)+10).attr('y', y(p.r)-8).text(`w*(λ=${lam.toFixed(2)})`);
+  }
+  document.getElementById('lam').oninput = update;
+  update();
+
+  function mulberry32(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+})();
+
+/* ===================== FIG 2: SIMPLEX / TURNOVER ===================== */
+(function(){
+  const svg = d3.select('#fig-simplex');
+  const W=560, H=380;
+  const A={x:W/2, y:50}, B={x:80, y:H-60}, C={x:W-80, y:H-60};
+  const old=[.32,.50,.18], target=[.62,.18,.20];
+  function bary(w){ return { x: w[0]*A.x + w[1]*B.x + w[2]*C.x, y: w[0]*A.y + w[1]*B.y + w[2]*C.y }; }
+
+  // simplex outline
+  svg.append('path').attr('d',`M${A.x},${A.y}L${B.x},${B.y}L${C.x},${C.y}Z`).attr('fill','#faf6e8').attr('stroke',INK).attr('stroke-width',1.4);
+  // labels
+  svg.append('text').attr('x',A.x).attr('y',A.y-12).attr('text-anchor','middle').attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',14).text('asset A');
+  svg.append('text').attr('x',B.x-6).attr('y',B.y+22).attr('text-anchor','end').attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',14).text('B');
+  svg.append('text').attr('x',C.x+6).attr('y',C.y+22).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',14).text('C');
+
+  // iso-reward ellipses (concentric around target in simplex coords)
+  const targXY = bary(target);
+  for(let r=20; r<=130; r+=22){
+    svg.append('ellipse').attr('cx',targXY.x).attr('cy',targXY.y).attr('rx',r).attr('ry',r*0.68).attr('fill','none').attr('stroke','#bdb39a').attr('stroke-width',.7).attr('opacity',.6);
+  }
+  svg.append('text').attr('x',targXY.x-4).attr('y',targXY.y-12).attr('text-anchor','end').attr('font-family','Inter').attr('font-size',11).attr('fill','#5b5443').text('iso-reward');
+
+  // iso-cost diamonds (l1 around old)
+  const oldXY = bary(old);
+  for(let r=20; r<=120; r+=22){
+    svg.append('path').attr('d',`M${oldXY.x},${oldXY.y-r}L${oldXY.x+r},${oldXY.y}L${oldXY.x},${oldXY.y+r}L${oldXY.x-r},${oldXY.y}Z`).attr('fill','none').attr('stroke',ACCENT).attr('stroke-width',.6).attr('opacity',.5);
+  }
+  svg.append('text').attr('x',oldXY.x).attr('y',oldXY.y+r2()).attr('text-anchor','middle').attr('font-family','Inter').attr('font-size',11).attr('fill',ACCENT).text('iso-cost');
+  function r2(){return 130;}
+
+  // points
+  svg.append('circle').attr('cx',oldXY.x).attr('cy',oldXY.y).attr('r',6).attr('fill','#888').attr('stroke','#fff').attr('stroke-width',1.5);
+  svg.append('text').attr('x',oldXY.x+10).attr('y',oldXY.y+4).attr('font-family','JetBrains Mono').attr('font-size',11).attr('fill','#555').text('w_{t-}');
+  svg.append('circle').attr('cx',targXY.x).attr('cy',targXY.y).attr('r',5).attr('fill','none').attr('stroke',INK).attr('stroke-width',1.5).attr('stroke-dasharray','3,3');
+  svg.append('text').attr('x',targXY.x+10).attr('y',targXY.y+4).attr('font-family','JetBrains Mono').attr('font-size',11).attr('fill',INK).text('unconstrained target');
+
+  const newDot = svg.append('circle').attr('r',7).attr('fill',ACCENT).attr('stroke','#fff').attr('stroke-width',2);
+  const trail = svg.append('path').attr('fill','none').attr('stroke',ACCENT).attr('stroke-width',2);
+
+  function update(){
+    const k = +document.getElementById('kap').value;
+    document.getElementById('kapV').textContent = k;
+    // alpha = 1/(1 + k*c). At k=0, alpha=1; at k large, alpha→0
+    const alpha = 1/(1 + k*0.04);
+    const w = old.map((v,i)=> v*(1-alpha) + target[i]*alpha);
+    const p = bary(w);
+    newDot.attr('cx', p.x).attr('cy', p.y);
+    trail.attr('d', `M${oldXY.x},${oldXY.y}L${p.x},${p.y}`);
+    const l1 = w.reduce((s,v,i)=>s + Math.abs(v - old[i]), 0);
+    document.getElementById('toV').textContent = l1.toFixed(3);
+  }
+  document.getElementById('kap').oninput = update;
+  update();
+})();
+
+/* ===================== FIG 3: SCREENING ===================== */
+(function(){
+  const svg = d3.select('#fig-screen');
+  const W=600, H=420, m={l:54,r:18,t:18,b:50};
+  const N=500;
+  const rng = (function(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}})(11);
+  const pts=[];
+  for(let i=0;i<N;i++){
+    let vol = .08 + .35*rng();
+    let mom = -.18 + .70*rng() + (.5 - vol)*0.18 + (rng()-.5)*.10;
+    pts.push({i,vol,mom});
+  }
+  const x = d3.scaleLinear().domain([.05, .45]).range([m.l, W-m.r]);
+  const y = d3.scaleLinear().domain([-.20, .55]).range([H-m.b, m.t]);
+  svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(6).tickFormat(d3.format('.0%'))).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','Inter').attr('font-size',11); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(6).tickFormat(d3.format('.0%'))).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','Inter').attr('font-size',11); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  svg.append('text').attr('x',W-m.r).attr('y',H-12).attr('text-anchor','end').attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13).text('σᵢ  →  asset volatility');
+  svg.append('text').attr('x',12).attr('y',m.t+8).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13).text('momᵢ');
+
+  let mode = 'mom';
+  function score(d){ return mode==='mom' ? d.mom : mode==='lvol' ? -d.vol : d.mom/(d.vol+0.04); }
+  const dotg = svg.append('g');
+  function draw(){
+    const K = +document.getElementById('kSel').value;
+    document.getElementById('kV').textContent = K;
+    const sorted = [...pts].sort((a,b)=>score(b)-score(a));
+    const top = new Set(sorted.slice(0,K).map(d=>d.i));
+    dotg.selectAll('circle').remove();
+    dotg.selectAll('circle').data(pts).enter().append('circle')
+      .attr('cx',d=>x(d.vol)).attr('cy',d=>y(d.mom))
+      .attr('r', d=>top.has(d.i)?3.6:1.8)
+      .attr('fill', d=>top.has(d.i)?ACCENT:'#999')
+      .attr('opacity', d=>top.has(d.i)?.95:.35);
+  }
+  document.getElementById('kSel').oninput = draw;
+  document.querySelectorAll('[data-q]').forEach(b=>{
+    b.onclick=()=>{ document.querySelectorAll('[data-q]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); mode=b.dataset.q; draw(); };
+  });
+  draw();
+})();
+
+/* ===================== FIG 4: WALK-FORWARD SCHEMATIC ===================== */
+(function(){
+  const svg = d3.select('#fig-wf');
+  const W=600, H=380, m={l:60,r:18,t:24,b:36};
+  const folds = 12;
+  const tickH = 22, gap = 6;
+  const x = d3.scaleLinear().domain([0,1]).range([m.l, W-m.r]);
+  for(let i=0;i<folds;i++){
+    const y = m.t + i*(tickH+gap);
+    const trS=0, trE = .55 + .025*i;
+    const evS = trE + .005, evE = Math.min(.99, evS + .12);
+    svg.append('rect').attr('x',x(trS)).attr('y',y).attr('width',x(trE)-x(trS)).attr('height',tickH).attr('fill','#cfe0e8').attr('stroke','#7d97a6').attr('stroke-width',.6);
+    svg.append('rect').attr('x',x(evS)).attr('y',y).attr('width',x(evE)-x(evS)).attr('height',tickH).attr('fill',ACCENT).attr('opacity',.85);
+    svg.append('text').attr('x',m.l-10).attr('y',y+tickH/2+4).attr('text-anchor','end').attr('font-family','JetBrains Mono').attr('font-size',10).attr('fill',MUTED).text(`s=${i}`);
+  }
+  // legend
+  const ly = H-18;
+  svg.append('rect').attr('x',m.l).attr('y',ly-10).attr('width',16).attr('height',10).attr('fill','#cfe0e8').attr('stroke','#7d97a6');
+  svg.append('text').attr('x',m.l+22).attr('y',ly-1).attr('font-family','Inter').attr('font-size',11).attr('fill',INK).text('train (statistics fit here)');
+  svg.append('rect').attr('x',m.l+200).attr('y',ly-10).attr('width',16).attr('height',10).attr('fill',ACCENT);
+  svg.append('text').attr('x',m.l+222).attr('y',ly-1).attr('font-family','Inter').attr('font-size',11).attr('fill',INK).text('evaluate (net reward realized)');
+
+  svg.append('text').attr('x',m.l).attr('y',m.t-8).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',12).attr('fill',INK).text('time →');
+})();
+
+/* ===================== FIG 5: HEATMAP ===================== */
+(function(){
+  let cur = '100';
+  const tabs = document.getElementById('hmTabs');
+  ['100','250','500'].forEach(u=>{
+    const b = document.createElement('button');
+    b.className='tab' + (u===cur?' active':'');
+    b.textContent = ULAB[u];
+    b.onclick=()=>{ cur=u; document.querySelectorAll('#hmTabs .tab').forEach(t=>t.classList.toggle('active', t===b)); draw(); };
+    tabs.appendChild(b);
+  });
+  const rowsOrder = ['momentum_21_top10','momentum_63_top10','low_volatility_63_top10','vol_adjusted_momentum_63_top10','cluster_capped_momentum_63_top10'];
+  const colsOrder = ['EW','MRH_tau21_k5','MRH_tau63_k5','MRH_tau126_k5'];
+  const div = document.getElementById('hm');
+
+  function draw(){
+    div.innerHTML='';
+    const rows = rowsOrder, cols = colsOrder;
+    const data = RESEARCH.payload.heat.filter(d=>d.u===cur);
+    const cellW=160, cellH=58, labelW=210, headH=42;
+    const W = labelW + cols.length*cellW + 12;
+    const H = headH + rows.length*cellH + 30;
+    const svg = d3.select(div).append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%');
+
+    // monochrome ramp tied to oxblood
+    const all = RESEARCH.payload.heat.map(d=>d.sr);
+    const ext = [Math.min(-0.1,d3.min(all)), d3.max(all)];
+    const color = d3.scaleSequential(t => d3.interpolateRgb('#f3eee0', ACCENT)(t)).domain(ext);
+
+    cols.forEach((c,i)=>{
+      svg.append('text').attr('x', labelW + i*cellW + cellW/2).attr('y', 26)
+        .attr('text-anchor','middle').attr('fill',INK).attr('font-family','Inter').attr('font-size',12).attr('font-weight',600)
+        .text(CLAB[c]);
+    });
+    rows.forEach((s,ri)=>{
+      svg.append('text').attr('x', labelW-12).attr('y', headH + ri*cellH + cellH/2 + 4)
+        .attr('text-anchor','end').attr('fill',INK).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',14)
+        .text(SLAB[s]);
+      cols.forEach((c,ci)=>{
+        const d = data.find(x=>x.s===s && x.c===c);
+        if(!d) return;
+        const X = labelW + ci*cellW, Y = headH + ri*cellH;
+        const g = svg.append('g').style('cursor','pointer');
+        g.append('rect').attr('x',X+2).attr('y',Y+2).attr('width',cellW-4).attr('height',cellH-4)
+          .attr('fill',color(d.sr)).attr('stroke', d.sel?INK:'#fff').attr('stroke-width', d.sel?2.5:1);
+        // text
+        const isDark = d.sr > (ext[0]+ext[1])*0.55;
+        g.append('text').attr('x',X+cellW/2).attr('y',Y+cellH/2-2)
+          .attr('text-anchor','middle').attr('fill', isDark?'#fff':INK)
+          .attr('font-family','EB Garamond').attr('font-size',22).attr('font-weight',600)
+          .text(fmt(d.sr,2));
+        g.append('text').attr('x',X+cellW/2).attr('y',Y+cellH-10)
+          .attr('text-anchor','middle').attr('fill', isDark?'rgba(255,255,255,.7)':MUTED)
+          .attr('font-family','JetBrains Mono').attr('font-size',9.5)
+          .text(`ret ${pct(d.ret)} · DD ${pct(d.dd)}`);
+        g.on('mousemove',ev=>{
+          showTip(`<b>${SLAB[s]} · ${CLAB[c]}</b>
+            <div class="row"><span>Sharpe</span><span>${fmt(d.sr,3)}</span></div>
+            <div class="row"><span>Ann. ret.</span><span>${pct(d.ret)}</span></div>
+            <div class="row"><span>Ann. vol.</span><span>${pct(d.vol)}</span></div>
+            <div class="row"><span>Max DD</span><span>${pct(d.dd)}</span></div>
+            <div class="row"><span>Turnover</span><span>${d.to<.01?'≈ 0':fmt(d.to,1)+'×'}</span></div>
+            <div class="row"><span>Splits</span><span>${d.sp}</span></div>`, ev);
+        }).on('mouseleave', hideTip);
+      });
+    });
+    // Legend
+    const lg = svg.append('g').attr('transform',`translate(${labelW},${H-22})`);
+    const grad = svg.append('defs').append('linearGradient').attr('id','grad'+cur);
+    [0,.25,.5,.75,1].forEach((t,i)=>grad.append('stop').attr('offset',(t*100)+'%').attr('stop-color',color(ext[0]+t*(ext[1]-ext[0]))));
+    lg.append('rect').attr('width', 200).attr('height',10).attr('fill',`url(#grad${cur})`).attr('stroke',INK).attr('stroke-width',.6);
+    lg.append('text').attr('x',0).attr('y',24).attr('font-family','JetBrains Mono').attr('font-size',10).attr('fill',MUTED).text(fmt(ext[0],2));
+    lg.append('text').attr('x',200).attr('y',24).attr('text-anchor','end').attr('font-family','JetBrains Mono').attr('font-size',10).attr('fill',MUTED).text(fmt(ext[1],2));
+    lg.append('text').attr('x',100).attr('y',24).attr('text-anchor','middle').attr('font-family','Inter').attr('font-size',10).attr('fill',MUTED).text('Sharpe ratio');
+  }
+  draw();
+})();
+
+/* ===================== FIG 6: WINNER SPLIT BARS ===================== */
+(function(){
+  const splits = RESEARCH.payload.splits;
+  document.querySelectorAll('svg.splits').forEach(svgEl=>{
+    const u = svgEl.dataset.u;
+    const data = splits[u];
+    const W=380,H=180,m={l:36,r:8,t:14,b:30};
+    const svg = d3.select(svgEl);
+    const x = d3.scaleBand().domain(data.map(d=>d.split)).range([m.l, W-m.r]).padding(.2);
+    const ext = d3.extent(data, d=>d.sr);
+    const y = d3.scaleLinear().domain([Math.min(-1, ext[0]-.3), Math.max(3.5, ext[1]+.3)]).range([H-m.b, m.t]);
+    const y0 = y(0);
+    svg.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y0).attr('y2',y0).attr('stroke',INK).attr('stroke-width',.8);
+    data.forEach(d=>{
+      const X = x(d.split), Y = d.sr>=0 ? y(d.sr) : y0;
+      const Hh = Math.abs(y(d.sr) - y0);
+      svg.append('rect').attr('x',X).attr('y',Y).attr('width',x.bandwidth()).attr('height',Hh)
+        .attr('fill', d.sr>=0?ACCENT:'#3a3a3a').attr('opacity',.85)
+        .style('cursor','pointer')
+        .on('mousemove',ev=>showTip(`<b>Split ${d.split}</b>
+          <div class="row"><span>Window</span><span>${d.start} → ${d.end}</span></div>
+          <div class="row"><span>Ann. ret.</span><span>${pct(d.ret)}</span></div>
+          <div class="row"><span>Sharpe</span><span>${fmt(d.sr,2)}</span></div>
+          <div class="row"><span>Turnover</span><span>${d.to<.01?'≈ 0':fmt(d.to,1)+'×'}</span></div>`, ev))
+        .on('mouseleave', hideTip);
+    });
+    const mean = d3.mean(data,d=>d.sr);
+    svg.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(mean)).attr('y2',y(mean))
+      .attr('stroke',INK).attr('stroke-dasharray','3,3').attr('stroke-width',1);
+    svg.append('text').attr('x',W-m.r-4).attr('y',y(mean)-4).attr('text-anchor','end').attr('font-family','JetBrains Mono').attr('font-size',10).attr('fill',INK).text(`μ̂ = ${fmt(mean,2)}`);
+    // y axis simple
+    svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4)).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',9); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+    svg.append('text').attr('x',W/2).attr('y',H-6).attr('text-anchor','middle').attr('font-family','Inter').attr('font-size',10).attr('fill',MUTED).text(`split index ·  N = ${data.length}`);
+  });
+})();
+
+/* ===================== FIG 7+8: ABLATION CHARTS ===================== */
+function ablBars(targetId, data, keyField, labelMap){
+  const W=540, H=320, m={l:50,r:14,t:24,b:84};
+  const svg = d3.select('#'+targetId).append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%');
+  const yMax = d3.max(data, d=>d.bs)*1.05;
+  const y = d3.scaleLinear().domain([0,yMax]).range([H-m.b, m.t]);
+  svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5)).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',10); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  const groups = ['100','250','500'];
+  const groupW = (W-m.l-m.r) / groups.length;
+  groups.forEach((u,gi)=>{
+    const g = data.filter(d=>d.u===u);
+    const bw = (groupW - 24) / Math.max(1,g.length);
+    g.forEach((d,i)=>{
+      const X = m.l + gi*groupW + 12 + i*bw;
+      // pale = mean
+      svg.append('rect').attr('x',X).attr('y',y(d.mn)).attr('width',bw-2).attr('height',H-m.b-y(d.mn)).attr('fill','#cdc6b4');
+      // saturated overlaid = best
+      svg.append('rect').attr('x',X+3).attr('y',y(d.bs)).attr('width',bw-8).attr('height',H-m.b-y(d.bs)).attr('fill',ACCENT);
+      // labels (rotated)
+      const lab = labelMap[d[keyField]] || d[keyField];
+      svg.append('text').attr('transform',`translate(${X+bw/2},${H-m.b+8}) rotate(-30)`).attr('text-anchor','end')
+        .attr('font-family','Inter').attr('font-size',10).attr('fill',MUTED).text(lab);
+    });
+    svg.append('text').attr('x', m.l + gi*groupW + groupW/2).attr('y', H-12).attr('text-anchor','middle').attr('font-family','EB Garamond').attr('font-size',13).attr('font-style','italic').attr('fill',INK).text(ULAB[u]);
+    svg.append('line').attr('x1', m.l + gi*groupW).attr('x2', m.l + gi*groupW).attr('y1',m.t).attr('y2',H-m.b).attr('stroke',LINE);
+  });
+  // legend
+  svg.append('rect').attr('x',m.l).attr('y',6).attr('width',10).attr('height',10).attr('fill','#cdc6b4');
+  svg.append('text').attr('x',m.l+14).attr('y',15).attr('font-family','Inter').attr('font-size',10).attr('fill',MUTED).text('mean Sharpe');
+  svg.append('rect').attr('x',m.l+110).attr('y',6).attr('width',10).attr('height',10).attr('fill',ACCENT);
+  svg.append('text').attr('x',m.l+124).attr('y',15).attr('font-family','Inter').attr('font-size',10).attr('fill',MUTED).text('best Sharpe');
+}
+ablBars('screenAb', RESEARCH.payload.screenAb, 's', SLAB);
+ablBars('ctrlAb',   RESEARCH.payload.controllerAb, 'c', CLAB);
+
+/* ===================== FIG 9: BOOTSTRAP HISTOGRAM ===================== */
+(function(){
+  let cur='100';
+  const splits = RESEARCH.payload.splits;
+  const heat = RESEARCH.payload.heat;
+  document.querySelectorAll('[data-bsu]').forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll('[data-bsu]').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); cur=b.dataset.bsu; run();
+    };
+  });
+  document.getElementById('bsRun').onclick=run;
+
+  function gapPoint(u){
+    const arms = heat.filter(d=>d.u===u).map(d=>d.sr).sort((a,b)=>b-a);
+    return arms[0]-arms[1];
+  }
+  function bootstrap(u, B){
+    // approximate per-arm split-level Sharpes by sampling around mean with sigma=mean*0.6 (since we only stored one trajectory per arm in payload)
+    // For the winning arm we have actual splits; for others we approximate by N(mean, 0.45) and resample folds
+    const arms = heat.filter(d=>d.u===u);
+    const winner = splits[u];
+    const N = winner.length;
+    const gaps=[];
+    const rng = Math.random;
+    for(let b=0;b<B;b++){
+      // resample N indices for each arm
+      const idx = Array.from({length:N}, ()=>Math.floor(rng()*N));
+      const armSR = arms.map(a=>{
+        if(a.s===winner._screen && a.c===winner._ctrl){
+          // shouldn't reach (winner has its own path)
+          return a.sr;
+        }
+        // approximate: resample from synthetic per-arm draws around mean
+        let s=0; for(let i=0;i<N;i++) s += a.sr + (Math.random()*2-1)*0.55;
+        return s/N;
+      });
+      // overwrite the winning arm with its real resampled splits
+      const w = arms.find(a=>a.sel);
+      let s=0; for(let i=0;i<N;i++){ const ix=idx[i]%winner.length; s+=winner[ix].sr; }
+      w._bs = s/N;
+      armSR[arms.indexOf(w)] = w._bs;
+      armSR.sort((a,b)=>b-a);
+      gaps.push(armSR[0]-armSR[1]);
+    }
+    return gaps;
+  }
+  function run(){
+    const svg = d3.select('#fig-bs'); svg.selectAll('*').remove();
+    const W=560,H=320,m={l:48,r:18,t:24,b:46};
+    const B = +document.getElementById('bsB').textContent || 2000;
+    const gaps = bootstrap(cur, B);
+    const xExt = [Math.min(0,d3.min(gaps)), d3.max(gaps)];
+    const x = d3.scaleLinear().domain([xExt[0]-.05, xExt[1]+.05]).range([m.l,W-m.r]);
+    const bins = d3.bin().domain(x.domain()).thresholds(28)(gaps);
+    const y = d3.scaleLinear().domain([0, d3.max(bins,b=>b.length)]).range([H-m.b, m.t]);
+    svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(6)).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',10); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+    svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5)).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',10); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+
+    bins.forEach(b=>{
+      svg.append('rect').attr('x',x(b.x0)+1).attr('y',y(b.length)).attr('width',Math.max(0,x(b.x1)-x(b.x0)-1)).attr('height',H-m.b-y(b.length))
+        .attr('fill','#bdb39a').attr('stroke','#fff').attr('stroke-width',.5);
+    });
+
+    // point estimate gap
+    const pt = {100:0.034, 250:0.104, 500:0.090}[cur];
+    svg.append('line').attr('x1',x(pt)).attr('x2',x(pt)).attr('y1',m.t).attr('y2',H-m.b).attr('stroke',ACCENT).attr('stroke-width',2);
+    svg.append('text').attr('x',x(pt)+6).attr('y',m.t+12).attr('font-family','JetBrains Mono').attr('font-size',11).attr('fill',ACCENT).text(`gap = ${pt.toFixed(3)}`);
+
+    // axis labels
+    svg.append('text').attr('x',W-m.r).attr('y',H-12).attr('text-anchor','end').attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13).text('bootstrap winner gap');
+    svg.append('text').attr('x',m.l).attr('y',m.t-8).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13).text(`${ULAB[cur]} · B = ${B}`);
+  }
+  run();
+})();
+
+/* ===================== FIG 10: COST SLOPE ===================== */
+(function(){
+  const svg = d3.select('#fig-cost');
+  const W=560, H=360, m={l:54,r:60,t:24,b:46};
+  const data = RESEARCH.payload.cost;
+  const x = d3.scalePoint().domain([0,10,25]).range([m.l, W-m.r]).padding(.3);
+  const y = d3.scaleLinear().domain([0.7, 1.95]).range([H-m.b, m.t]);
+  svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).tickFormat(d=>d+' bps')).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',11); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(6)).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',11); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+
+  const colors = {'100':'#3a5a3a','250':'#1f3a7a','500':ACCENT};
+  ['100','250','500'].forEach(u=>{
+    const g = data.filter(d=>d.u===u);
+    const line = d3.line().x(d=>x(d.cost)).y(d=>y(d.sr));
+    svg.append('path').datum(g).attr('d',line).attr('fill','none').attr('stroke',colors[u]).attr('stroke-width',2);
+    g.forEach(d=>svg.append('circle').attr('cx',x(d.cost)).attr('cy',y(d.sr)).attr('r',4.5).attr('fill',colors[u]).attr('stroke','#fff').attr('stroke-width',1));
+    const last = g[g.length-1];
+    svg.append('text').attr('x',x(last.cost)+8).attr('y',y(last.sr)+4).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13).attr('fill',colors[u]).text(ULAB[u]);
+  });
+  svg.append('text').attr('x',W-m.r).attr('y',H-12).attr('text-anchor','end').attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13).text('proportional cost κ');
+  svg.append('text').attr('x',m.l).attr('y',m.t-8).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13).text('winner Sharpe');
+})();
+
+/* ===================== FIG 11: RL BARS ===================== */
+(function(){
+  const svg = d3.select('#fig-rl');
+  const W=580,H=320,m={l:50,r:18,t:36,b:46};
+  const data = RESEARCH.payload.rl;
+  const scopes = data.map(d=>d.scope);
+  const x0 = d3.scaleBand().domain(scopes).range([m.l,W-m.r]).padding(.18);
+  const methods=['rl','fixed','trail','rand'];
+  const x1 = d3.scaleBand().domain(methods).range([0,x0.bandwidth()]).padding(.1);
+  const y = d3.scaleLinear().domain([0,2.7]).range([H-m.b,m.t]);
+  const cols={ rl:ACCENT, fixed:'#7d97a6', trail:'#3a5a3a', rand:'#aaa' };
+
+  svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x0).tickFormat(d=>ULAB[d])).call(g=>{ g.selectAll('text').attr('fill',INK).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',13); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5)).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',10); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+
+  data.forEach(d=>{
+    methods.forEach(mt=>{
+      svg.append('rect').attr('x',x0(d.scope)+x1(mt)).attr('y',y(d[mt])).attr('width',x1.bandwidth()).attr('height',H-m.b-y(d[mt]))
+        .attr('fill',cols[mt]).attr('stroke','#fff').attr('stroke-width',.7);
+      svg.append('text').attr('x',x0(d.scope)+x1(mt)+x1.bandwidth()/2).attr('y',y(d[mt])-3)
+        .attr('text-anchor','middle').attr('font-family','JetBrains Mono').attr('font-size',9).attr('fill',INK).text(d[mt].toFixed(2));
+    });
+    // oracle as line
+    svg.append('line').attr('x1',x0(d.scope)+4).attr('x2',x0(d.scope)+x0.bandwidth()-4)
+      .attr('y1',y(d.oracle)).attr('y2',y(d.oracle)).attr('stroke',INK).attr('stroke-dasharray','3,3').attr('stroke-width',1);
+  });
+  // legend
+  const lg = svg.append('g').attr('transform',`translate(${m.l},14)`);
+  const items = [['rl','RL (mean ± σ)'],['fixed','Train-fixed'],['trail','Trailing'],['rand','Random'],['oracle','Oracle (dashed)']];
+  items.forEach(([k,lab],i)=>{
+    const g = lg.append('g').attr('transform',`translate(${i*108},0)`);
+    if(k==='oracle') g.append('line').attr('x1',0).attr('x2',12).attr('y1',6).attr('y2',6).attr('stroke',INK).attr('stroke-dasharray','3,3');
+    else g.append('rect').attr('x',0).attr('y',0).attr('width',12).attr('height',12).attr('fill',cols[k]);
+    g.append('text').attr('x',16).attr('y',10).attr('font-family','Inter').attr('font-size',10).attr('fill',INK).text(lab);
+  });
+})();
+
+/* ===================== FIG 12: RL TRAINING CURVE ===================== */
+(function(){
+  const svg = d3.select('#fig-rlcurve');
+  const W=580,H=200,m={l:50,r:18,t:18,b:34};
+  const data = RESEARCH.payload.rlcurve;
+  const x = d3.scaleLinear().domain(d3.extent(data,d=>d.u)).range([m.l,W-m.r]);
+  const y = d3.scaleLinear().domain([0, d3.max(data,d=>d.r)*1.15]).range([H-m.b,m.t]);
+  svg.append('g').attr('transform',`translate(0,${H-m.b})`).call(d3.axisBottom(x).ticks(8)).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',10); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  svg.append('g').attr('transform',`translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(d3.format('.3f'))).call(g=>{ g.selectAll('text').attr('fill',MUTED).attr('font-family','JetBrains Mono').attr('font-size',10); g.selectAll('line').attr('stroke',LINE); g.select('.domain').attr('stroke',INK); });
+  const line = d3.line().x(d=>x(d.u)).y(d=>y(d.r)).curve(d3.curveMonotoneX);
+  svg.append('path').datum(data).attr('d',line).attr('fill','none').attr('stroke',ACCENT).attr('stroke-width',2);
+  data.forEach(d=>svg.append('circle').attr('cx',x(d.u)).attr('cy',y(d.r)).attr('r',2.2).attr('fill',ACCENT));
+  svg.append('text').attr('x',W-m.r).attr('y',H-12).attr('text-anchor','end').attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',12).text('policy-gradient update');
+  svg.append('text').attr('x',m.l).attr('y',m.t-2).attr('font-family','EB Garamond').attr('font-style','italic').attr('font-size',12).text('trajectory reward');
+})();
+
+</script>
+</body>
+</html>

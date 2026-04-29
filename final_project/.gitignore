@@ -18,3 +18,7 @@ venv/
 
 # Optional: large data drops (uncomment if you add raw data at repo root)
 # data/raw/
+
+# Playwright screenshot artifacts from local QA
+output/
+.playwright-cli/

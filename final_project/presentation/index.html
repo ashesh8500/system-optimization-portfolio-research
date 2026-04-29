@@ -166,6 +166,32 @@ table.data tr.win td:first-child{border-left:3px solid var(--accent); padding-le
   border-left:2px solid var(--line); padding-left:14px; line-height:1.5;
 }
 
+/* "in plain words" — leads dense slides with intuition before the math */
+.intuition{
+  border-left:3px solid var(--ink);
+  padding:8px 14px 8px 16px;
+  margin:6px 0 20px;
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:18px;
+  line-height:1.45;
+  color:var(--ink-2);
+  background:linear-gradient(90deg, rgba(19,22,27,.04), transparent 60%);
+}
+.intuition::before{
+  content:'In plain words';
+  display:block;
+  font-family:var(--sans);
+  font-style:normal;
+  font-weight:600;
+  font-size:10.5px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  margin-bottom:3px;
+}
+.intuition em{color:var(--accent); font-style:italic}
+
 /* dropcap on title slide lead */
 .dropcap::first-letter{
   font-family:var(--serif); float:left; font-size:5em; line-height:.85;
@@ -302,34 +328,39 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   <div class="num">02</div>
   <div class="inner">
     <span class="smallcaps">Thesis</span>
-    <h2>The optimal control stack is <em style="color:var(--accent)">not</em> invariant in universe breadth.</h2>
-    <p class="lead">
-      Classical mean–variance optimization solves for weights after a universe is fixed. This study shows that the binding layer — the layer where optimization adds value — moves as the candidate universe widens.
+    <h2>The best recipe changes <em style="color:var(--accent)">with the kitchen</em>.</h2>
+
+    <div class="intuition">
+      Investing isn't one decision; it's a stack. <em>Where</em> can I shop? <em>What</em> do I put on the list? <em>How much</em> of each? <em>How often</em> do I redo the meal? The textbook answer ("solve for weights") only handles step three. The other steps decide the meal.
+    </div>
+
+    <p class="lead" style="margin-top:14px">
+      We measured every step out of sample. When the shopping list is short, picking the right items matters most. When it's long, ranking them ranks too. When it's medium, calming things down beats chasing winners.
     </p>
 
     <div class="grid g3" style="margin-top:36px">
       <div class="panel">
-        <h4>Top-100</h4>
-        <h3>Momentum screen + equal weight</h3>
-        <p class="muted sans" style="font-size:13px">Sharpe $1.474$ · ann. ret. $20.4\%$ · ann. vol. $20.2\%$ · turnover $\approx 0$</p>
-        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">Once the universe is narrow, the screen has already done most of the selection work. Equal weighting is the minimum-estimation controller.</p>
+        <h4>Small kitchen · Top-100</h4>
+        <h3>Pick the recent winners. Cook them equally.</h3>
+        <p class="muted sans" style="font-size:13px">21d momentum · equal weight · Sharpe $1.474$ · ret. $20.4\%$ · turnover $\approx 0$</p>
+        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">When the menu is already short, the picking does the work. Splitting the plate evenly avoids over-fitting and pays nothing in trading costs.</p>
       </div>
       <div class="panel">
-        <h4>Top-250</h4>
-        <h3>Low-volatility screen + equal weight</h3>
-        <p class="muted sans" style="font-size:13px">Sharpe $0.859$ · ann. ret. $11.2\%$ · ann. vol. $14.1\%$ · DD $-10.5\%$</p>
-        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">A broader candidate set introduces noise. Risk filtering dominates momentum chasing. Breadth is not monotone in performance.</p>
+        <h4>Medium kitchen · Top-250</h4>
+        <h3>Pick the calm ones. Cook them equally.</h3>
+        <p class="muted sans" style="font-size:13px">63d low-vol · equal weight · Sharpe $0.859$ · ret. $11.2\%$ · DD $-10.5\%$</p>
+        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">More options also means more noise. Filtering for stability beats chasing trends. A wider menu isn't automatically a better one.</p>
       </div>
       <div class="panel">
-        <h4>Top-500</h4>
-        <h3>Vol-adj. momentum + 21d rank-and-hold</h3>
-        <p class="muted sans" style="font-size:13px">Sharpe $1.756$ · ann. ret. $35.1\%$ · turnover $22\times$ · DD $-15.5\%$</p>
-        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">Cross-sectional dispersion is rich enough that a second active ranking layer earns its turnover cost.</p>
+        <h4>Big kitchen · Top-500</h4>
+        <h3>Rank by clean trend. Re-rank monthly.</h3>
+        <p class="muted sans" style="font-size:13px">63d vol-adj. mom. · 21d re-rank · Sharpe $1.756$ · ret. $35.1\%$ · turnover $22\times$</p>
+        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">Now there are enough good options to be picky twice. The extra ranking earns its trading cost — which would have been wasted in a small kitchen.</p>
       </div>
     </div>
 
     <div class="footnote">
-      Each entry is the best stack out of 20 screen $\times$ controller combinations within its universe, evaluated chronologically at $\kappa = 10$ bps proportional turnover cost. Bootstrap winner stability is $\sim$one-third (slide 11).
+      Each row is the best stack out of $5\!\times\!4 = 20$ screen / controller combinations in that universe, scored chronologically at $\kappa = 10$ bps trading cost. The point estimate's bootstrap winner stability is $\sim$one-third (slide 11) — read these as the <em>shape</em> of the answer, not the exact recipe.
     </div>
   </div>
 </section>
@@ -339,30 +370,32 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   <div class="num">03</div>
   <div class="inner">
     <span class="smallcaps">Starting point</span>
-    <h2>The single-period mean–variance program.</h2>
+    <h2>One knob: how cautious do you want to be?</h2>
 
     <div class="grid g2" style="margin-top:18px">
       <div>
-        <p>The classical formulation seeks weights $w \in \mathbb{R}^n$ given an estimate $(\hat\mu, \hat\Sigma)$, with $\hat\Sigma \succeq 0$, by solving the convex quadratic program</p>
+        <div class="intuition">
+          Markowitz turns "what should I buy?" into a single dial. Crank it down and you chase return; crank it up and you chase calm. The slider on the right <em>is</em> that dial.
+        </div>
+
+        <p>Formally: pick weights $w$ on the simplex to balance expected return $\hat\mu^\top w$ against risk $w^\top\hat\Sigma w$, scaled by a caution parameter $\lambda$.</p>
 
         <div class="eqblock">
           <span class="label">Markowitz · 1952</span>
           $$\begin{aligned} \min_{w \in \Delta_n} \quad &amp; \lambda\, w^\top \hat\Sigma w \;-\; \hat\mu^\top w \\ \text{s.t.} \quad &amp; \mathbf{1}^\top w = 1, \quad w \ge 0. \end{aligned}$$
         </div>
 
-        <p>The Lagrangian for the equality-constrained relaxation is $\mathcal{L}(w,\eta) = \lambda w^\top \hat\Sigma w - \hat\mu^\top w + \eta(\mathbf{1}^\top w - 1)$, giving the KKT condition</p>
+        <p>The optimum lives on the <em>efficient frontier</em>: the best return at each level of risk. The first-order condition</p>
 
         <div class="eqblock">
-          $$2\lambda\, \hat\Sigma\, w^\star \;-\; \hat\mu \;+\; \eta\, \mathbf{1} = 0 \;\Longrightarrow\; w^\star(\lambda) \propto \hat\Sigma^{-1}(\hat\mu - \eta\mathbf{1}).$$
+          $$2\lambda\, \hat\Sigma\, w^\star \;-\; \hat\mu \;+\; \eta\, \mathbf{1} = 0 \;\Longrightarrow\; w^\star(\lambda) \propto \hat\Sigma^{-1}(\hat\mu - \eta\mathbf{1})$$
         </div>
 
-        <p class="marg sans">
-          As $\lambda$ grows, $w^\star$ contracts toward the global minimum-variance portfolio. The frontier is the parametric curve $\{(\sigma(w^\star(\lambda)), \mu^\top w^\star(\lambda)) : \lambda > 0\}$.
-        </p>
+        <p>is the formal version of the dial: bigger $\lambda$ pulls $w^\star$ toward the calmest portfolio; smaller $\lambda$ pushes it toward the highest-return one.</p>
 
         <div class="gap" style="margin-top:24px">
-          <h4>Where this stops being enough</h4>
-          <div class="body">Equation (3.1) takes the universe $\{1,\dots,n\}$ as exogenous. In a live system the universe itself, the active set chosen from it, and the rebalancing rule are all decision variables. This is the wedge the rest of the talk drives into.</div>
+          <h4>Why one dial isn't enough</h4>
+          <div class="body">The equation assumes you've already decided <em>what</em> can go in the basket. In a real system, that menu is also a choice — and so is how often you rebuild it. Those decisions sit upstream of $w$ and can dominate it.</div>
         </div>
       </div>
 
@@ -386,23 +419,28 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Turnover as control" data-notes="Turnover is not a fee; it is control effort. Show the iso-cost ball around w_{t-}. As kappa grows, the new optimum is dragged back. This is the sequential-control reading of the QP.">
   <div class="num">04</div>
   <div class="inner">
-    <span class="smallcaps">From a QP to a controller</span>
-    <h2>Turnover is control effort, not a transaction fee.</h2>
+    <span class="smallcaps">From a static problem to a controller</span>
+    <h2>Trading is fuel. Movement costs more than you'd think.</h2>
 
     <div class="grid g2" style="margin-top:18px">
       <div>
-        <p>Let $w_{t^-}$ be the pre-rebalance portfolio and $w_t$ the post-rebalance portfolio. Linear transaction cost adds an $\ell_1$ regularizer that pulls the iterate back toward the previous state:</p>
-        <div class="eqblock">
-          $$\max_{w_t \in \Delta} \;\; \alpha_t^\top w_t \;-\; \lambda\, w_t^\top \hat\Sigma_t w_t \;-\; \kappa\, \|w_t - w_{t^-}\|_1.$$
+        <div class="intuition">
+          Each rebalance is a tug-of-war: the new "best" target pulls the portfolio one way, last week's holdings pull the other. The bigger the cost knob, the harder it is to leave home.
         </div>
-        <p>The pre-trade portfolio joins the state $x_t = (\mathcal{F}_t, w_{t^-})$. The lookahead version is finite-horizon stochastic optimal control:</p>
+
+        <p>Let $w_{t^-}$ be where you are and $w_t$ where you'd like to be. The trading-cost term $\kappa\,\|w_t-w_{t^-}\|_1$ literally measures how far you'd have to move:</p>
+        <div class="eqblock">
+          $$\max_{w_t \in \Delta} \;\; \alpha_t^\top w_t \;-\; \lambda\, w_t^\top \hat\Sigma_t w_t \;-\; \underbrace{\kappa\, \|w_t - w_{t^-}\|_1}_{\text{cost of moving}}.$$
+        </div>
+
+        <p>Your current holdings are now part of the "state". Done across many periods, this becomes a planning problem — at each step, balance today's reward against tomorrow's value:</p>
         <div class="eqblock">
           <span class="label">Bellman</span>
           $$V_t(x_t) = \max_{a_t \in \mathcal{A}(x_t)} \Big\{\, g(x_t,a_t) + \delta\,\mathbb{E}\big[V_{t+1}(x_{t+1}) \mid x_t,a_t\big] \,\Big\}$$
         </div>
-        <p style="font-size:15px">with $g(x_t,a_t) = \mathbb{E}[w_t^\top r_{t+1}\mid \mathcal{F}_t] - \kappa\|w_t-w_{t^-}\|_1 - \rho\,\mathcal{R}(w_t,\mathcal{F}_t)$ and admissible set $\mathcal{A}(x_t)$ encoding simplex, eligibility, and turnover constraints.</p>
+        <p style="font-size:15px">with $g(x_t,a_t) = \mathbb{E}[w_t^\top r_{t+1}\mid \mathcal{F}_t] - \kappa\|w_t-w_{t^-}\|_1 - \rho\,\mathcal{R}(w_t,\mathcal{F}_t)$.</p>
         <div class="marg sans" style="margin-top:14px">
-          The implementation does not solve this Bellman equation. It approximates the optimal policy $\pi^\star$ with restricted, interpretable policy classes (equal weight, rank-and-hold) and chooses among them with an outer router.
+          We don't actually solve Bellman. We approximate the optimal policy with a small set of simple, named recipes (equal weight, rank-and-hold) and pick among them. The point is just to see <em>where</em> the trading-cost tug binds.
         </div>
       </div>
 
@@ -428,50 +466,55 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Layered formulation" data-notes="This is the central modelling slide. Universe breadth, screen, weighting controller. The stack (b,j,k) defines a feasible problem; the empirical study enumerates a 3x5x4 grid and evaluates each arm out of sample.">
   <div class="num">05</div>
   <div class="inner">
-    <span class="smallcaps">Mathematical decomposition</span>
-    <h2>A bilevel mixed discrete–continuous control problem.</h2>
+    <span class="smallcaps">The decomposition</span>
+    <h2>Two stacked choices: <em style="color:var(--accent)">what</em> to consider, then <em style="color:var(--accent)">how much</em> of each.</h2>
 
-    <p class="lead">Index candidate-universe breadth by $b \in \{100,250,500\}$, screen rule by $j \in \mathcal{J}$, and weighting controller by $k \in \mathcal{K}$. The full model-selection problem is</p>
+    <div class="intuition">
+      Step 1, <b>screen</b>: pick which $K$ items from a long list. (The shopping list.) Step 2, <b>weighting</b>: pick how much of each. (The recipe.) Both are optimization choices; classical theory only handles step 2.
+    </div>
+
+    <p style="margin-top:18px">Index the choices by universe breadth $b$, screen rule $j$, and weighting controller $k$. The whole stack is one optimization:</p>
 
     <div class="eqblock">
       $$\begin{aligned}
-      \max_{b,\,j,\,k} \quad &amp; \frac{\widehat{\mu}_{b,j,k}}{\widehat{\sigma}_{b,j,k}} \;-\; \phi\,\widehat{\text{DD}}_{b,j,k} \;-\; \psi\,\widehat{\text{TO}}_{b,j,k} \\[2pt]
-      \text{s.t.} \quad &amp; H_{b,j}(t) \;=\; S_j\!\left(\,\mathcal{U}_b(t),\,\mathcal{F}_t\,\right), \\
-      &amp; w_t \;=\; C_k\!\left(\, H_{b,j}(t),\, \mathcal{F}_t,\, w_{t^-} \,\right), \\
+      \max_{b,\,j,\,k} \quad &amp; \underbrace{\tfrac{\widehat{\mu}_{b,j,k}}{\widehat{\sigma}_{b,j,k}}}_{\text{risk-adj. return}} \;-\; \phi\,\underbrace{\widehat{\text{DD}}_{b,j,k}}_{\text{drawdown}} \;-\; \psi\,\underbrace{\widehat{\text{TO}}_{b,j,k}}_{\text{turnover}} \\[2pt]
+      \text{s.t.} \quad &amp; H_{b,j}(t) = S_j\!\left(\mathcal{U}_b(t),\mathcal{F}_t\right) &amp;&amp; \text{(shopping list)} \\
+      &amp; w_t = C_k\!\left(H_{b,j}(t),\mathcal{F}_t,w_{t^-}\right) &amp;&amp; \text{(recipe)} \\
       &amp; |H_{b,j}(t)| \le K_{\max}, \quad w_t \in \Delta_{|H_{b,j}(t)|}.
       \end{aligned}$$
     </div>
 
     <div class="grid g2" style="margin-top:30px; gap:36px">
       <div>
-        <h3>Discrete layer · screen as cardinality projection</h3>
-        <p>For a per-asset score $q_i(t)$ on the candidate universe $\mathcal{U}_b(t)$, the top-$K$ screen solves</p>
+        <h3>Step 1 · The shopping list</h3>
+        <p>Score each candidate by some rule $q_i(t)$ and keep the top $K$. Formally a 0–1 cardinality problem:</p>
         <div class="eqblock">
           $$\max_{z\in\{0,1\}^{|\mathcal{U}|}} \sum_{i\in\mathcal{U}} q_i(t)\, z_i \;\;\text{s.t.}\;\; \sum_i z_i \le K.$$
         </div>
-        <p>The five score functions evaluated are</p>
+        <p>The score is the personality of the screen. We tested five:</p>
         <div class="eqblock" style="font-size:15px">
           $$\begin{aligned}
-          q_i^{\text{mom},\tau} &amp;= \tfrac{P_i(t)}{P_i(t-\tau)} - 1 \\
-          q_i^{\text{vam},\tau} &amp;= \tfrac{P_i(t)/P_i(t-\tau)\,-\,1}{\hat\sigma_{i,\tau}(t) + \varepsilon} \\
-          q_i^{\text{lvol},\tau} &amp;= -\hat\sigma_{i,\tau}(t) \\
-          q_i^{\text{cluster}} &amp;= q_i^{\text{mom},63} \;\text{with per-cluster caps}
+          q_i^{\text{mom},\tau} &amp;= \tfrac{P_i(t)}{P_i(t-\tau)} - 1 &amp;&amp; \text{recent winners} \\
+          q_i^{\text{vam},\tau} &amp;= \tfrac{P_i(t)/P_i(t-\tau)\,-\,1}{\hat\sigma_{i,\tau}(t)+\varepsilon} &amp;&amp; \text{winners, noise-discounted} \\
+          q_i^{\text{lvol},\tau} &amp;= -\hat\sigma_{i,\tau}(t) &amp;&amp; \text{calmest names} \\
+          q_i^{\text{cluster}} &amp;= q_i^{\text{mom},63} &amp;&amp; \text{winners, sector-capped}
           \end{aligned}$$
         </div>
       </div>
       <div>
-        <h3>Continuous layer · controllers as restricted policies</h3>
-        <p>Equal weight is the minimum-estimation controller on the screened set $H_t$:</p>
+        <h3>Step 2 · The recipe</h3>
+        <p>Given a shopping list $H_t$, pick weights. Two recipes were tested.</p>
+        <p><b>Equal weight.</b> Split evenly. No estimation, no opinions:</p>
         <div class="eqblock">$$w_{i,t}^{\text{EW}} = \tfrac{1}{|H_t|}\,\mathbf{1}\{i \in H_t\}.$$</div>
-        <p>Rank-and-hold imposes a second top-$k$ ranking inside $H_t$ on a horizon-$\tau$ momentum score:</p>
+        <p><b>Rank-and-hold.</b> Inside the list, keep only the top $k$ recent winners and weight them equally:</p>
         <div class="eqblock">
           $$w_{i,t}^{\text{MRH},\tau,k} = \tfrac{1}{k}\,\mathbf{1}\!\left\{ i \in \operatorname{TopK}_{\ell\in H_t}\!\left(\tfrac{P_\ell(t)}{P_\ell(t-\tau)} - 1\right)\right\}.$$
         </div>
-        <p>Although simpler than a full QP, $w^{\text{MRH}}$ is still an optimization rule on $H_t$. Whether it is worth its turnover is the question slide 9 settles empirically.</p>
+        <p>It's a simple recipe, but it isn't free — every re-rank means trading. Whether the extra ranking is worth the trades is what slide 9 measures.</p>
 
         <div class="gap" style="margin-top:20px">
-          <h4>Honest scope</h4>
-          <div class="body">The $3\times5\times4 = 60$ enumerated grid is a tractable approximation of the bilevel program above. We do not solve the mixed-integer program; we sample it and study the surface.</div>
+          <h4>What we actually solve</h4>
+          <div class="body">The headline equation is mixed-integer and we don't solve it directly. We <em>sample</em> it: $3\!\times\!5\!\times\!4 = 60$ named combinations evaluated honestly, then we map the surface.</div>
         </div>
       </div>
     </div>
@@ -482,37 +525,40 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Screening visualization" data-notes="Move the score selector to show that momentum, low-vol, and vol-adjusted momentum produce structurally different active sets. Screening is a discrete optimization, not preprocessing.">
   <div class="num">06</div>
   <div class="inner">
-    <span class="smallcaps">Screens as different feasible problems</span>
-    <h2>Changing $q_i(t)$ moves the active set, not just the labels.</h2>
+    <span class="smallcaps">The shopping list is a decision</span>
+    <h2>Different scoring rules pick different shopping lists.</h2>
 
     <div class="grid g2" style="margin-top:18px">
       <div class="figure">
-        <h4 style="margin-bottom:6px">Top-$K$ projection on synthetic $(\sigma_i, \text{mom}_i)$</h4>
+        <h4 style="margin-bottom:6px">Pick the top $K$ of 500 candidates</h4>
         <svg id="fig-screen" viewBox="0 0 600 420"></svg>
         <div class="controls">
-          <button class="mini active" data-q="mom">$q^{\text{mom}}$</button>
-          <button class="mini" data-q="lvol">$q^{\text{lvol}}$</button>
-          <button class="mini" data-q="vam">$q^{\text{vam}}$</button>
+          <button class="mini active" data-q="mom">recent winners ($q^{\text{mom}}$)</button>
+          <button class="mini" data-q="lvol">calmest ($q^{\text{lvol}}$)</button>
+          <button class="mini" data-q="vam">winners ÷ noise ($q^{\text{vam}}$)</button>
           <span style="margin-left:auto">$K =$ <span class="val" id="kV">20</span></span>
           <input id="kSel" type="range" min="5" max="80" step="1" value="20" style="width:140px">
         </div>
         <div class="caption">
-          <b>Method.</b> 500 synthetic assets with vol $\sigma_i$ and momentum $\text{mom}_i$ drawn from a structured joint. The top-$K$ set under each score is the solution to a 0–1 knapsack with cardinality constraint; only the score function changes.
+          <b>Try it.</b> Toggle the score; the highlighted dots are the chosen list. Same 500 candidates, different rule — totally different list. Each rule selects a different region of the (volatility, momentum) plane.
         </div>
       </div>
 
       <div>
-        <h3>The system-optimization point</h3>
-        <p>Each score induces a different feasible simplex $\Delta_{|H|}$ for the downstream weighting controller. The continuous layer is therefore solving a <em>different</em> portfolio problem under each screen — not the same problem with different inputs.</p>
+        <div class="intuition">
+          The shopping list isn't <em>cleaning</em> — it's part of the recipe. Each scoring rule cooks a different meal even before any weights are chosen.
+        </div>
+
+        <p>Formally, a screen $S_j$ is just a map: candidates in, list out, with a size cap.</p>
 
         <div class="eqblock" style="font-size:15px">
           $$S_j : \big(\mathcal{U}_b(t), \mathcal{F}_t\big) \longmapsto H_{b,j}(t), \qquad |H_{b,j}(t)| \le K.$$
         </div>
 
-        <p>The headline empirical effect (slide 9) is that the best screen <em>changes</em> with universe breadth: momentum at $b{=}100$, low-volatility at $b{=}250$, vol-adjusted momentum at $b{=}500$.</p>
+        <p>What you'll see on slide 9 is that <em>the right scoring rule depends on how big the kitchen is</em>: recent winners win at $b{=}100$, calmest wins at $b{=}250$, noise-discounted winners win at $b{=}500$.</p>
 
         <div class="marg sans" style="margin-top:14px">
-          A common error is to treat screening as "data cleaning". In a layered system it is a 0–1 optimization with as much leverage as the weight choice — and sometimes more.
+          Common mistake: treating the shopping list as "preprocessing". In a stacked system it has at least as much leverage as the recipe — sometimes more.
         </div>
       </div>
     </div>
@@ -523,18 +569,22 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Walk-forward protocol" data-notes="Make the protocol concrete. Train end, validation end, evaluation start/end. Statistics are computed only through train end. Net reward subtracts proportional turnover cost. Every arm is stored — not only the winner.">
   <div class="num">07</div>
   <div class="inner">
-    <span class="smallcaps">Empirical protocol</span>
-    <h2>Walk-forward optimization, full ledger.</h2>
+    <span class="smallcaps">How we kept ourselves honest</span>
+    <h2>No peeking at tomorrow.</h2>
 
     <div class="grid g2" style="margin-top:18px">
       <div>
-        <p>Each arm is evaluated through chronological train/test splits. Screen scores and statistics are computed using only information available through the training end date $t^{\text{tr}}_s$, and net reward is realized over the immediately following evaluation window $[t^{\text{ev,start}}_s, t^{\text{ev,end}}_s]$.</p>
-
-        <div class="eqblock" style="font-size:15px">
-          $$R_s(b,j,k) \;=\; \underbrace{w_t^\top r_{t+1}}_{\text{gross}} \;-\; \underbrace{\kappa\,\|w_t - w_{t^-}\|_1}_{\text{control cost}}, \qquad t \in s.$$
+        <div class="intuition">
+          A backtest only counts if the strategy could have actually been run. So we fit each recipe using <em>only</em> data up to a date, then judge it on the next 90 days — and repeat.
         </div>
 
-        <p>The performance of stack $(b,j,k)$ is the cross-split mean Sharpe</p>
+        <p>Concretely: every screen score and every controller statistic is computed using prices through the training end $t^{\text{tr}}_s$ only. Net reward is then realized over the next window $[t^{\text{ev,start}}_s, t^{\text{ev,end}}_s]$, with trading costs subtracted:</p>
+
+        <div class="eqblock" style="font-size:15px">
+          $$R_s(b,j,k) \;=\; \underbrace{w_t^\top r_{t+1}}_{\text{gross return}} \;-\; \underbrace{\kappa\,\|w_t - w_{t^-}\|_1}_{\text{trading cost}}, \qquad t \in s.$$
+        </div>
+
+        <p>The score for a whole stack $(b,j,k)$ is its average risk-adjusted return across folds:</p>
         <div class="eqblock" style="font-size:15px">
           $$\widehat{\text{SR}}(b,j,k) \;=\; \frac{1}{|\mathcal{W}|} \sum_{s \in \mathcal{W}} \frac{\bar{R}_s(b,j,k)}{\hat\sigma_s(b,j,k)}.$$
         </div>
@@ -571,10 +621,14 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Full surface" data-notes="This is the central empirical figure. Tabs switch universe. The selected (winning) cell is outlined in oxblood. Pause here and let the audience read the structural shift.">
   <div class="num">08</div>
   <div class="inner">
-    <span class="smallcaps">Empirical core</span>
-    <h2>The Sharpe surface, by screen and controller.</h2>
+    <span class="smallcaps">The whole map, in one picture</span>
+    <h2>The bright spot moves as the kitchen grows.</h2>
 
-    <p class="lead">For each universe, $5 \times 4 = 20$ arms. The winning cell is outlined; the colour ramp is shared across panels for direct comparison. The pattern <em>moves</em> as $b$ grows.</p>
+    <div class="intuition">
+      Each cell is one recipe, evaluated honestly. Darker = better. The story isn't <em>which</em> cell is best — it's how the dark region <em>shifts</em> across tabs.
+    </div>
+
+    <p class="lead">For each universe, $5 \times 4 = 20$ recipes. The winning cell is outlined; the colour ramp is shared across panels so you can compare directly.</p>
 
     <div class="figure" style="margin-top:18px">
       <div class="tabs" id="hmTabs"></div>
@@ -591,14 +645,18 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   <div class="num">09</div>
   <div class="inner">
     <span class="smallcaps">Headline result</span>
-    <h2>The winning $(j^\star, k^\star)$ depends on $b$.</h2>
+    <h2>Different kitchens want different recipes.</h2>
 
-    <table class="data" style="margin-top:24px; font-size:15px">
+    <div class="intuition">
+      Same trading-cost, same honest protocol, three universe sizes. The best recipe in the small kitchen would be a poor choice in the big one — and vice versa. That's the layer-shift in one row.
+    </div>
+
+    <table class="data" style="margin-top:18px; font-size:15px">
       <thead>
         <tr>
-          <th>Universe $b$</th>
-          <th>Discrete screen $j^\star$</th>
-          <th>Weighting $k^\star$</th>
+          <th>Kitchen size</th>
+          <th>Shopping list</th>
+          <th>Recipe</th>
           <th class="num">Splits</th>
           <th class="num">Ann. ret.</th>
           <th class="num">Ann. vol.</th>
@@ -658,26 +716,28 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   <div class="num">10</div>
   <div class="inner">
     <span class="smallcaps">Layer attribution</span>
-    <h2>Which layer is doing the useful work?</h2>
+    <h2>Which layer is actually pulling its weight?</h2>
 
-    <p>For each universe, marginalize over one layer and inspect the other. Pale bars are the mean Sharpe across the marginalized layer; saturated bars are the best observed Sharpe.</p>
+    <div class="intuition">
+      To isolate the shopping list, average across all four recipes. To isolate the recipe, average across all five lists. That removes the other layer from the picture so you can see what each one contributes alone.
+    </div>
 
     <div class="grid g2" style="margin-top:18px">
       <div class="figure">
-        <h4 style="margin-bottom:6px">Screens · marginalize over controllers</h4>
+        <h4 style="margin-bottom:6px">Shopping lists, recipe averaged out</h4>
         <div id="screenAb"></div>
-        <div class="caption"><b>Read.</b> Bars are sorted within universe by mean Sharpe. The screen objective that wins on average changes across breadths.</div>
+        <div class="caption"><b>Read.</b> Within each universe, sorted by average Sharpe. The list that wins on average <em>changes</em> with kitchen size.</div>
       </div>
       <div class="figure">
-        <h4 style="margin-bottom:6px">Controllers · marginalize over screens</h4>
+        <h4 style="margin-bottom:6px">Recipes, list averaged out</h4>
         <div id="ctrlAb"></div>
-        <div class="caption"><b>Read.</b> Equal weight wins on average for $b \in \{100,250\}$. The 21-day rank-and-hold takes the lead in $b{=}500$.</div>
+        <div class="caption"><b>Read.</b> Equal weight wins on average for the small and medium kitchens. Re-rank monthly takes the big kitchen.</div>
       </div>
     </div>
 
     <div class="panel" style="margin-top:24px">
-      <h4>Operational implication</h4>
-      <p style="margin-bottom:0">Extra optimization is not universally good. It is only useful when the upstream feasible set retains enough cross-sectional dispersion to <em>pay</em> for the implied control effort — i.e. when the marginal gross alpha exceeds $\kappa\,\|\Delta w\|_1$.</p>
+      <h4>The operational rule of thumb</h4>
+      <p style="margin-bottom:0">More optimization isn't always better. The extra ranking pays only when the kitchen is big enough that the new picks beat the trading bill: roughly, <em>marginal gross alpha</em> $> \kappa\,\|\Delta w\|_1$.</p>
     </div>
   </div>
 </section>
@@ -686,10 +746,14 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Selection risk" data-notes="Stop and be honest. The winning Sharpe is selected over 20 arms. Block-bootstrap winner stability is around one-third. Two of three CIs include zero. Treat the result as mechanism evidence, not a deployable claim.">
   <div class="num">11</div>
   <div class="inner">
-    <span class="smallcaps">Diagnostics</span>
-    <h2>The selected maximum is fragile, the mechanism is not.</h2>
+    <span class="smallcaps">Diagnostics · being honest about luck</span>
+    <h2>The exact winner is shaky. The pattern isn't.</h2>
 
-    <p class="lead">Each universe's reported winner is $\widehat{a} = \arg\max_a \widehat{\text{SR}}(a)$ over $|\mathcal{A}| = 20$ arms. We treat that statistic with appropriate caution.</p>
+    <div class="intuition">
+      We tested $20$ recipes per kitchen and reported the best one. If you try enough things, one of them will look great by accident. So we shake the data and ask: how often does the same recipe still come out on top?
+    </div>
+
+    <p>Formally: $\widehat{a} = \arg\max_a \widehat{\text{SR}}(a)$ over $|\mathcal{A}| = 20$ candidates. Block-bootstrap the folds, recompute the best arm thousands of times, look at the distribution.</p>
 
     <div class="grid g2" style="margin-top:18px">
       <div class="figure">
@@ -737,27 +801,31 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Cost sensitivity" data-notes="Cost slope. Top-100 and Top-250 winners have zero turnover so they are flat. Top-500 visibly pays for its turnover — but stays best at 25 bps. The ordering is robust to the cost parameter.">
   <div class="num">12</div>
   <div class="inner">
-    <span class="smallcaps">Robustness · proportional cost</span>
-    <h2>Slope of winner Sharpe in $\kappa$.</h2>
+    <span class="smallcaps">Robustness · charging the optimizer for movement</span>
+    <h2>Does charging more for trades change the answer?</h2>
 
     <div class="grid g2" style="margin-top:18px">
       <div class="figure">
-        <h4 style="margin-bottom:6px">Winner Sharpe across cost slices</h4>
+        <h4 style="margin-bottom:6px">Winner Sharpe across three cost levels</h4>
         <svg id="fig-cost" viewBox="0 0 560 360"></svg>
         <div class="caption">
-          <b>Read.</b> Equal-weight winners (Top-100, Top-250) have $\|w_t - w_{t^-}\|_1 \approx 0$ between rebalances and so are flat in $\kappa$. The Top-500 winner pays its $22\times$ turnover and still keeps the lead at $\kappa = 25$ bps.
+          <b>Read.</b> The Top-100 and Top-250 winners hardly trade — flat lines. The Top-500 winner trades a lot ($22\times$ a year) and pays for it, but still keeps the lead even at $25$ bps.
         </div>
       </div>
       <div>
-        <p>The Top-500 result tests the control interpretation directly. If the active rank-and-hold layer were noise, its Sharpe would collapse as $\kappa \to 25$ bps. Instead</p>
+        <div class="intuition">
+          If the extra ranking layer were just luck, a higher trading bill would expose it. It doesn't — the bill scales with turnover, but the winner still wins.
+        </div>
+
+        <p>For the Top-500 winner:</p>
         <div class="eqblock" style="font-size:15px">
           $$\widehat{\text{SR}}_{500}^\star(0) = 1.81, \quad \widehat{\text{SR}}_{500}^\star(10) = 1.76, \quad \widehat{\text{SR}}_{500}^\star(25) = 1.67.$$
         </div>
-        <p>The slope is $\approx -0.005$ Sharpe per bp. The same winning <em>family</em> is selected at every cost slice in every universe, so the layer-shift conclusion is not an artifact of the chosen $\kappa$.</p>
+        <p>That's $\approx -0.005$ Sharpe per basis point of cost — a real bill, but not a fatal one. The same winning <em>family</em> is picked at every cost level in every kitchen, so the layer-shift story isn't an artifact of the cost we chose.</p>
 
         <div class="gap" style="margin-top:20px">
-          <h4>Visible gap · cost realism</h4>
-          <div class="body">A proportional model is a controlled diagnostic. The next study should replace $\kappa\|\Delta w\|_1$ with $\sum_i c_i|\Delta w_i| + m_i (\Delta w_i)^2$ to incorporate impact and liquidity.</div>
+          <h4>Where this is too gentle</h4>
+          <div class="body">Real trading bills aren't proportional. They get worse the more you push at once. The next study replaces $\kappa\|\Delta w\|_1$ with $\sum_i c_i|\Delta w_i| + m_i (\Delta w_i)^2$ — a quadratic punishment for big trades.</div>
         </div>
       </div>
     </div>
@@ -768,30 +836,35 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Policy-gradient router" data-notes="The RL component sits at the system level: it routes among interpretable arms, not over raw weights. It learns stable preferences and improves over train-fixed routing in the combined panel, but does not beat the trailing-window optimizer.">
   <div class="num">13</div>
   <div class="inner">
-    <span class="smallcaps">Meta-control</span>
-    <h2>Learned routing over interpretable arms.</h2>
+    <span class="smallcaps">A head chef that learns the menu</span>
+    <h2>Can a learned router beat "do whatever worked recently"?</h2>
 
     <div class="grid g2" style="margin-top:18px">
       <div>
-        <p>Treat arm selection as a finite-action MDP. The state $s_t$ contains time features, scope identity, trailing rewards, and most recent reward vector. The policy is</p>
+        <div class="intuition">
+          We don't ask a neural net to design portfolios from scratch — that would be a black box. Instead we ask it to <em>pick</em> from the recipes we already understand. The question becomes: can a learner choose better than a simple "do whatever worked recently" rule?
+        </div>
+
+        <p>Each recipe is an "arm" $a$. The router observes the state $s_t$ (time, kitchen size, trailing rewards) and outputs a probability over arms via softmax:</p>
         <div class="eqblock">
           $$\pi_\theta(a \mid s_t) \;=\; \frac{\exp\bigl(f_\theta(s_t)_a\bigr)}{\sum_{a' \in \mathcal{A}} \exp\bigl(f_\theta(s_t)_{a'}\bigr)}.$$
         </div>
-        <p>Reward is realized net return minus a switching penalty:</p>
+        <p>It earns the realized net return, minus a small penalty for jumping recipe:</p>
         <div class="eqblock">
           $$r^{\text{router}}_t \;=\; R_t(a_t) \;-\; \xi\,\mathbf{1}\{a_t \ne a_{t-1}\}.$$
         </div>
-        <p>Updates use REINFORCE with a value baseline:</p>
+        <p>Train it with the standard REINFORCE update — pull up the log-probability of arms that did better than expected:</p>
         <div class="eqblock">
           $$\nabla_\theta J(\theta) \;=\; \mathbb{E}_\pi\!\left[\sum_t (G_t - b_t)\,\nabla_\theta \log \pi_\theta(a_t \mid s_t)\right].$$
         </div>
 
-        <h3 style="margin-top:18px">Critical design choice</h3>
-        <p>The router does not learn raw weights. Its action space is the same $\mathcal{A}$ as the enumerated grid. This makes it directly comparable to two transparent baselines:</p>
-
+        <h3 style="margin-top:18px">The fair comparison</h3>
+        <p>The same reward stream is fed to four head chefs:</p>
         <ul style="font-family:var(--sans); font-size:14px; color:var(--ink-2)">
-          <li><b>Train-fixed:</b> $a^{\text{train}} = \arg\max_a \sum_{t \in \mathcal{T}_{\text{tr}}} R_t(a)$, then hold.</li>
-          <li><b>Trailing window:</b> $a^{\text{trail}}_t = \arg\max_a \sum_{s=t-L}^{t-1} R_s(a)$.</li>
+          <li><b>Learned (RL):</b> the policy above.</li>
+          <li><b>Train-fixed:</b> pick the recipe that did best in training, never change.</li>
+          <li><b>Trailing window:</b> "do whatever worked the last few months." A dumb-but-honest online rule.</li>
+          <li><b>Random / Oracle:</b> floor and ceiling.</li>
         </ul>
       </div>
 
@@ -811,8 +884,8 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
     </div>
 
     <div class="panel" style="margin-top:28px">
-      <h4>The result is the comparison, not the win</h4>
-      <p style="margin-bottom:0">A learned router that does not beat trailing-window routing should not be deployed. Its value is methodological: when reformulated as a meta-controller over already-interpretable optimization arms, the architecture is auditable. That is the right setting in which to ask whether descriptor-conditioned context (next study) actually adds predictive content beyond recent rewards.</p>
+      <h4>What this tells us</h4>
+      <p style="margin-bottom:0">The learner does <em>better than holding one recipe</em>, but it does <em>worse than the dumb-but-honest "what worked recently" rule</em>. That's a meaningful negative result — it says: in this finite sample, a recency rule already squeezes most of the predictive juice out of recent rewards. A learned router only earns its keep if it adds something <em>more than</em> recency, like context about the kitchen itself. That's the next study.</p>
     </div>
   </div>
 </section>
@@ -821,40 +894,42 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Gaps · what this study does not show" data-notes="Be explicit about what is missing. Survivorship bias, finite folds, model-selection bias, cost realism, learned-router sample size, and lack of point-in-time universe construction.">
   <div class="num">14</div>
   <div class="inner">
-    <span class="smallcaps">Threats and open problems</span>
+    <span class="smallcaps">Where the evidence runs out</span>
     <h2>What this study does <em style="color:var(--accent)">not</em> yet establish.</h2>
 
-    <p class="lead">The strongest defense of an empirical claim is a precise statement of where the evidence runs out.</p>
+    <div class="intuition">
+      A claim is only as strong as its limits. Each box below is a thing the current data <em>cannot</em> tell you — and a precise next experiment.
+    </div>
 
     <div class="grid g2" style="margin-top:24px; gap:24px">
       <div class="gap">
-        <h4>1 · Survivorship bias</h4>
-        <div class="body">$\mathcal{U}_b(t)$ is approximated by current liquid constituents, not point-in-time membership. A name that delisted in 2020 is silently absent. This is the single highest-priority next experiment.</div>
+        <h4>1 · Survivors only</h4>
+        <div class="body">The candidate kitchens $\mathcal{U}_b(t)$ are today's liquid names, not the names that were investable on each date. A company that went bust in 2020 isn't in the data. <b>Fix:</b> rebuild point-in-time membership.</div>
       </div>
       <div class="gap">
-        <h4>2 · Finite walk-forward folds</h4>
-        <div class="body">Top-500 has only $9$ independent evaluation windows. The router has even fewer per-scope episodes. Confidence intervals are wide enough that two of three winner gaps include zero.</div>
+        <h4>2 · Few honest folds</h4>
+        <div class="body">The big kitchen has only $9$ independent windows. The router has even fewer. With a small sample, two of three winner gaps stretch through zero — the rankings could flip on noise.</div>
       </div>
       <div class="gap">
-        <h4>3 · Model-selection bias</h4>
-        <div class="body">Each universe's winner is selected from $20$ arms. The reported Sharpe is a maximum over a 20-element family — not a hypothesis test. Deflated-Sharpe-style adjustments are not yet integrated into the headline numbers.</div>
+        <h4>3 · Picked from many tries</h4>
+        <div class="body">Each kitchen reports the best of $20$ recipes. The best of many tries is bigger than the typical try. Deflated-Sharpe-style corrections aren't yet baked into the headline numbers.</div>
       </div>
       <div class="gap">
-        <h4>4 · Cost realism</h4>
-        <div class="body">The current friction term is purely linear: $\kappa\|w_t - w_{t^-}\|_1$. Real implementation cost is concave-then-convex in trade size and depends on liquidity. A nonlinear $c_i|\Delta w_i| + m_i(\Delta w_i)^2$ is the next step.</div>
+        <h4>4 · Trading bills are too gentle</h4>
+        <div class="body">Current cost is a flat $\kappa\|\Delta w\|_1$. Real bills get worse the more you push at once: $c_i|\Delta w_i| + m_i(\Delta w_i)^2$. Adding non-linear impact would punish the active recipe more.</div>
       </div>
       <div class="gap">
-        <h4>5 · Router state representation</h4>
-        <div class="body">The router uses recent rewards and scope identity. It does <em>not</em> use universe descriptors (avg. pairwise correlation, PC1 share, dispersion, vol-of-vol). Without descriptor context, beating trailing-window selection is hard.</div>
+        <h4>5 · The router can't see the kitchen</h4>
+        <div class="body">The learner only sees recent rewards and the kitchen's name — not its <em>shape</em> (pairwise correlation, PC1 share, dispersion, vol-of-vol). With no kitchen context, beating "what worked recently" is genuinely hard.</div>
       </div>
       <div class="gap">
-        <h4>6 · No exact bilevel solve</h4>
-        <div class="body">The headline equation on slide 5 is mixed-integer. The study samples it on a grid; it does not solve it. Whether a relaxed continuous formulation (e.g. $\ell_1$-regularized) can recover the same layer-shift is open.</div>
+        <h4>6 · We sampled, didn't solve</h4>
+        <div class="body">The headline equation on slide 5 is mixed-integer. We tried 60 named recipes; we didn't solve the integer program. Whether a continuous relaxation (e.g. $\ell_1$-regularized) recovers the same layer-shift is open.</div>
       </div>
     </div>
 
     <p class="muted sans" style="margin-top:30px; font-size:13px">
-      Each gap above is also a precise next experiment. None of them undermine the layered-control framing; together they describe the path from <em>mechanism evidence</em> to <em>operational claim</em>.
+      Each box above is the path from <em>"there's a mechanism here"</em> to <em>"here's a rule you can actually run."</em>
     </p>
   </div>
 </section>
@@ -863,29 +938,33 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 <section class="slide" data-title="Related work" data-notes="Locate the contribution in the literature. Markowitz, transaction-cost optimization (Garleanu-Pedersen), online portfolio (Cover), reinforcement-learning portfolios. The contribution is the decomposition + the comparison standard.">
   <div class="num">15</div>
   <div class="inner narrow">
-    <span class="smallcaps">Where this sits</span>
-    <h2>Anchoring the contribution.</h2>
+    <span class="smallcaps">How this connects</span>
+    <h2>Standing on which shoulders.</h2>
+
+    <div class="intuition">
+      Every piece of the stack borrows from a known idea. The contribution isn't any single piece — it's joining them into one map and benchmarking honestly.
+    </div>
 
     <div class="grid g2" style="margin-top:24px">
       <div>
-        <h3>Risk–return baseline</h3>
-        <p>Markowitz (1952), Sharpe ratio, mean–variance frontier — the convex starting point on slide 3.</p>
+        <h3>The risk–return dial</h3>
+        <p>Markowitz (1952). Slide 3 is just the textbook frontier — risk vs. return as one knob.</p>
 
-        <h3 style="margin-top:18px">Transaction-cost dynamic trading</h3>
-        <p>Gârleanu & Pedersen (2013) make turnover a first-class control term and show the optimal dynamic policy partially adjusts toward the static target. The $\ell_1$-regularized program on slide 4 is the discrete analogue.</p>
+        <h3 style="margin-top:18px">"Trading is fuel"</h3>
+        <p>Gârleanu &amp; Pedersen (2013) show that the optimal dynamic portfolio only partially adjusts toward its target — the rest is held back by friction. Slide 4 is the discrete sibling of that idea.</p>
       </div>
       <div>
-        <h3>Online portfolio selection</h3>
-        <p>Cover's universal portfolios (1991) and the broader online-learning portfolio literature motivate evaluating policies through nonanticipating sequential wealth. The trailing-window router is exactly an online optimizer.</p>
+        <h3>"You can't peek at tomorrow"</h3>
+        <p>Cover (1991) and the online-portfolio literature insist policies are judged sequentially, on data the system actually saw. The trailing-window router is exactly that idea.</p>
 
-        <h3 style="margin-top:18px">RL for portfolios</h3>
-        <p>Jiang & Liang (2017), Zhang et al. (2020) and others apply policy gradients to allocation. The standard the present study borrows is: a learned policy is interesting only if it beats transparent online baselines on the same reward stream.</p>
+        <h3 style="margin-top:18px">Learners over recipes</h3>
+        <p>Jiang &amp; Liang (2017), Zhang et al. (2020) apply policy gradients to allocation. The rule we borrow is strict: a learner is only interesting if it beats <em>transparent</em> online rules on the same reward stream.</p>
       </div>
     </div>
 
     <div class="panel" style="margin-top:30px">
-      <h4>The contribution</h4>
-      <p style="margin-bottom:0">A unified layered formulation — universe, screen, weighting, friction, routing — with an out-of-sample empirical surface that shows the binding optimization layer changes with universe breadth, plus a learned meta-controller benchmarked against strict online baselines.</p>
+      <h4>What's new here</h4>
+      <p style="margin-bottom:0">One layered map — universe, list, recipe, friction, head chef — plus an honest evaluation surface that shows <em>which</em> layer is binding under <em>which</em> kitchen. And a learned head chef that doesn't yet beat "what worked recently" — which is itself the result.</p>
     </div>
   </div>
 </section>
@@ -898,13 +977,13 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
     <h2>Three things to remember.</h2>
 
     <ol style="font-family:var(--serif); font-size:22px; line-height:1.45; padding-left:24px; margin-top:30px">
-      <li style="margin-bottom:22px"><b>Portfolio allocation is a layered control system.</b> Universe breadth, screen, weighting, turnover, and routing are all optimization decisions — and the static QP captures only one of them.</li>
-      <li style="margin-bottom:22px"><b>The binding layer moves with $b$.</b> $b{=}100$: screen does the work. $b{=}250$: risk filtering does. $b{=}500$: a second active ranking layer earns its turnover.</li>
-      <li style="margin-bottom:22px"><b>Complexity must beat transparent baselines.</b> A learned router that does not beat trailing-window selection is not deployable, however appealing its architecture.</li>
+      <li style="margin-bottom:22px"><b>Allocation is a stack, not a single problem.</b> Where you shop, what you list, how much of each, how often you redo it — all are optimization choices. Textbook theory only handles one of them.</li>
+      <li style="margin-bottom:22px"><b>The binding layer changes with the kitchen.</b> Small kitchen: picking does the work. Medium: filtering for calm wins. Big: a second pickier layer earns its trading bill. <span class="muted sans" style="font-size:14px">Formally, the binding layer shifts with universe breadth $b$.</span></li>
+      <li style="margin-bottom:22px"><b>Fancy must beat dumb-but-honest.</b> A learned head chef that can't beat "do whatever worked recently" isn't ready to deploy — no matter how clever the architecture.</li>
     </ol>
 
     <p class="lead" style="margin-top:36px">
-      The research question shifts from <em>"which portfolio rule wins?"</em> to <em>"which layer should be optimized under the current market structure?"</em>
+      The question shifts from <em>"which portfolio rule wins?"</em> to <em>"which layer is binding in <em>this</em> kitchen, right now?"</em>
     </p>
 
     <div class="footnote">

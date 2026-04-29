@@ -1,0 +1,2 @@
+universe,controller,n_assets,n_days,train_updates,mean_training_reward_last20,ann_return,ann_vol,sharpe,max_dd,calmar,turnover,num_trades
+cached_large_equity_10,RL_Learned,10,900,30,0.03705607720313908,0.0850553269248342,0.18186980855625826,0.46767150413564185,-0.21366953159783783,0.39806951551952957,1.9640138046211866,41

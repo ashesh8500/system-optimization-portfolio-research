@@ -1,0 +1,8 @@
+artifact,required_fields,reason
+universe_provenance.csv,"universe_name, source, construction_date, point_in_time_available, includes_delisted, survivorship_bias_flag, missing_data_rule",Prevents current-constituent bias from being hidden.
+model_selection_ledger.csv,"run_id, timestamp, universe_rule, screen_rule, K, controller, hyperparameters, cost_bps, selected_for_paper",Counts research degrees of freedom.
+all_trials.csv,"split_id, universe, rule, screen, K, controller, cost_bps, gross_return, net_return, turnover, sharpe, max_drawdown",Keeps losers and winners for honest inference.
+gross_vs_net_summary.csv,"controller, universe, gross_return, net_return, cost_drag, turnover",Shows whether signal survives implementation costs.
+deflated_sharpe_summary.csv,"controller, universe, sharpe, skew, kurtosis, n_obs, n_trials, dsr_or_adjusted_p",Separates exploratory Sharpe from stronger evidence.
+ablation_summary.csv,"base, +screen, +weighting, +routing, delta_sharpe, delta_turnover, survives_costs",Identifies which layer actually contributes.
+router_reward_panel.csv,"date, universe, context_features, arm, horizon, net_reward, turnover, drawdown",Turns meta-controller from few winner rows into many date-level samples.

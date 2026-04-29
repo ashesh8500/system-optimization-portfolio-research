@@ -1,0 +1,5 @@
+universe_name,snapshot_date,symbol,rank,score,selection_source,lookback_end
+liquid_us_equity_100,2020-02-29,AAA,1,1005.0,rolling_liquidity,2020-02-29
+liquid_us_equity_100,2020-02-29,BBB,2,804.0,rolling_liquidity,2020-02-29
+liquid_us_equity_100,2020-03-31,AAA,1,1015.0,rolling_liquidity,2020-03-31
+liquid_us_equity_100,2020-03-31,BBB,2,812.0,rolling_liquidity,2020-03-31

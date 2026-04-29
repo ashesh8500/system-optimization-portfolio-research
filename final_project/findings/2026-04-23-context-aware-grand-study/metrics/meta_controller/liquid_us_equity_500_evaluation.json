@@ -1,0 +1,21 @@
+{
+  "universe": "liquid_us_equity_500",
+  "n_train": 6,
+  "n_test": 3,
+  "feature_columns": [
+    "avg_pairwise_corr",
+    "first_pc_share",
+    "cross_sectional_dispersion",
+    "trend_persistence",
+    "vol_level",
+    "vol_of_vol",
+    "liquidity_proxy",
+    "regime_switch_rate"
+  ],
+  "accuracy": 0.3333333333333333,
+  "labels": [
+    "EW",
+    "MRH_tau21_k5",
+    "MRH_tau63_k5"
+  ]
+}

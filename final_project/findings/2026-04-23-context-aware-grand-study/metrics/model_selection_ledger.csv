@@ -1,0 +1,13 @@
+run_id,timestamp_utc,universe_name,universe_rule,screen_rule,holding_budget,controller,hyperparameters,cost_bps,selected_for_paper
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_100,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,EW,{},10.0,True
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_100,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau21_k5,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_100,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau63_k5,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_100,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau126_k5,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_250,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,EW,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_250,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau21_k5,{},10.0,True
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_250,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau63_k5,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_250,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau126_k5,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_500,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,EW,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_500,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau21_k5,{},10.0,True
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_500,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau63_k5,{},10.0,False
+2026-04-23-context-aware-grand-study,2026-04-24T01:09:46.092056+00:00,liquid_us_equity_500,fixed_current_constituents_symbol_limited,none_controller_internal_selection,controller_defined,MRH_tau126_k5,{},10.0,False

@@ -1,0 +1,5 @@
+scope,config,n,win_vs_train_selected_fixed,tie_or_win_vs_train_selected_fixed,win_vs_trailing_window,win_vs_random_mean,median_rl_vs_train_selected_fixed,median_rl_vs_trailing_window,dominant_arm_modes
+combined,aggressive,7,6,6,0,1,0.1211654277685738,-0.2884137699958231,"{'cluster_capped_momentum_63_top10|EW': 4, 'momentum_21_top10|MRH_tau126_k5': 2, 'momentum_63_top10|EW': 1}"
+liquid_us_equity_100,aggressive,7,6,6,7,7,4.912726581096649e-08,0.3518160461764781,{'momentum_21_top10|MRH_tau126_k5': 7}
+liquid_us_equity_250,aggressive,7,0,0,0,6,-1.1175870895385742e-08,-0.0005627979300916,{'low_volatility_63_top10|EW': 7}
+liquid_us_equity_500,aggressive,7,7,7,0,0,1.862645149230957e-09,-0.1957488210648298,{'momentum_21_top10|MRH_tau63_k5': 7}

@@ -1,0 +1,4 @@
+universe,n_train,n_test,feature_columns,accuracy,labels
+liquid_us_equity_100,14,8,"['avg_pairwise_corr', 'first_pc_share', 'cross_sectional_dispersion', 'trend_persistence', 'vol_level', 'vol_of_vol', 'liquidity_proxy', 'regime_switch_rate']",0.25,"['EW', 'MRH_tau126_k5', 'MRH_tau21_k5', 'MRH_tau63_k5']"
+liquid_us_equity_250,7,4,"['avg_pairwise_corr', 'first_pc_share', 'cross_sectional_dispersion', 'trend_persistence', 'vol_level', 'vol_of_vol', 'liquidity_proxy', 'regime_switch_rate']",0.0,"['EW', 'MRH_tau126_k5', 'MRH_tau21_k5']"
+liquid_us_equity_500,6,3,"['avg_pairwise_corr', 'first_pc_share', 'cross_sectional_dispersion', 'trend_persistence', 'vol_level', 'vol_of_vol', 'liquidity_proxy', 'regime_switch_rate']",0.3333333333333333,"['EW', 'MRH_tau21_k5', 'MRH_tau63_k5']"

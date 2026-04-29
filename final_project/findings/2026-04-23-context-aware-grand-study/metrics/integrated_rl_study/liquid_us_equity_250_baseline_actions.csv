@@ -1,0 +1,6 @@
+split_id,universe,evaluation_start,evaluation_end,trailing_window_arm,trailing_window_reward,trailing_window_raw_reward,trailing_window_switch_penalty
+6,liquid_us_equity_250,2023-09-14,2023-12-12,momentum_21_top10|MRH_tau63_k5,0.06035195663571358,0.06035195663571358,0.0
+7,liquid_us_equity_250,2023-12-13,2024-03-14,momentum_21_top10|MRH_tau63_k5,0.19921527802944183,0.19921527802944183,0.0
+8,liquid_us_equity_250,2024-03-15,2024-06-13,low_volatility_63_top10|MRH_tau63_k5,-0.03985298323631287,-0.039352983236312866,0.0005
+9,liquid_us_equity_250,2024-06-14,2024-09-13,low_volatility_63_top10|MRH_tau21_k5,0.08328564566373825,0.08378564566373825,0.0005
+10,liquid_us_equity_250,2024-09-16,2024-12-12,low_volatility_63_top10|MRH_tau21_k5,0.0027584596537053585,0.0027584596537053585,0.0

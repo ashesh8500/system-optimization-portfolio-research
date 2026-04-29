@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use or discuss this coursework research repository, please cite it as below."
+title: "Portfolio Allocation as Layered System Optimization"
+authors:
+  - family-names: "Kaji"
+    given-names: "Ashesh"
+year: 2026
+repository-code: "https://github.com/ashesh8500/system-optimization-portfolio-research"
+abstract: "A System Optimization Methods final project studying portfolio allocation as a layered sequential control problem over universe breadth, screening, weighting, transaction-cost control, and adaptive routing."
+keywords:
+  - portfolio optimization
+  - system optimization
+  - sequential control
+  - reinforcement learning
+  - transaction costs
+license: "MIT"

@@ -1,0 +1,5 @@
+split_id,universe,evaluation_start,evaluation_end,trailing_window_arm,trailing_window_reward,trailing_window_raw_reward,trailing_window_switch_penalty
+5,liquid_us_equity_500,2023-10-16,2024-01-16,momentum_21_top10|MRH_tau21_k5,-0.02404722571372986,-0.02404722571372986,0.0
+6,liquid_us_equity_500,2024-01-17,2024-04-16,momentum_63_top10|MRH_tau21_k5,0.1976152594089508,0.1981152594089508,0.0005
+7,liquid_us_equity_500,2024-04-17,2024-07-17,momentum_63_top10|MRH_tau21_k5,0.16405519843101501,0.16405519843101501,0.0
+8,liquid_us_equity_500,2024-07-18,2024-10-15,cluster_capped_momentum_63_top10|MRH_tau21_k5,0.22863846373558044,0.22913846373558044,0.0005

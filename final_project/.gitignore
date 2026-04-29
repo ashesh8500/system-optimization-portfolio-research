@@ -1,0 +1,20 @@
+# Local OS / IDE
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments (if created at project root)
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Optional: large data drops (uncomment if you add raw data at repo root)
+# data/raw/

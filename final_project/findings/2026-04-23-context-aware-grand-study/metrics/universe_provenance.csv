@@ -1,0 +1,4 @@
+universe_name,source,construction_date,point_in_time_available,includes_delisted,membership_changes_used,survivorship_bias_flag,missing_data_rule,minimum_history_days
+liquid_us_equity_100,"current public S&P constituent seed list, symbol_limit=25",2026-04-23,False,False,False,True,drop assets without complete adjusted-close panel in cached run,252
+liquid_us_equity_250,"current public S&P constituent seed list, symbol_limit=40",2026-04-23,False,False,False,True,drop assets without complete adjusted-close panel in cached run,252
+liquid_us_equity_500,"current public S&P constituent seed list, symbol_limit=60",2026-04-23,False,False,False,True,drop assets without complete adjusted-close panel in cached run,252

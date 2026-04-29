@@ -1,0 +1,4 @@
+universe,arms_tested,screens_tested,controllers_tested,best_screen_rule,best_controller,best_mean_sharpe,second_best_mean_sharpe,winner_gap_vs_second,diagnostic_note
+liquid_us_equity_100,20,5,4,momentum_21_top10,EW,1.4743813943593862,1.44016914424767,0.034212250111716136,Exploratory multiple-comparison count; no p-value claimed because folds are overlapping and arms are not independent.
+liquid_us_equity_250,20,5,4,low_volatility_63_top10,EW,0.8592181159536008,0.7549799282930933,0.10423818766050741,Exploratory multiple-comparison count; no p-value claimed because folds are overlapping and arms are not independent.
+liquid_us_equity_500,20,5,4,vol_adjusted_momentum_63_top10,MRH_tau21_k5,1.7564080110227396,1.6662647498237702,0.09014326119896943,Exploratory multiple-comparison count; no p-value claimed because folds are overlapping and arms are not independent.

@@ -1,0 +1,4 @@
+universe,screen_rule,holding_budget,controller,splits,mean_ann_return,mean_ann_vol,mean_sharpe,worst_split_drawdown,mean_turnover,selected_for_paper,source_path
+liquid_us_equity_500,vol_adjusted_momentum_63_top10,10,MRH_tau21_k5,9,0.3511220846395793,0.2083113569012892,1.7564080110227396,-0.1546492039959892,22.0666666666446,True,metrics/screened_candidate_pilot/liquid_us_equity_500/summary.csv
+liquid_us_equity_100,momentum_21_top10,10,EW,22,0.2041431676754959,0.2024527528797532,1.4743813943593862,-0.4491631729839874,1.0000333894311098e-12,True,metrics/screened_candidate_pilot/liquid_us_equity_100/summary.csv
+liquid_us_equity_250,low_volatility_63_top10,10,EW,11,0.1118208559257063,0.1409139384438904,0.8592181159536008,-0.1053918728589278,1.0000333894311098e-12,True,metrics/screened_candidate_pilot/liquid_us_equity_250/summary.csv

@@ -1,0 +1,6 @@
+split_id,universe,evaluation_start,evaluation_end,chosen_arm,reward,raw_reward,switch_penalty
+6,liquid_us_equity_250,2023-09-14,2023-12-12,low_volatility_63_top10|EW,0.04015159234404564,0.04015159234404564,0.0
+7,liquid_us_equity_250,2023-12-13,2024-03-14,low_volatility_63_top10|EW,0.11733929812908173,0.11733929812908173,0.0
+8,liquid_us_equity_250,2024-03-15,2024-06-13,low_volatility_63_top10|EW,-0.01570754125714302,-0.01570754125714302,0.0
+9,liquid_us_equity_250,2024-06-14,2024-09-13,low_volatility_63_top10|EW,0.11498019099235535,0.11498019099235535,0.0
+10,liquid_us_equity_250,2024-09-16,2024-12-12,low_volatility_63_top10|EW,0.04843201860785484,0.04843201860785484,0.0

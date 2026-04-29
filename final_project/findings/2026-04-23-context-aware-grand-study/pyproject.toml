@@ -1,0 +1,26 @@
+[project]
+name = "context-aware-grand-study"
+version = "0.1.0"
+description = "Context-aware portfolio allocation research package for universe, screen, weighting, and routing experiments."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gymnasium>=0.29.1",
+    "matplotlib>=3.10.0",
+    "numpy>=2.0.0",
+    "pandas>=2.2.0,<3.0.0",
+    "pufferlib>=2.0.6",
+    "pyarrow>=16.0.0",
+    "scikit-learn>=1.5.0",
+    "setuptools<70",
+    "yfinance>=0.2.50",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

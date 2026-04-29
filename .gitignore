@@ -1,0 +1,56 @@
+# macOS / editor
+.DS_Store
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+
+# Large / regenerable data caches
+final_project/**/data/*.parquet
+final_project/**/data/**/*.parquet
+final_project/**/data/raw/
+final_project/**/.cache/
+
+# Local Hermes planning state
+final_project/.hermes/
+
+# Course handouts/textbooks kept locally but not published in the research repo
+ECE*.pdf
+linear_programming_textbook.pdf
+modules/*.pdf
+final_project/proposal/ECE-GY6233 Term Project Description.pdf
+
+# Legacy exploratory bundles kept locally; the public repo keeps the final canonical study package
+final_project/exploration/
+final_project/docs/AGENTS.md
+final_project/docs/plans/
+final_project/findings/2026-04-17*/
+final_project/findings/2026-04-22*/
+final_project/findings/2026-04-22*.md
+final_project/findings/data/

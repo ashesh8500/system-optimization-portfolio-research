@@ -1,0 +1,14 @@
+descriptor,level,definition,why_it_matters
+n_assets,universe,number of eligible assets at rebalance,controls opportunity set size and diversification capacity
+weight_concentration_hhi,universe,Herfindahl index under benchmark or active weights,captures concentration / leadership intensity
+avg_pairwise_corr,universe,average rolling pairwise correlation,measures covariance structure strength
+first_pc_share,universe,share of variance explained by first principal component,captures common-factor dominance
+cross_sectional_dispersion,universe,dispersion of asset returns over recent window,indicates stock-picking opportunity
+trend_persistence,universe,autocorrelation / trend score of equal-weight universe index,helps explain momentum-friendly settings
+regime_switch_rate,universe,frequency of regime label changes over rolling window,indicates whether adaptation is likely to help
+vol_level,universe,realized volatility of universe index,measures stress / noise level
+vol_of_vol,universe,volatility of realized volatility,captures instability
+turnover_burden_proxy,controller-universe,estimated turnover under simple rebalance rule,measures frictional difficulty
+liquidity_proxy,asset/universe,"rolling ADV, dollar volume, or spread proxy",important for reconstitution and crowding realism
+breadth_effective_n,controller-universe,1/sum(w^2) under realized weights,measures diversification realized by each controller
+crowding_proxy,asset/universe,ownership / volatility-depth / overlap proxy,supports strategic-layer experiments

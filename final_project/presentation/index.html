@@ -1143,6 +1143,7 @@ const LINE = '#d8d2c2';
 
 /* ===================== FIG 1: EFFICIENT FRONTIER (computed) ===================== */
 (function(){
+  if(!document.getElementById('fig-frontier')) return;
   const svg = d3.select('#fig-frontier');
   const W=560,H=380, m={l:54,r:18,t:18,b:46};
   // Generate synthetic mu, Sigma (low-rank) for n=8
@@ -1235,6 +1236,7 @@ const LINE = '#d8d2c2';
 
 /* ===================== FIG 2: SIMPLEX / TURNOVER ===================== */
 (function(){
+  if(!document.getElementById('fig-simplex')) return;
   const svg = d3.select('#fig-simplex');
   const W=560, H=380;
   const A={x:W/2, y:50}, B={x:80, y:H-60}, C={x:W-80, y:H-60};
@@ -1581,6 +1583,7 @@ ablBars('ctrlAb',   RESEARCH.payload.controllerAb, 'c', CLAB);
 
 /* ===================== FIG 10: COST SLOPE ===================== */
 (function(){
+  if(!document.getElementById('fig-cost')) return;
   const svg = d3.select('#fig-cost');
   const W=560, H=360, m={l:54,r:60,t:24,b:46};
   const data = RESEARCH.payload.cost;

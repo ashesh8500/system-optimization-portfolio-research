@@ -192,6 +192,36 @@ table.data tr.win td:first-child{border-left:3px solid var(--accent); padding-le
 }
 .intuition em{color:var(--accent); font-style:italic}
 
+/* presentation/reading-mode separation */
+.deck-only{display:none}
+body:not(.deck) .deck-only{display:none!important}
+body.deck .scroll-detail{display:none!important}
+body.deck .deck-only{display:block}
+body.deck .deck-only.deck-grid{display:grid}
+.deck-cue{
+  border:1px solid var(--ink); border-left:4px solid var(--accent);
+  background:#fff; padding:16px 18px; margin:18px 0 22px;
+  font-family:var(--sans); font-size:clamp(15px,1.15vw,18px); line-height:1.45;
+  box-shadow:0 10px 30px rgba(0,0,0,.04);
+}
+.deck-cue strong{color:var(--accent); font-weight:700}
+.explain-strip{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:22px 0}
+.explain-step{background:#fff; border:1px solid var(--line); padding:14px; min-height:96px}
+.explain-step b{display:block; font-family:var(--sans); font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:8px}
+.explain-step span{font-family:var(--serif); font-size:19px; line-height:1.25; color:var(--ink)}
+.result-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:22px 0}
+.result-card{background:#fff; border:1px solid var(--line); border-top:4px solid var(--accent); padding:18px}
+.result-card .metric{font-family:var(--mono); font-size:22px; color:var(--accent); margin:6px 0}
+.result-card p{font-size:14px; line-height:1.45; margin:0; color:var(--ink-2)}
+.compare-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:18px 0}
+.compare-card{background:#fff; border:1px solid var(--line); padding:14px 16px; font-family:var(--sans)}
+.compare-card b{display:block; color:var(--ink); margin-bottom:4px}
+.compare-card span{color:var(--muted); font-size:13px}
+#slideMap{display:flex; gap:5px; align-items:center; max-width:240px; overflow:hidden}
+#slideMap button{width:7px; height:7px; border-radius:99px; padding:0; border:0; background:#c8c0ad; opacity:.75}
+#slideMap button.active{width:18px; background:var(--accent); opacity:1}
+@media (max-width:1050px){#slideMap{display:none}.explain-strip,.result-cards,.compare-cards{grid-template-columns:1fr}.result-cards{gap:10px}}
+
 /* dropcap on title slide lead */
 .dropcap::first-letter{
   font-family:var(--serif); float:left; font-size:5em; line-height:.85;
@@ -249,9 +279,59 @@ button.mini.active{background:var(--ink); color:var(--bg); border-color:var(--in
 
 /* deck mode */
 body.deck main{height:calc(100vh - 46px); overflow:hidden}
-body.deck .slide{display:none}
-body.deck .slide.active{display:block; animation:fade .3s ease}
-@keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+body.deck .slide{display:none; overflow:hidden}
+body.deck .slide.active{display:flex; align-items:center}
+body.deck.forward .slide.active{animation:slideInFwd .38s cubic-bezier(.2,.8,.2,1)}
+body.deck.back .slide.active{animation:slideInBack .38s cubic-bezier(.2,.8,.2,1)}
+body.deck .slide .inner{width:100%; max-height:calc(100vh - 82px); overflow:hidden}
+body.deck .slide{padding:28px max(36px, 5vw) 32px}
+body.deck h2{font-size:clamp(30px,3.25vw,48px); margin-bottom:12px}
+body.deck h3{font-size:20px}
+body.deck .lead{font-size:clamp(19px,1.6vw,24px)}
+body.deck .intuition{font-size:clamp(18px,1.35vw,22px); margin-bottom:14px}
+body.deck .eqblock, body.deck .marg, body.deck .footnote, body.deck .gap, body.deck table.data, body.deck .figure .caption, body.deck ul{display:none!important}
+body.deck .slide p{display:none}
+body.deck .slide[data-title="Title"] p,
+body.deck .slide[data-title="Related work"] p,
+body.deck .lead,
+body.deck .panel p,
+body.deck .result-card p{display:block}
+body.deck .slide[data-title="Layered formulation"] .grid.g2,
+body.deck .slide[data-title="Walk-forward protocol"] h3,
+body.deck .slide[data-title="Full surface"] .intuition,
+body.deck .slide[data-title="Winner stacks"] .intuition,
+body.deck .slide[data-title="Layer ablations"] .intuition,
+body.deck .slide[data-title="Selection risk"] .intuition,
+body.deck .slide[data-title="Adaptive routing"] .intuition,
+body.deck .slide[data-title="Adaptive routing"] h3,
+body.deck .slide[data-title="Adaptive routing"] .figure + .figure,
+body.deck .slide[data-title="Related work"] .grid.g2{display:none}
+body.deck .slide[data-title="Game theory · results"] .grid.g2{display:grid}
+body.deck .slide[data-title="Game theory · results"] h3{display:block}
+body.deck .slide[data-title="Game theory · results"] .panel p{display:block}
+body.deck .slide[data-title="Game theory · results"] .caption{display:none!important}
+body.deck .slide[data-title="Game theory · results"] .footnote{display:none!important}
+body.deck .slide[data-title="Multi-agent game · formulation"] .grid.g2{display:grid}
+body.deck .slide[data-title="Multi-agent game · formulation"] .panel p{display:block}
+body.deck .slide[data-title="Limitations"] h3{display:block}
+body.deck .slide[data-title="Limitations"] .grid.g3{display:grid}
+body.deck .slide[data-title="Limitations"] .gap{display:block!important}
+body.deck .slide[data-title="Limitations"] .gap h4{display:block}
+body.deck .slide[data-title="Limitations"] .gap .body{display:block}
+body.deck .slide[data-title="Takeaways"] ul{display:block!important}
+body.deck .slide[data-title="Takeaways"] li{display:list-item!important}
+body.deck .slide[data-title="Adaptive routing"] h3{display:block}
+body.deck .slide[data-title="Adaptive routing"] .figure + .figure{display:none}
+body.deck .figure{padding:12px}
+body.deck .figure svg{max-height:38vh}
+body.deck .g2{gap:22px}
+body.deck .panel{padding:18px 20px}
+body.deck .panel p{font-size:13px!important; line-height:1.4}
+body.deck .panel h3{font-size:20px; line-height:1.2}
+body.deck .slide > .num{opacity:.55}
+@keyframes slideInFwd{from{opacity:0; transform:translateX(26px) scale(.992)} to{opacity:1; transform:none}}
+@keyframes slideInBack{from{opacity:0; transform:translateX(-26px) scale(.992)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:reduce){body.deck.forward .slide.active,body.deck.back .slide.active{animation:none}}
 
 .kbd{
   font-family:var(--mono); font-size:11px; padding:1px 5px;
@@ -282,6 +362,7 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   <div class="mark">Layered Portfolio Optimization</div>
   <div class="num" id="counter">01 / —</div>
   <div class="title sans" id="slideTitle"></div>
+  <div id="slideMap" aria-label="Slide map"></div>
   <div class="spacer"></div>
   <button id="modeBtn">Scroll</button>
   <button id="notesBtn">Notes</button>
@@ -293,8 +374,8 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 
 <main>
 
-<!-- ============ SLIDE 1: TITLE ============ -->
-<section class="slide active" data-title="Title" data-notes="Open by stating the thesis: portfolio allocation is not a single static optimization. It is a layered control problem where the binding optimization layer changes with universe breadth. Three to five sentences, no jargon yet.">
+<!-- ============ SLIDE 01: TITLE ============ -->
+<section class="slide active" data-title="Title" data-notes="Welcome. I'm Ashesh Kaji, and this is my final project for System Optimization Methods. The question: what happens when you treat portfolio allocation not as a single static optimization, but as a layered control problem — where each decision is an optimization in its own right? I ran a 60-arm walk-forward evaluation. I also extended to multi-agent game theory. The headline: the optimal control stack changes with universe breadth, and the framework for asking these questions is the real contribution.">
   <div class="num">01</div>
   <div class="inner">
     <div style="margin-bottom:36px">
@@ -323,8 +404,9 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 2: THESIS ============ -->
-<section class="slide" data-title="Thesis" data-notes="State the central claim. The optimal stack is not invariant. Top-100 favors momentum + EW. Top-250 favors low-vol + EW. Top-500 favors vol-adjusted momentum + 21d rank-and-hold. Numbers come from the final 60-arm matrix at 10 bps cost.">
+
+<!-- ============ SLIDE 02: THESIS ============ -->
+<section class="slide" data-title="Thesis" data-notes="The thesis: the best recipe changes with the kitchen. Narrow universe — top 100 — 21-day momentum plus equal weight, Sharpe 1.47. The screen does the work. Medium — top 250 — momentum screens underperform. Low-volatility filtering with equal weight wins, Sharpe 0.86. More options introduced more noise. Broad — top 500 — enough dispersion that a second ranking layer pays off. Volatility-adjusted momentum plus 21-day rank-and-hold, Sharpe 1.76, higher turnover. The binding optimization layer changes with opportunity set breadth. This is system optimization, not strategy search.">
   <div class="num">02</div>
   <div class="inner">
     <span class="smallcaps">Thesis</span>
@@ -335,10 +417,11 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
     </div>
 
     <p class="lead" style="margin-top:14px">
+      Portfolio allocation is a sequential stochastic control problem: at each rebalance, you choose a universe, screen candidates, assign weights, and pay turnover costs. The Markowitz convex QP solves the weight problem — but the upstream decisions (universe and screen) can dominate the outcome.
       We measured every step out of sample. When the shopping list is short, picking the right items matters most. When it's long, ranking them ranks too. When it's medium, calming things down beats chasing winners.
     </p>
 
-    <div class="grid g3" style="margin-top:36px">
+    <div class="grid g3 scroll-detail" style="margin-top:36px">
       <div class="panel">
         <h4>Small kitchen · Top-100</h4>
         <h3>Pick the recent winners. Cook them equally.</h3>
@@ -365,106 +448,10 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 3: STARTING POINT — MARKOWITZ ============ -->
-<section class="slide" data-title="Markowitz baseline" data-notes="Walk through the QP. Emphasize that this is convex on the simplex but assumes the universe is given. The KKT condition shows that weights tilt toward expected return only insofar as covariance-scaled risk permits. Move slider live to show the optimum sweep the frontier.">
+
+<!-- ============ SLIDE 03: LAYERED FORMULATION ============ -->
+<section class="slide" data-title="Layered formulation" data-notes="This is the central decomposition. At each rebalance: observe market information, choose a candidate universe, apply a screen, apply a controller, execute, observe net reward. The problem combines convex optimization for weights, combinatorial optimization for screening, sequential control for repeated adjustment, and online learning for routing. Instead of solving the intractable mixed problem, I enumerate a disciplined 60-arm grid, evaluate each out of sample, and study the surface. The screen changes the feasible set; the controller optimizes within it. This is bilevel optimization.">
   <div class="num">03</div>
-  <div class="inner">
-    <span class="smallcaps">Starting point</span>
-    <h2>One knob: how cautious do you want to be?</h2>
-
-    <div class="grid g2" style="margin-top:18px">
-      <div>
-        <div class="intuition">
-          Markowitz turns "what should I buy?" into a single dial. Crank it down and you chase return; crank it up and you chase calm. The slider on the right <em>is</em> that dial.
-        </div>
-
-        <p>Formally: pick weights $w$ on the simplex to balance expected return $\hat\mu^\top w$ against risk $w^\top\hat\Sigma w$, scaled by a caution parameter $\lambda$.</p>
-
-        <div class="eqblock">
-          <span class="label">Markowitz · 1952</span>
-          $$\begin{aligned} \min_{w \in \Delta_n} \quad &amp; \lambda\, w^\top \hat\Sigma w \;-\; \hat\mu^\top w \\ \text{s.t.} \quad &amp; \mathbf{1}^\top w = 1, \quad w \ge 0. \end{aligned}$$
-        </div>
-
-        <p>The optimum lives on the <em>efficient frontier</em>: the best return at each level of risk. The first-order condition</p>
-
-        <div class="eqblock">
-          $$2\lambda\, \hat\Sigma\, w^\star \;-\; \hat\mu \;+\; \eta\, \mathbf{1} = 0 \;\Longrightarrow\; w^\star(\lambda) \propto \hat\Sigma^{-1}(\hat\mu - \eta\mathbf{1})$$
-        </div>
-
-        <p>is the formal version of the dial: bigger $\lambda$ pulls $w^\star$ toward the calmest portfolio; smaller $\lambda$ pushes it toward the highest-return one.</p>
-
-        <div class="gap" style="margin-top:24px">
-          <h4>Why one dial isn't enough</h4>
-          <div class="body">The equation assumes you've already decided <em>what</em> can go in the basket. In a real system, that menu is also a choice — and so is how often you rebuild it. Those decisions sit upstream of $w$ and can dominate it.</div>
-        </div>
-      </div>
-
-      <div class="figure">
-        <h4 style="margin-bottom:6px">Computed efficient frontier</h4>
-        <svg id="fig-frontier" viewBox="0 0 560 380"></svg>
-        <div class="controls">
-          <label>risk aversion $\lambda$</label>
-          <input id="lam" type="range" min="0.05" max="20" step="0.05" value="2.5">
-          <span class="val" id="lamV">2.50</span>
-        </div>
-        <div class="caption">
-          <b>Method.</b> Synthetic $n=8$ assets with random $\hat\mu$, low-rank $\hat\Sigma$. Frontier traced by sweeping $\lambda$ and solving (3.1) on the simplex with projected gradient. The red dot is $w^\star(\lambda)$ at the chosen $\lambda$; grey points are sampled long-only portfolios.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ SLIDE 4: TURNOVER AS CONTROL EFFORT ============ -->
-<section class="slide" data-title="Turnover as control" data-notes="Turnover is not a fee; it is control effort. Show the iso-cost ball around w_{t-}. As kappa grows, the new optimum is dragged back. This is the sequential-control reading of the QP.">
-  <div class="num">04</div>
-  <div class="inner">
-    <span class="smallcaps">From a static problem to a controller</span>
-    <h2>Trading is fuel. Movement costs more than you'd think.</h2>
-
-    <div class="grid g2" style="margin-top:18px">
-      <div>
-        <div class="intuition">
-          Each rebalance is a tug-of-war: the new "best" target pulls the portfolio one way, last week's holdings pull the other. The bigger the cost knob, the harder it is to leave home.
-        </div>
-
-        <p>Let $w_{t^-}$ be where you are and $w_t$ where you'd like to be. The trading-cost term $\kappa\,\|w_t-w_{t^-}\|_1$ literally measures how far you'd have to move:</p>
-        <div class="eqblock">
-          $$\max_{w_t \in \Delta} \;\; \alpha_t^\top w_t \;-\; \lambda\, w_t^\top \hat\Sigma_t w_t \;-\; \underbrace{\kappa\, \|w_t - w_{t^-}\|_1}_{\text{cost of moving}}.$$
-        </div>
-
-        <p>Your current holdings are now part of the "state". Done across many periods, this becomes a planning problem — at each step, balance today's reward against tomorrow's value:</p>
-        <div class="eqblock">
-          <span class="label">Bellman</span>
-          $$V_t(x_t) = \max_{a_t \in \mathcal{A}(x_t)} \Big\{\, g(x_t,a_t) + \delta\,\mathbb{E}\big[V_{t+1}(x_{t+1}) \mid x_t,a_t\big] \,\Big\}$$
-        </div>
-        <p style="font-size:15px">with $g(x_t,a_t) = \mathbb{E}[w_t^\top r_{t+1}\mid \mathcal{F}_t] - \kappa\|w_t-w_{t^-}\|_1 - \rho\,\mathcal{R}(w_t,\mathcal{F}_t)$.</p>
-        <div class="marg sans" style="margin-top:14px">
-          We don't actually solve Bellman. We approximate the optimal policy with a small set of simple, named recipes (equal weight, rank-and-hold) and pick among them. The point is just to see <em>where</em> the trading-cost tug binds.
-        </div>
-      </div>
-
-      <div class="figure">
-        <h4 style="margin-bottom:6px">$\ell_1$-regularized update on the 3-asset simplex</h4>
-        <svg id="fig-simplex" viewBox="0 0 560 380"></svg>
-        <div class="controls">
-          <label>cost $\kappa$</label>
-          <input id="kap" type="range" min="0" max="80" step="1" value="10">
-          <span class="val" id="kapV">10</span>
-          <span class="muted">|</span>
-          <span>fired turnover $\|w_t - w_{t^-}\|_1 =$ <span class="val mono" id="toV">—</span></span>
-        </div>
-        <div class="caption">
-          <b>Method.</b> Iso-reward ellipses are the level sets of $\alpha^\top w - \lambda w^\top \hat\Sigma w$ on the simplex. Diamonds are iso-cost contours of $\kappa\|w-w_{t^-}\|_1$ centred at the prior portfolio. The optimum slides from the unconstrained target toward $w_{t^-}$ as $\kappa$ rises.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ SLIDE 5: LAYERED FORMULATION ============ -->
-<section class="slide" data-title="Layered formulation" data-notes="This is the central modelling slide. Universe breadth, screen, weighting controller. The stack (b,j,k) defines a feasible problem; the empirical study enumerates a 3x5x4 grid and evaluates each arm out of sample.">
-  <div class="num">05</div>
   <div class="inner">
     <span class="smallcaps">The decomposition</span>
     <h2>Two stacked choices: <em style="color:var(--accent)">what</em> to consider, then <em style="color:var(--accent)">how much</em> of each.</h2>
@@ -472,6 +459,16 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
     <div class="intuition">
       Step 1, <b>screen</b>: pick which $K$ items from a long list. (The shopping list.) Step 2, <b>weighting</b>: pick how much of each. (The recipe.) Both are optimization choices; classical theory only handles step 2.
     </div>
+
+    <div class="explain-strip deck-only deck-grid">
+      <div class="explain-step"><b>1 · Universe</b><span>Which market can I shop in?</span></div>
+      <div class="explain-step"><b>2 · Screen</b><span>Which names make the active list?</span></div>
+      <div class="explain-step"><b>3 · Controller</b><span>How much of each name?</span></div>
+      <div class="explain-step"><b>4 · Friction</b><span>How costly is movement?</span></div>
+      <div class="explain-step"><b>5 · Router</b><span>Which recipe should run now?</span></div>
+    </div>
+
+    <div class="deck-cue deck-only"><strong>Key bridge:</strong> the empirical study does not search for one magic portfolio. It maps which layer becomes binding as the universe gets wider.</div>
 
     <p style="margin-top:18px">Index the choices by universe breadth $b$, screen rule $j$, and weighting controller $k$. The whole stack is one optimization:</p>
 
@@ -521,9 +518,10 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 6: SCREEN AS DECISION ============ -->
-<section class="slide" data-title="Screening visualization" data-notes="Move the score selector to show that momentum, low-vol, and vol-adjusted momentum produce structurally different active sets. Screening is a discrete optimization, not preprocessing.">
-  <div class="num">06</div>
+
+<!-- ============ SLIDE 04: SCREEN AS DECISION ============ -->
+<section class="slide" data-title="Screening visualization" data-notes="Screens are a discrete optimization layer, not preprocessing. Each screen computes per-asset scores from past prices, then selects the top K. Five scoring functions: 21-day momentum, 63-day momentum, volatility-adjusted momentum, low-vol as negative score, and cluster-capped momentum. Different scores select different active sets — changing the feasible region for every downstream controller. The visualization shows how the same top-500 universe produces different top-10 selections depending on the scoring rule. Scores are purely functions of past prices — no lookahead.">
+  <div class="num">04</div>
   <div class="inner">
     <span class="smallcaps">The shopping list is a decision</span>
     <h2>Different scoring rules pick different shopping lists.</h2>
@@ -549,6 +547,12 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
           The shopping list isn't <em>cleaning</em> — it's part of the recipe. Each scoring rule cooks a different meal even before any weights are chosen.
         </div>
 
+        <div class="compare-cards deck-only deck-grid">
+          <div class="compare-card"><b>Momentum</b><span>chooses recent winners.</span></div>
+          <div class="compare-card"><b>Low volatility</b><span>chooses calm names.</span></div>
+          <div class="compare-card"><b>Vol-adjusted momentum</b><span>chooses trend after discounting noise.</span></div>
+        </div>
+
         <p>Formally, a screen $S_j$ is just a map: candidates in, list out, with a size cap.</p>
 
         <div class="eqblock" style="font-size:15px">
@@ -565,9 +569,10 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 7: PROTOCOL ============ -->
-<section class="slide" data-title="Walk-forward protocol" data-notes="Make the protocol concrete. Train end, validation end, evaluation start/end. Statistics are computed only through train end. Net reward subtracts proportional turnover cost. Every arm is stored — not only the winner.">
-  <div class="num">07</div>
+
+<!-- ============ SLIDE 05: WALK-FORWARD PROTOCOL ============ -->
+<section class="slide" data-title="Walk-forward protocol" data-notes="Walk-forward validation. For each universe, the data splits into chronological train and test windows. Screen membership uses only training-period data. Performance measured on the subsequent test interval. No lookahead bias. Top-100 yields 22 splits, top-250 yields 11, top-500 yields 9. Ten basis points one-way trading cost is the primary slice, with 0 and 25 for diagnostics. Every arm is recorded, enabling honest ablation and multiple-comparison diagnostics.">
+  <div class="num">05</div>
   <div class="inner">
     <span class="smallcaps">How we kept ourselves honest</span>
     <h2>No peeking at tomorrow.</h2>
@@ -577,6 +582,8 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
         <div class="intuition">
           A backtest only counts if the strategy could have actually been run. So we fit each recipe using <em>only</em> data up to a date, then judge it on the next 90 days — and repeat.
         </div>
+
+        <div class="deck-cue deck-only"><strong>Presenter version:</strong> blue means information the strategy was allowed to see; red means the exam. Every arm takes the same exam, and every arm is kept in the ledger.</div>
 
         <p>Concretely: every screen score and every controller statistic is computed using prices through the training end $t^{\text{tr}}_s$ only. Net reward is then realized over the next window $[t^{\text{ev,start}}_s, t^{\text{ev,end}}_s]$, with trading costs subtracted:</p>
 
@@ -617,9 +624,10 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 8: FULL SURFACE HEATMAP ============ -->
-<section class="slide" data-title="Full surface" data-notes="This is the central empirical figure. Tabs switch universe. The selected (winning) cell is outlined in oxblood. Pause here and let the audience read the structural shift.">
-  <div class="num">08</div>
+
+<!-- ============ SLIDE 06: FULL SURFACE ============ -->
+<section class="slide" data-title="Full surface" data-notes="The full 60-arm surface. Each cell is the best Sharpe across weighting controllers for a screen-universe pair. The bright spot moves as the kitchen grows. Top-100: momentum screens dominate. Top-250: only low-vol shows strength. Top-500: volatility-adjusted and 63-day momentum surge. This is the most compact evidence that the screen objective matters — it changes the feasible set in a way that can dominate the weighting rule. There is no single best screening rule.">
+  <div class="num">06</div>
   <div class="inner">
     <span class="smallcaps">The whole map, in one picture</span>
     <h2>The bright spot moves as the kitchen grows.</h2>
@@ -628,7 +636,9 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
       Each cell is one recipe, evaluated honestly. Darker = better. The story isn't <em>which</em> cell is best — it's how the dark region <em>shifts</em> across tabs.
     </div>
 
-    <p class="lead">For each universe, $5 \times 4 = 20$ recipes. The winning cell is outlined; the colour ramp is shared across panels so you can compare directly.</p>
+    <div class="deck-cue deck-only"><strong>How to read it live:</strong> do not read all 60 cells. Point to the outlined cell in each tab and say: the winning region moves as the candidate universe changes.</div>
+
+    <p class="lead scroll-detail">For each universe, $5 \times 4 = 20$ recipes. The winning cell is outlined; the colour ramp is shared across panels so you can compare directly.</p>
 
     <div class="figure" style="margin-top:18px">
       <div class="tabs" id="hmTabs"></div>
@@ -640,9 +650,10 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 9: WINNER STACKS ============ -->
-<section class="slide" data-title="Winner stacks" data-notes="Three winning stacks. Read each row. The argument is that the same controller is not best across breadths — therefore the optimization formulation must include the layer choice.">
-  <div class="num">09</div>
+
+<!-- ============ SLIDE 07: WINNER STACKS ============ -->
+<section class="slide" data-title="Winner stacks" data-notes="The three winning stacks. Top-100: 21-day momentum, equal weight, Sharpe 1.47, near-zero turnover. Top-250: low-vol, equal weight, Sharpe 0.86, only 10.5% max drawdown. Top-500: volatility-adjusted momentum, 21-day rank-and-hold, Sharpe 1.76, 35% return, but 22 times turnover. Narrow universe: screening does the work. Broad universe: second ranking layer earns its cost. Medium universe: noise dominates, risk filtering beats momentum. This non-monotonic relationship is the central empirical finding.">
+  <div class="num">07</div>
   <div class="inner">
     <span class="smallcaps">Headline result</span>
     <h2>Different kitchens want different recipes.</h2>
@@ -651,7 +662,13 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
       Same trading-cost, same honest protocol, three universe sizes. The best recipe in the small kitchen would be a poor choice in the big one — and vice versa. That's the layer-shift in one row.
     </div>
 
-    <table class="data" style="margin-top:18px; font-size:15px">
+    <div class="result-cards deck-only deck-grid">
+      <div class="result-card"><h4>Top-100</h4><h3>Screening does the work.</h3><div class="metric">Sharpe 1.47</div><p>21-day momentum + equal weight. Narrow menu: avoid overfitting the weights.</p></div>
+      <div class="result-card"><h4>Top-250</h4><h3>Noise control wins.</h3><div class="metric">Sharpe 0.86</div><p>63-day low volatility + equal weight. Wider is not automatically better.</p></div>
+      <div class="result-card"><h4>Top-500</h4><h3>Second-stage ranking pays.</h3><div class="metric">Sharpe 1.76</div><p>Vol-adjusted momentum + 21-day rank-and-hold. The active layer earns its cost.</p></div>
+    </div>
+
+    <table class="data scroll-detail" style="margin-top:18px; font-size:15px">
       <thead>
         <tr>
           <th>Kitchen size</th>
@@ -711,9 +728,10 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 10: ABLATIONS ============ -->
-<section class="slide" data-title="Layer ablations" data-notes="Ablate one layer at a time. Average over screens to evaluate controllers; average over controllers to evaluate screens. Equal weighting wins on average in 100/250; rank-and-hold takes 500.">
-  <div class="num">10</div>
+
+<!-- ============ SLIDE 08: LAYER ABLATIONS ============ -->
+<section class="slide" data-title="Layer ablations" data-notes="Which layer pulls its weight? Left: averaging over controllers, how do screens compare? Right: averaging over screens, which controller family wins? Top-100: the screen picks the winner. Top-250: low-vol dominates — almost nothing else works. Top-500: 21-day rank-and-hold adds value, but only with the right screen. Extra optimization effort pays only when the upstream feasible set has enough dispersion. This is cost-benefit at the system level.">
+  <div class="num">08</div>
   <div class="inner">
     <span class="smallcaps">Layer attribution</span>
     <h2>Which layer is actually pulling its weight?</h2>
@@ -742,15 +760,22 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 11: SELECTION RISK ============ -->
-<section class="slide" data-title="Selection risk" data-notes="Stop and be honest. The winning Sharpe is selected over 20 arms. Block-bootstrap winner stability is around one-third. Two of three CIs include zero. Treat the result as mechanism evidence, not a deployable claim.">
-  <div class="num">11</div>
+
+<!-- ============ SLIDE 09: SELECTION RISK ============ -->
+<section class="slide" data-title="Selection risk" data-notes="Model-selection risk. Twenty arms per universe, 9 to 22 splits — the point-estimate winner is fragile. Block-bootstrap with 2,000 resamples: the best arm is selected in only one-third of bootstrap samples. Winner-gap confidence intervals include zero for two of three universes. The results are mechanism evidence — how the surface changes across layers — not a claim about any specific arm. The pattern matters more than the exact winner. This is rigorous system optimization.">
+  <div class="num">09</div>
   <div class="inner">
     <span class="smallcaps">Diagnostics · being honest about luck</span>
     <h2>The exact winner is shaky. The pattern isn't.</h2>
 
     <div class="intuition">
       We tested $20$ recipes per kitchen and reported the best one. If you try enough things, one of them will look great by accident. So we shake the data and ask: how often does the same recipe still come out on top?
+    </div>
+
+    <div class="compare-cards deck-only deck-grid">
+      <div class="compare-card"><b>Winner gap</b><span>small-to-moderate, not decisive.</span></div>
+      <div class="compare-card"><b>Bootstrap stability</b><span>about one-third across scopes.</span></div>
+      <div class="compare-card"><b>Interpretation</b><span>mechanism evidence, not a deployable trading rule.</span></div>
     </div>
 
     <p>Formally: $\widehat{a} = \arg\max_a \widehat{\text{SR}}(a)$ over $|\mathcal{A}| = 20$ candidates. Block-bootstrap the folds, recompute the best arm thousands of times, look at the distribution.</p>
@@ -797,44 +822,10 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 12: COST SENSITIVITY ============ -->
-<section class="slide" data-title="Cost sensitivity" data-notes="Cost slope. Top-100 and Top-250 winners have zero turnover so they are flat. Top-500 visibly pays for its turnover — but stays best at 25 bps. The ordering is robust to the cost parameter.">
-  <div class="num">12</div>
-  <div class="inner">
-    <span class="smallcaps">Robustness · charging the optimizer for movement</span>
-    <h2>Does charging more for trades change the answer?</h2>
 
-    <div class="grid g2" style="margin-top:18px">
-      <div class="figure">
-        <h4 style="margin-bottom:6px">Winner Sharpe across three cost levels</h4>
-        <svg id="fig-cost" viewBox="0 0 560 360"></svg>
-        <div class="caption">
-          <b>Read.</b> The Top-100 and Top-250 winners hardly trade — flat lines. The Top-500 winner trades a lot ($22\times$ a year) and pays for it, but still keeps the lead even at $25$ bps.
-        </div>
-      </div>
-      <div>
-        <div class="intuition">
-          If the extra ranking layer were just luck, a higher trading bill would expose it. It doesn't — the bill scales with turnover, but the winner still wins.
-        </div>
-
-        <p>For the Top-500 winner:</p>
-        <div class="eqblock" style="font-size:15px">
-          $$\widehat{\text{SR}}_{500}^\star(0) = 1.81, \quad \widehat{\text{SR}}_{500}^\star(10) = 1.76, \quad \widehat{\text{SR}}_{500}^\star(25) = 1.67.$$
-        </div>
-        <p>That's $\approx -0.005$ Sharpe per basis point of cost — a real bill, but not a fatal one. The same winning <em>family</em> is picked at every cost level in every kitchen, so the layer-shift story isn't an artifact of the cost we chose.</p>
-
-        <div class="gap" style="margin-top:20px">
-          <h4>Where this is too gentle</h4>
-          <div class="body">Real trading bills aren't proportional. They get worse the more you push at once. The next study replaces $\kappa\|\Delta w\|_1$ with $\sum_i c_i|\Delta w_i| + m_i (\Delta w_i)^2$ — a quadratic punishment for big trades.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ SLIDE 13: META-CONTROL / RL ============ -->
-<section class="slide" data-title="Policy-gradient router" data-notes="The RL component sits at the system level: it routes among interpretable arms, not over raw weights. It learns stable preferences and improves over train-fixed routing in the combined panel, but does not beat the trailing-window optimizer.">
-  <div class="num">13</div>
+<!-- ============ SLIDE 10: ADAPTIVE ROUTING ============ -->
+<section class="slide" data-title="Adaptive routing" data-notes="Can a learned router beat simple baselines? Policy-gradient router with softmax policy, state features including trailing rewards and scope identity, switching penalty. Baselines: train-fixed, trailing-window — pick whatever worked recently, random, oracle. Results: RL improves over fixed in the combined panel. In top-100, beats trailing. But in combined and top-500, the simple trailing-window router dominates. Honest conclusion: RL recovers stable policies but doesn't justify complexity over a transparent online optimizer. Transparent baselines must be beaten.">
+  <div class="num">10</div>
   <div class="inner">
     <span class="smallcaps">A head chef that learns the menu</span>
     <h2>Can a learned router beat "do whatever worked recently"?</h2>
@@ -843,6 +834,12 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
       <div>
         <div class="intuition">
           We don't ask a neural net to design portfolios from scratch — that would be a black box. Instead we ask it to <em>pick</em> from the recipes we already understand. The question becomes: can a learner choose better than a simple "do whatever worked recently" rule?
+        </div>
+
+        <div class="compare-cards deck-only deck-grid">
+          <div class="compare-card"><b>Beats fixed</b><span>the learner improves over holding one training winner.</span></div>
+          <div class="compare-card"><b>Loses to recency</b><span>trailing-window selection is the stronger online baseline.</span></div>
+          <div class="compare-card"><b>Next step</b><span>give the router structural context, not just recent rewards.</span></div>
         </div>
 
         <p>Each recipe is an "arm" $a$. The router observes the state $s_t$ (time, kitchen size, trailing rewards) and outputs a probability over arms via softmax:</p>
@@ -883,16 +880,112 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
       </div>
     </div>
 
-    <div class="panel" style="margin-top:28px">
+    <div class="deck-cue deck-only"><strong>Bottom line:</strong> RL is first-class in the project, but the result is disciplined: it is promising only after it beats transparent recency routing on the same reward stream.</div>
+
+    <div class="panel scroll-detail" style="margin-top:28px">
       <h4>What this tells us</h4>
       <p style="margin-bottom:0">The learner does <em>better than holding one recipe</em>, but it does <em>worse than the dumb-but-honest "what worked recently" rule</em>. That's a meaningful negative result — it says: in this finite sample, a recency rule already squeezes most of the predictive juice out of recent rewards. A learned router only earns its keep if it adds something <em>more than</em> recency, like context about the kitchen itself. That's the next study.</p>
     </div>
   </div>
 </section>
 
-<!-- ============ SLIDE 14: GAPS ============ -->
-<section class="slide" data-title="Gaps · what this study does not show" data-notes="Be explicit about what is missing. Survivorship bias, finite folds, model-selection bias, cost realism, learned-router sample size, and lack of point-in-time universe construction.">
-  <div class="num">14</div>
+
+<!-- ============ SLIDE 11: GAME THEORY — FORMULATION ============ -->
+<section class="slide" data-title="Multi-agent game · formulation" data-notes="The game-theoretic extension. Single-agent treats arms as independent. In reality, strategies compete for the same assets. Six strategy arms as players in a non-cooperative game. Each player maximizes signal return minus risk minus turnover minus crowding — gamma times dot product with sum of others' weights. One extra linear term in the convex QP. Nash equilibrium via Gauss-Seidel best-response: optimize holding others fixed, iterate. Convergence in four to eight iterations, stable across all 20 quarterly windows.">
+  <div class="num">11</div>
+  <div class="inner">
+    <span class="smallcaps">System Optimization Methods · Game Theory</span>
+    <h2>When strategies <em>compete</em> for the same assets.</h2>
+    <div class="intuition">
+      Strategy arms aren't independent — if everyone holds the same assets, they crowd each other out. Game theory models this as a non-cooperative equilibrium.
+    </div>
+    <div class="grid g2" style="grid-template-columns:1.2fr 0.8fr; margin-top:20px;">
+      <div>
+        <div class="eqblock">
+          $$U_a(w_a,w_{-a}) = \underbrace{\alpha_a^\top w_a}_{\text{signal return}} - \underbrace{\lambda w_a^\top\Sigma w_a}_{\text{risk}} - \underbrace{\kappa\|\Delta w_a\|_1}_{\text{turnover}} - \underbrace{\gamma\,w_a^\top\!\sum_{j\neq a} w_j}_{\text{crowding}}$$
+          <div class="label">Player a's utility</div>
+        </div>
+        <p class="sans" style="font-size:13px; color:var(--muted); margin-top:6px;">
+          <b>Players:</b> 6 strategy arms (momentum, low-vol, VAM, cluster-capped × EW / rank-and-hold).<br>
+          <b>Shared universe:</b> Top-500 candidates.<br>
+          <b>Solution:</b> Iterative Gauss-Seidel best-response dynamics.
+        </p>
+      </div>
+      <div class="panel">
+        <span class="smallcaps">Key insight</span>
+        <p style="font-size:14px; line-height:1.45; color:var(--ink-2);">
+          The same convex QP used throughout this project — with <em>one extra linear term</em> — solves each player's best response. The interaction is simple, but the equilibrium reveals whether crowding changes the answer.
+        </p>
+        <p style="font-size:13px; color:var(--muted);">
+          Convergence: 4–8 iterations, 20/20 windows stable.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ SLIDE 12: GAME THEORY — RESULTS ============ -->
+<section class="slide" data-title="Game theory · results" data-notes="Game-theoretic results. At gamma 0.05, efficiency loss under 2% for most players. Low-vol player improves — crowding penalizes others for holding the same low-vol assets. Crowding sweep: gamma zero, 25% overlap. Gamma 0.05, 10%. Gamma 0.25, near zero overlap. But total utility drops less than 3% across the sweep. Temporally, the best player's share oscillates between 28 and 36%. No single strategy dominates — dominance is regime-dependent. Single-agent finds what wins; multi-agent finds what survives. They're complementary.">
+  <div class="num">12</div>
+  <div class="inner">
+    <span class="smallcaps">System Optimization Methods · Game-Theoretic Results</span>
+    <h2>Crowding <em>separates</em> the strategies. Efficiency barely drops.</h2>
+    <div class="intuition">
+      Six strategy arms compete for the same 500 assets. At low crowding, they overlap naturally (~25%). As crowding increases, they diversify away — but total system utility drops less than 3%. No single player dominates across market regimes.
+    </div>
+
+    <div class="grid g2" style="margin-top:14px;">
+      <div class="figure">
+        <span class="smallcaps">Equilibrium efficiency by player (γ=0.05)</span>
+        <table class="data" style="font-size:11px;">
+          <thead><tr><th>Strategy arm</th><th>Single-agent</th><th>Equilibrium</th><th>Eff. loss</th></tr></thead>
+          <tbody>
+            <tr><td>21d Mom / EW</td><td class="num">0.205</td><td class="num">0.209</td><td class="num" style="color:var(--good)">−1.9%</td></tr>
+            <tr><td>63d Mom / EW</td><td class="num">0.187</td><td class="num">0.185</td><td class="num">1.1%</td></tr>
+            <tr><td>63d LowVol / EW</td><td class="num">−0.046</td><td class="num">−0.015</td><td class="num" style="color:var(--good)">+67%</td></tr>
+            <tr><td>63d VAM / RH 21d</td><td class="num">0.039</td><td class="num">0.048</td><td class="num" style="color:var(--good)">−23%</td></tr>
+            <tr><td>63d Mom / RH 21d</td><td class="num">0.625</td><td class="num">0.614</td><td class="num">1.8%</td></tr>
+          </tbody>
+        </table>
+        <div class="caption"><b>Table.</b> Efficiency loss under 2% for most players at moderate crowding. Low-vol benefits from reduced competition in equilibrium.</div>
+      </div>
+
+      <div>
+        <div class="panel" style="margin-bottom:12px;">
+          <span class="smallcaps">Crowding sweep (γ ∈ [0, 1.0])</span>
+          <p style="font-size:13px; line-height:1.5; color:var(--ink-2);">
+            <b>γ=0:</b> 25% overlap · independent play<br>
+            <b>γ=0.05:</b> 10% overlap · moderate crowding<br>
+            <b>γ≥0.25:</b> <2% overlap · near-separation<br>
+            <br><b>Total system utility drops <3%</b> across the entire sweep.
+          </p>
+        </div>
+        <div class="panel" style="margin-bottom:12px;">
+          <span class="smallcaps">20 quarterly windows · all converged</span>
+          <p style="font-size:13px; line-height:1.5; color:var(--ink-2);">
+            Utility share of best player: <b>28–36%</b> across windows. Strategy dominance is <em>regime-dependent</em>, not structural. No single strategy eliminates the others.
+          </p>
+        </div>
+        <div class="panel" style="background:var(--panel-2);">
+          <h3>Two lenses, one problem</h3>
+          <p style="font-size:13px; line-height:1.45; color:var(--ink-2);">
+            <b>Single-agent:</b> which stack maximizes risk-adjusted return?<br>
+            <b>Multi-agent:</b> which strategies survive when they compete?<br>
+            <br>The answers are complementary. Moderate crowding doesn't change the ordering. High crowding forces separation. Both perspectives use the same system optimization toolkit.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="footnote">
+      <b>Method.</b> Nash equilibrium via Gauss-Seidel best-response dynamics. Each player solves a convex QP with one extra linear crowding term. Convergence in 4–8 iterations. Code under <code>game_theoretic/</code>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13: LIMITATIONS ============ -->
+<section class="slide" data-title="Limitations" data-notes="What this study doesn't yet establish. Survivor bias from current-constituent universes. Finite folds — only 9 to 11 splits for larger universes. Model-selection bias from 60 arms — I report diagnostics but the risk isn't eliminated. Proportional costs — no nonlinear impact, no liquidity constraints. The router can't see universe structure, only past rewards. We sampled a grid rather than solving the full bilevel problem. These limitations are also the roadmap for the next step.">
+  <div class="num">13</div>
   <div class="inner">
     <span class="smallcaps">Where the evidence runs out</span>
     <h2>What this study does <em style="color:var(--accent)">not</em> yet establish.</h2>
@@ -901,7 +994,13 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
       A claim is only as strong as its limits. Each box below is a thing the current data <em>cannot</em> tell you — and a precise next experiment.
     </div>
 
-    <div class="grid g2" style="margin-top:24px; gap:24px">
+    <div class="result-cards deck-only deck-grid">
+      <div class="result-card"><h4>Data</h4><h3>Point-in-time universes.</h3><p>Rebuild membership so failed/delisted names are not silently missing.</p></div>
+      <div class="result-card"><h4>Inference</h4><h3>More independent folds.</h3><p>Winner gaps and router claims need more out-of-sample episodes.</p></div>
+      <div class="result-card"><h4>Costs + RL</h4><h3>More realistic friction and context.</h3><p>Add nonlinear impact and feed the router structural descriptors of the universe.</p></div>
+    </div>
+
+    <div class="grid g2 scroll-detail" style="margin-top:24px; gap:24px">
       <div class="gap">
         <h4>1 · Survivors only</h4>
         <div class="body">The candidate kitchens $\mathcal{U}_b(t)$ are today's liquid names, not the names that were investable on each date. A company that went bust in 2020 isn't in the data. <b>Fix:</b> rebuild point-in-time membership.</div>
@@ -934,47 +1033,13 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
   </div>
 </section>
 
-<!-- ============ SLIDE 15: RELATED WORK ============ -->
-<section class="slide" data-title="Related work" data-notes="Locate the contribution in the literature. Markowitz, transaction-cost optimization (Garleanu-Pedersen), online portfolio (Cover), reinforcement-learning portfolios. The contribution is the decomposition + the comparison standard.">
-  <div class="num">15</div>
-  <div class="inner narrow">
-    <span class="smallcaps">How this connects</span>
-    <h2>Standing on which shoulders.</h2>
 
-    <div class="intuition">
-      Every piece of the stack borrows from a known idea. The contribution isn't any single piece — it's joining them into one map and benchmarking honestly.
-    </div>
-
-    <div class="grid g2" style="margin-top:24px">
-      <div>
-        <h3>The risk–return dial</h3>
-        <p>Markowitz (1952). Slide 3 is just the textbook frontier — risk vs. return as one knob.</p>
-
-        <h3 style="margin-top:18px">"Trading is fuel"</h3>
-        <p>Gârleanu &amp; Pedersen (2013) show that the optimal dynamic portfolio only partially adjusts toward its target — the rest is held back by friction. Slide 4 is the discrete sibling of that idea.</p>
-      </div>
-      <div>
-        <h3>"You can't peek at tomorrow"</h3>
-        <p>Cover (1991) and the online-portfolio literature insist policies are judged sequentially, on data the system actually saw. The trailing-window router is exactly that idea.</p>
-
-        <h3 style="margin-top:18px">Learners over recipes</h3>
-        <p>Jiang &amp; Liang (2017), Zhang et al. (2020) apply policy gradients to allocation. The rule we borrow is strict: a learner is only interesting if it beats <em>transparent</em> online rules on the same reward stream.</p>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-top:30px">
-      <h4>What's new here</h4>
-      <p style="margin-bottom:0">One layered map — universe, list, recipe, friction, head chef — plus an honest evaluation surface that shows <em>which</em> layer is binding under <em>which</em> kitchen. And a learned head chef that doesn't yet beat "what worked recently" — which is itself the result.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ SLIDE 16: TAKEAWAYS ============ -->
-<section class="slide" data-title="Takeaways" data-notes="Three things to remember. Layered control. Binding layer changes with breadth. Complexity must beat transparent baselines.">
-  <div class="num">16</div>
+<!-- ============ SLIDE 14: TAKEAWAYS ============ -->
+<section class="slide" data-title="Takeaways" data-notes="Four takeaways. First: optimize the opportunity set before over-engineering the optimizer. Second: treat screens as decision rules, not preprocessing. Third: keep equal weighting in your benchmark — it's a low-variance controller after screening. Fourth: game theory reveals what single-agent analysis misses. When strategies compete, crowding separates them, but efficiency loss is modest. The toolkit spans convex QP, dynamic programming, policy-gradient RL, and Nash equilibrium. The contribution is methodological: showing how to choose the right tool for where the binding constraint lives. Thank you.">
+  <div class="num">14</div>
   <div class="inner narrow">
     <span class="smallcaps">Conclusion</span>
-    <h2>Three things to remember.</h2>
+    <h2>Three things to remember — plus one more.</h2>
 
     <ol style="font-family:var(--serif); font-size:22px; line-height:1.45; padding-left:24px; margin-top:30px">
       <li style="margin-bottom:22px"><b>Allocation is a stack, not a single problem.</b> Where you shop, what you list, how much of each, how often you redo it — all are optimization choices. Textbook theory only handles one of them.</li>
@@ -996,6 +1061,7 @@ body.deck .slide.active{display:block; animation:fade .3s ease}
 
 </main>
 
+
 <script>
 /* ===================== DATA ===================== */
 const RESEARCH = window.__BAKED_DATA__ = {/* injected below */};
@@ -1008,10 +1074,27 @@ RESEARCH.payload = JSON.parse(document.getElementById('data').textContent);
 
 /* ===================== NAV ===================== */
 const slides = Array.from(document.querySelectorAll('.slide'));
+const slideMap = document.getElementById('slideMap');
+if(slideMap){
+  slides.forEach((s,j)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.title=String(j+1).padStart(2,'0')+' · '+(s.dataset.title||'Slide');
+    b.setAttribute('aria-label', b.title);
+    b.onclick=()=>setSlide(j);
+    slideMap.appendChild(b);
+  });
+}
 let idx = 0;
 function setSlide(i){
-  idx = Math.max(0, Math.min(slides.length-1, i));
+  const next = Math.max(0, Math.min(slides.length-1, i));
+  const dir = next < idx ? 'back' : 'forward';
+  document.body.classList.remove('forward','back');
+  void document.body.offsetWidth;
+  document.body.classList.add(dir);
+  idx = next;
   slides.forEach((s,j)=>s.classList.toggle('active', j===idx));
+  if(slideMap) Array.from(slideMap.children).forEach((b,j)=>b.classList.toggle('active', j===idx));
   document.getElementById('progress').style.width = ((idx+1)/slides.length*100)+'%';
   const total = String(slides.length).padStart(2,'0');
   const cur = String(idx+1).padStart(2,'0');

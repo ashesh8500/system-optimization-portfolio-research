@@ -1196,7 +1196,8 @@ ablBars('ctrlAb',   RESEARCH.payload.controllerAb, 'c', CLAB);
       b.classList.add('active'); cur=b.dataset.bsu; run();
     };
   });
-  document.getElementById('bsRun').onclick=run;
+  const bsBtn = document.getElementById('bsRun');
+  if(bsBtn) bsBtn.onclick=run;
 
   function gapPoint(u){
     const arms = heat.filter(d=>d.u===u).map(d=>d.sr).sort((a,b)=>b-a);

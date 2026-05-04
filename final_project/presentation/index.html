@@ -389,8 +389,8 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
 <section class="slide" data-title="Main result" data-notes="This is the punchline. The best screen/controller stack changes completely depending on how many candidates you're picking from. This means the decomposition isn't just taxonomy — it reveals that different universes have different binding constraints.">
   <div class="num">02</div>
   <div class="inner">
-    <span class="smallcaps">The Central Finding</span>
-    <h2>The best controller depends on <em style="color:var(--accent)">which universe</em> you give it.</h2>
+    <span class="smallcaps">Thesis</span>
+    <h2>The best recipe changes with the <em style="color:var(--accent)">kitchen</em>.</h2>
     <div class="intuition">
       If a single recipe worked everywhere, the decomposition wouldn't matter. The fact that it changes proves the layers interact.
     </div>
@@ -477,8 +477,8 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
 <section class="slide" data-title="Walk-forward protocol" data-notes="No peeking. Every screen and controller is trained on data up to the split boundary, then evaluated on the next window. We record every arm — all 60 — so the analysis isn't selective. This is the empirical version of out-of-sample control evaluation.">
   <div class="num">07</div>
   <div class="inner">
-    <span class="smallcaps">Method</span>
-    <h2>Train on the past, test on the <em style="color:var(--accent)">future</em>.</h2>
+    <span class="smallcaps">How we kept ourselves honest</span>
+    <h2>No peeking at <em style="color:var(--accent)">tomorrow</em>.</h2>
     <div class="intuition">
       Chronological walk-forward splits. Screens and controllers see only training-window data. Performance is measured strictly out of sample. 60 arms × 3 cost slices: all recorded, no cherry-picking.
     </div>
@@ -491,8 +491,8 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
 <section class="slide" data-title="Full surface" data-notes="This is the full empirical surface. Each cell is one screen × controller combination, out of sample. Switch between universe tabs and watch the bright spot move. The heatmap makes the interaction visible: the best cell in Top-100 is not the best cell in Top-500.">
   <div class="num">08</div>
   <div class="inner">
-    <span class="smallcaps">The Surface</span>
-    <h2>The bright spot <em style="color:var(--accent)">moves</em> as the universe expands.</h2>
+    <span class="smallcaps">The whole map, in one picture</span>
+    <h2>The bright spot moves as the <em style="color:var(--accent)">kitchen</em> grows.</h2>
     <div class="intuition">
       If the layers didn't interact, the same cell would win everywhere. It doesn't. Toggle between universes and watch where the dark cells land.
     </div>
@@ -506,8 +506,8 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
 <section class="slide" data-title="Winning stacks" data-notes="These are the actual numbers for the best stack in each universe. Notice: 22 splits in Top-100, only 9 in Top-500. The narrower universe has more history and more independent folds. Also notice the drawdowns — Top-100 momentum gets crushed in bad months (-45%), while Top-250 low-vol holds up much better (-10.5%).">
   <div class="num">09</div>
   <div class="inner">
-    <span class="smallcaps">The Winners</span>
-    <h2>Three universes, three different recipes.</h2>
+    <span class="smallcaps">Headline result</span>
+    <h2>Different kitchens want different <em style="color:var(--accent)">recipes</em>.</h2>
     <div class="result-cards deck-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:24px;">
       <div class="result-card">
         <h4>Top-100 · 22 splits</h4>
@@ -534,8 +534,8 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
 <section class="slide" data-title="Why the breakdown matters" data-notes="This is the core evidence that the decomposition is real, not cosmetic. The same controllers perform DIFFERENTLY in different universes. Equal weight is dominant in Top-100 (mean Sharpe 1.38) and still good in Top-500 (1.42) — but 21d rank-and-hold jumps from 0.95 in Top-100 to 1.43 in Top-500. That's a full inversion. The decomposition reveals this interaction.">
   <div class="num">10</div>
   <div class="inner">
-    <span class="smallcaps">The Evidence</span>
-    <h2>The same controller <em style="color:var(--accent)">wins and loses</em> depending on the universe.</h2>
+    <span class="smallcaps">Layer attribution</span>
+    <h2>Which layer is actually <em style="color:var(--accent)">pulling its weight</em>?</h2>
     <div class="intuition">
       If the decomposition didn't matter, the same controller would dominate everywhere. Here's what actually happens — averaged across all 5 screens in each universe:
     </div>
@@ -590,31 +590,55 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
   </div>
 </section>
 
-<section class="slide" data-title="RL Router" data-notes="This is where I take a position. The RL router is placed as a meta-controller — it chooses among interpretable arms, it doesn't learn raw weights. It beats train-fixed in the combined panel by +7%. But trailing-window routing (a dead-simple online optimizer that picks whichever arm performed best recently) beats RL in most scopes. My take: RL's contribution is architectural, not performance. The architecture is correct. The features are insufficient. The right next step is to give the router structural descriptors.">
+<section class="slide" data-title="RL Router" data-notes="Can a learned router beat simple baselines? Policy-gradient router with softmax policy, state features including trailing rewards and scope identity, switching penalty. Baselines: train-fixed, trailing-window — pick whatever worked recently, random, oracle. Results: RL improves over fixed in the combined panel. In top-100, beats trailing. But in combined and top-500, the simple trailing-window router dominates. Honest conclusion: RL recovers stable policies but doesn't justify complexity over a transparent online optimizer.">
   <div class="num">13</div>
   <div class="inner">
-    <span class="smallcaps">System-Level Policy</span>
-    <h2>RL learns stable arm preferences. But <em style="color:var(--accent)">trailing-window</em> is hard to beat.</h2>
-    <div class="intuition">
-      The RL router is a meta-controller: it picks which arm to run, it doesn't learn weights from scratch. That's the right architecture. But with only recent rewards as state, it can't see regime structure that trailing-window routing also misses.
+    <span class="smallcaps">A head chef that learns the menu</span>
+    <h2>Can a learned router beat "do whatever worked recently"?</h2>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div>
+        <div class="intuition">
+          We don't ask a neural net to design portfolios from scratch — that would be a black box. Instead we ask it to <em>pick</em> from the recipes we already understand.
+        </div>
+        <p>Each recipe is an "arm" $a$. State $s_t$ (time, kitchen size, recent rewards). Softmax policy:</p>
+        <div class="eqblock">
+          $$\pi_\theta(a \mid s_t) = \frac{\exp(f_\theta(s_t)_a)}{\sum_{a'} \exp(f_\theta(s_t)_{a'})}.$$
+        </div>
+        <p>Router reward with switching penalty:</p>
+        <div class="eqblock">
+          $$r^{\text{router}}_t = R_t(a_t) - \xi\,\mathbf{1}\{a_t \ne a_{t-1}\}.$$
+        </div>
+        <p>Trained via REINFORCE:</p>
+        <div class="eqblock">
+          $$\nabla_\theta J = \mathbb{E}_\pi\Bigl[\sum_t (G_t - b_t)\,\nabla_\theta \log \pi_\theta(a_t \mid s_t)\Bigr].$$
+        </div>
+        <h3 style="margin-top:14px">The fair comparison</h3>
+        <p>Same reward stream, four head chefs:</p>
+        <ul style="font-family:var(--sans); font-size:13px; color:var(--ink-2); padding-left:18px;">
+          <li><b>Learned (RL):</b> the policy above.</li>
+          <li><b>Train-fixed:</b> pick the best training recipe, never change.</li>
+          <li><b>Trailing window:</b> "do whatever worked recently."</li>
+          <li><b>Random / Oracle:</b> floor and ceiling.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="figure">
+          <h4 style="margin-bottom:6px">Cumulative test reward by router (10 bps)</h4>
+          <svg id="fig-rl" viewBox="0 0 580 320"></svg>
+          <div class="caption">RL improves over train-fixed in the combined panel (+0.08) but loses to trailing-window (−0.33).</div>
+        </div>
+        <div class="figure" style="margin-top:16px">
+          <h4 style="margin-bottom:6px">Training trajectory · single seed</h4>
+          <svg id="fig-rlcurve" viewBox="0 0 580 200"></svg>
+          <div class="caption">30 policy-gradient updates. Reward stabilizes after ~8 steps; high variance from few independent trajectories.</div>
+        </div>
+      </div>
     </div>
-    <div class="grid g2" style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:14px;">
-      <div class="figure">
-        <h4 style="margin-bottom:6px">Combined panel: cumulative test reward</h4>
-        <table class="data compact" style="font-size:11px;">
-          <tr><th>Method</th><th>Cum. reward</th><th>vs RL</th></tr>
-          <tr><td>Oracle (upper bound)</td><td class="num">2.586</td><td class="num">+1.373</td></tr>
-          <tr><td>Trailing-window</td><td class="num">1.543</td><td class="num" style="color:var(--accent)">+0.330</td></tr>
-          <tr><td>Random</td><td class="num">1.276</td><td class="num">+0.063</td></tr>
-          <tr class="win"><td>RL (policy-gradient)</td><td class="num">1.213 ± 0.063</td><td class="num">—</td></tr>
-          <tr><td>Train-fixed</td><td class="num">1.134</td><td class="num" style="color:var(--good)">−0.079</td></tr>
-        </table>
-      </div>
-      <div class="panel">
-        <h3>My take: architectural win, feature problem</h3>
-        <p style="font-size:13px; line-height:1.5;">RL beats train-fixed (+7%) — it actually switches when beneficial. But trailing-window wins because <em>recent reward carries most of the signal</em> in this setting. RL's state (time features + recent rewards) adds nothing beyond that.</p>
-        <p style="font-size:13px; line-height:1.5; margin-top:8px;"><b>The fix:</b> give the router <em>structural descriptors</em> — universe concentration, cross-sectional dispersion, volatility-of-volatility, trend persistence. Then RL can learn regime-conditioned policies that trailing-window <em>cannot</em> replicate. That's where this becomes genuinely useful.</p>
-      </div>
+
+    <div class="panel" style="margin-top:22px">
+      <h4>What this tells us</h4>
+      <p style="margin-bottom:0">The learner beats holding one recipe, but loses to the dumb-but-honest "what worked recently" rule. In this finite sample, recency already squeezes most predictive juice from recent rewards. A learned router only earns its keep with <em>more than</em> recency — like structural descriptors about the kitchen itself. That's the next study.</p>
     </div>
   </div>
 </section>
@@ -686,8 +710,8 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
 <section class="slide" data-title="Limitations" data-notes="Be honest. Point-in-time universes are approximate. 9-22 folds is not a lot. RL has 4-14 test periods per scope. Proportional costs ignore market impact. But these limitations point to clear next steps, not fatal flaws.">
   <div class="num">16</div>
   <div class="inner">
-    <span class="smallcaps">Limits</span>
-    <h2>What this study <em style="color:var(--accent)">does not</em> establish.</h2>
+    <span class="smallcaps">Where the evidence runs out</span>
+    <h2>What this study does <em style="color:var(--accent)">not</em> yet establish.</h2>
     <div class="result-cards deck-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:24px;">
       <div class="result-card"><h4>Data</h4><h3>Point-in-time membership.</h3><p>Current universes use approximate constituents. Delisted names are silently missing, which biases performance estimates upward. Rebuilding with proper membership filters is the top priority.</p></div>
       <div class="result-card"><h4>Inference</h4><h3>Small fold counts.</h3><p>Top-100 has 22 splits; Top-250 has 11; Top-500 has 9. Confidence intervals on mean Sharpe differences are wide. The results are mechanism evidence, not deployment claims.</p></div>

@@ -1060,8 +1060,8 @@ const LINE = '#d8d2c2';
     const kapV = document.getElementById('kapV');
     const toV = document.getElementById('toV');
     if(kapV) kapV.textContent = k;
-    // alpha = 1/(1 + k*c). At k=0, alpha=1; at k large, alpha→0
-    const alpha = 1/(1 + k*0.04);
+    // alpha = 1/(1 + k). At k=0, alpha=1 → target. At k=0.1, alpha≈0.09 → heavily constrained toward old.
+    const alpha = 1/(1 + k*100);
     const w = old.map((v,i)=> v*(1-alpha) + target[i]*alpha);
     const p = bary(w);
     newDot.attr('cx', p.x).attr('cy', p.y);

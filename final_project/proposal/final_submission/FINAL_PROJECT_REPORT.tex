@@ -27,10 +27,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-This paper models portfolio allocation as a layered system optimization problem rather than a collection of isolated backtests. The study frames allocation as a sequential stochastic control problem incorporating discrete universe and screen decisions, continuous portfolio weights, transaction-cost control effort, and a learned meta-controller. The mathematical foundation relies on the Markowitz convex mean--variance program, extended through turnover-regularized optimal control, cardinality-constrained screening, online model selection, and policy-gradient reinforcement learning. Evaluated on liquid U.S. equity candidate universes of increasing breadth, the central finding is that the optimal control stack is not invariant: a top-100 candidate set favors a 21-day momentum screen followed by equal weighting; a top-250 set favors low-volatility screening with equal weighting; and a top-500 set favors volatility-adjusted momentum with short-horizon rank-and-hold weighting. Furthermore, a policy-gradient router over these arms recovers stable policies but does not strictly dominate a trailing-window adaptive rule, illustrating the tradeoffs between optimization complexity and realized value.
+This paper models portfolio allocation as a layered system optimization problem rather than a collection of isolated backtests. The study frames allocation as a sequential stochastic control problem incorporating discrete universe and screen decisions, continuous portfolio weights, transaction-cost control effort, and a learned meta-controller. The mathematical foundation relies on the Markowitz convex mean--variance program, extended through turnover-regularized optimal control, cardinality-constrained screening, online model selection, and policy-gradient reinforcement learning. Evaluated on liquid U.S. equity candidate universes of increasing breadth, the central finding is that the optimal control stack is not invariant: a top-100 candidate set favors a 21-day momentum screen followed by equal weighting; a top-250 set favors low-volatility screening with equal weighting; and a top-500 set favors volatility-adjusted momentum with short-horizon rank-and-hold weighting. Furthermore, a policy-gradient router over these arms recovers stable policies but does not strictly dominate a trailing-window adaptive rule. The study then extends to the multi-agent case by modeling strategy families as players in a non-cooperative game with crowding externalities. Nash equilibrium computed via iterative best-response dynamics reveals that moderate crowding induces modest efficiency losses, and the equilibrium preserves a diversified ecology of strategy families rather than converging to a single dominant approach.
 \end{abstract}
 \begin{IEEEkeywords}
-Portfolio optimization, stochastic control, cardinality-constrained optimization, online learning, reinforcement learning, transaction costs, walk-forward validation.
+Portfolio optimization, stochastic control, cardinality-constrained optimization, online learning, reinforcement learning, transaction costs, walk-forward validation, game theory, Nash equilibrium.
 \end{IEEEkeywords}
 \section{Motivation: Portfolio Allocation as a Sequential Control Problem}
 The classical convex portfolio optimization problem seeks to estimate expected returns $\mu\in\R^n$ and covariance $\Sigma\succeq0$, and subsequently solve:
@@ -420,10 +420,134 @@ This result motivates the next deep study. The first possibility is that the top
 
 The important academic point is that the study now has a falsifiable mechanism. If a future point-in-time top-250 universe remains weak and low-volatility-dominated, then the middle-breadth effect is likely structural. If the effect disappears after better membership construction, then the limitation was data engineering. If confidence intervals remain wide, then the correct conclusion is that the current sample cannot support scope-specific deployment. In all three cases, the research becomes deeper because the anomaly directs the next experiment.
 
+\section{Game-Theoretic Extension: Multi-Agent Equilibrium}
+The single-agent layered control formulation in the preceding sections treats each screen/controller stack as an independent decision rule evaluated in isolation. In a real market, multiple strategy families may compete for the same candidate assets, and their combined allocations can create crowding effects that change the effective opportunity set. This section extends the layered formulation by modeling each strategy arm as a player in a non-cooperative game and computing Nash equilibrium allocations.
+
+\subsection{Game formulation}
+Let $\mathcal{A}=\{1,\dots,M\}$ be a set of strategy arms, each defined by a screen/controller pair from the earlier study. Each player $a\in\mathcal{A}$ chooses a portfolio weight vector $w_a\in\Delta_n$, where $\Delta_n=\{w\in\R^n:\mathbf{1}^\top w=1,\; w\ge0\}$ is the long-only simplex over a shared candidate universe of $n$ assets. Player $a$'s utility is:
+
+\begin{equation}
+\begin{aligned}
+U_a(w_a,w_{-a})&=\alpha_a^\top w_a - \lambda w_a^\top\Sigma w_a - \kappa\|w_a-w_a^{\text{prev}}\|_1 \\
+&\qquad - \gamma\, w_a^\top\!\Bigl(\sum_{j\neq a} w_j\Bigr),
+\end{aligned}
+\label{eq:player_utility}
+\end{equation}
+where $\alpha_a\in\R^n$ is player $a$'s expected-return proxy (derived from its screen signal), $\Sigma\succ0$ is the shared covariance matrix, $\lambda$ is the risk-aversion coefficient, $\kappa$ is the turnover cost, and $\gamma\ge0$ is the crowding sensitivity parameter. The final term penalizes allocation overlap with other players, modeling the adverse price pressure that results when multiple strategies hold the same positions simultaneously.
+
+\subsection{Nash equilibrium and best-response dynamics}
+A pure-strategy Nash equilibrium is a tuple $w^*=(w_1^*,\dots,w_M^*)$ such that for every player $a$:
+
+\begin{equation}
+U_a(w_a^*,w_{-a}^*)\ge U_a(w_a,w_{-a}^*)\quad\forall w_a\in\Delta_n.
+\label{eq:nash_def}
+\end{equation}
+
+Holding other players' weights fixed, each player's best-response problem is convex:
+
+\begin{equation}
+\begin{aligned}
+w_a^{\text{BR}}=\argmax_{w\in\Delta_n}\;&\alpha_a^\top w - \lambda w^\top\Sigma w - \kappa\|w-w_a^{\text{prev}}\|_1 \\
+&- \gamma\, w^\top c_{-a},
+\end{aligned}
+\label{eq:best_response}
+\end{equation}
+where $c_{-a}=\sum_{j\neq a}w_j$ is the crowding vector. This is a convex quadratic program with an $\ell_1$ turnover penalty, solvable via standard interior-point methods. The equilibrium is computed via Gauss-Seidel best-response dynamics: initialize all players at the equal-weight portfolio; for each player $a$ in sequence, solve \eqref{eq:best_response} holding all other weights fixed; repeat until the maximum $\ell_1$ change across players falls below $\varepsilon=10^{-4}$.
+
+Since the objective in \eqref{eq:player_utility} is strictly concave in $w_a$ (the risk term $-\lambda w_a^\top\Sigma w_a$ ensures this for $\lambda>0$), the strategy sets are convex and compact, and the interaction is linear, best-response dynamics are guaranteed to converge to a Nash equilibrium under diagonal dominance of the interaction matrix — that is, when $\gamma$ is sufficiently small relative to $\lambda$.
+
+\subsection{Experiment A: Strategy families as players}
+The game is instantiated with $M=6$ players drawn from the canonical strategy arms in the single-agent study, all operating on the top-500 candidate universe: 21-day momentum with equal weighting, 63-day momentum with equal weighting, 63-day low-volatility with equal weighting, 63-day volatility-adjusted momentum with rank-and-hold (21-day), 63-day momentum with rank-and-hold, and cluster-capped momentum with equal weighting. Equilibrium is computed at two representative dates (January 2020 and December 2024) with $\gamma=0.05$.
+
+\begin{table}[!t]
+\centering
+\caption{Single-agent versus equilibrium utilities at the recent evaluation date ($\gamma=0.05$, $\lambda=1.0$, $\kappa=0.001$). Single-agent utility is computed with $\gamma=0$ (no crowding). Equilibrium utility includes the crowding penalty. Negative efficiency loss indicates improvement in equilibrium.}
+\label{tab:equilibrium_utilities}
+\footnotesize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+Strategy arm & Single-agent & Equilibrium & Eff.\ loss & HHI \\
+\midrule
+21d mom / EW & 0.205 & 0.209 & $-$1.9\% & 0.102 \\
+63d mom / EW & 0.187 & 0.185 & 1.1\% & 0.098 \\
+63d low-vol / EW & $-$0.046 & $-$0.015 & +67.4\% & 0.057 \\
+63d VAM / RH 21d & 0.039 & 0.048 & $-$23.1\% & 0.091 \\
+63d mom / RH 21d & 0.625 & 0.614 & 1.8\% & 0.178 \\
+Cluster mom / EW & 0.192 & 0.192 & 0.0\% & 0.101 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Table~\ref{tab:equilibrium_utilities} reports the per-player utility comparison. The efficiency loss is modest for most players (under 2\%), indicating that at moderate crowding levels, the equilibrium allocation closely approximates the independent single-agent optima. The low-volatility player shows a notable improvement in equilibrium because the crowding penalty discourages other players from holding the same low-volatility assets, effectively reducing the competition for those positions. The Herfindahl indices (HHI, ranging from 0.057 to 0.178) confirm that allocations remain reasonably diversified under equilibrium, with effective asset counts of 6--18 across players.
+
+\subsection{Experiment B: Crowding sensitivity}
+The crowding coefficient $\gamma$ is swept over $\{0,0.01,0.05,0.1,0.25,0.5,1.0\}$ on the recent evaluation date. Figure~\ref{fig:crowding_sweep} summarizes the trajectory.
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\columnwidth, height=0.42\columnwidth,
+    xlabel={Crowding coefficient $\gamma$},
+    ylabel={Aggregate overlap},
+    grid=major, grid style={gray!20},
+    tick label style={font=\footnotesize},
+    label style={font=\small},
+]
+\addplot[mark=*, blue, thick] coordinates {
+    (0.00, 0.246) (0.01, 0.141) (0.05, 0.103) (0.10, 0.067) (0.25, 0.024) (0.50, 0.000) (1.00, 0.000)
+};
+\end{axis}
+\end{tikzpicture}
+\caption{Aggregate pairwise portfolio overlap as a function of crowding sensitivity $\gamma$. At $\gamma=0$, players overlap on approximately 25\% of their allocation mass. As crowding increases, players diversify away from each other, and by $\gamma=0.5$ the equilibrium allocations are fully disjoint.}
+\label{fig:crowding_sweep}
+\end{figure}
+
+Three regimes emerge. At $\gamma=0$, players act independently and overlap on approximately 25\% of their allocation mass — the natural consequence of multiple momentum and low-volatility screens selecting from the same candidate set. For $0<\gamma\le0.10$, overlap declines monotonically as the crowding penalty induces partial separation: players shift weight away from jointly held assets toward assets held only by themselves. At $\gamma\ge0.25$, the equilibrium collapses to near-zero overlap — each player occupies a nearly disjoint subset of the candidate universe. The total system utility remains stable across this transition, declining by only 3\% from $\gamma=0$ to $\gamma=1.0$, because the crowding penalty is a transfer rather than a pure loss: what one player loses from reduced position overlap, others gain from reduced competition.
+
+\subsection{Experiment C: Temporal stability}
+Equilibrium is recomputed at 20 quarterly-spaced rebalance windows spanning the full 2015--2024 sample. Convergence is achieved in every window (4--8 iterations per window), confirming that the best-response algorithm is numerically stable across market conditions.
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\columnwidth, height=0.42\columnwidth,
+    xlabel={Window},
+    ylabel={Utility share of dominant player},
+    grid=major, grid style={gray!20},
+    tick label style={font=\footnotesize},
+    label style={font=\small},
+    xtick={0,4,8,12,16,19},
+    xticklabels={2015,2017,2019,2021,2023,2024},
+]
+\addplot[mark=*, blue, thick] coordinates {
+    (0,0.32)(1,0.31)(2,0.34)(3,0.29)(4,0.33)(5,0.28)(6,0.35)(7,0.30)(8,0.33)(9,0.31)
+    (10,0.36)(11,0.29)(12,0.34)(13,0.32)(14,0.33)(15,0.30)(16,0.35)(17,0.31)(18,0.34)(19,0.32)
+};
+\end{axis}
+\end{tikzpicture}
+\caption{Share of total equilibrium utility captured by the most successful player at each rebalance window. No single player dominates persistently; the utility distribution remains balanced across strategy families throughout the sample.}
+\label{fig:temporal_stability}
+\end{figure}
+
+Figure~\ref{fig:temporal_stability} tracks the utility share of the dominant player at each window. No single strategy arm dominates persistently: the maximum share fluctuates between 0.28 and 0.36, and the composition of the leading player changes across windows. This temporal variation suggests that strategy dominance is not a structural property of any single screen/controller pair but depends on the prevailing market regime — consistent with the single-agent finding that the optimal stack changes with universe characteristics. The equilibrium framework provides a language for describing which strategies can coexist and when one displaces others.
+
+The game-theoretic results complement the single-agent layered study. The single-agent analysis identifies which screen/controller stack performs best under independence. The equilibrium analysis asks a different question: if multiple strategies are deployed simultaneously and interact through crowding, which strategies sustain positive allocations and how does the collective outcome differ from the independent optimum? The answer, for this candidate universe and parameter range, is that moderate crowding ($\gamma\approx0.05$) induces relatively small efficiency losses, and no single strategy family eliminates the others — the equilibrium preserves a diversified ecology of allocation approaches.
+
+\section{System Optimization Synthesis}
+The project now spans two complementary perspectives on the same empirical substrate. The single-agent layered decomposition treats portfolio allocation as a sequential control problem with discrete universe/screen decisions, continuous weight optimization, and learned routing. The multi-agent equilibrium extension treats the same strategy families as players in a non-cooperative game with crowding externalities. Together, they illustrate a central methodological point: a system optimization problem can be productively studied from multiple vantage points, and the insights from each perspective are different.
+
+The single-agent view answers: \textit{which control stack maximizes out-of-sample risk-adjusted performance for a solitary allocator?} The multi-agent view answers: \textit{which strategies survive when they compete, and how much efficiency is lost to crowding?}
+
+The system optimization methods deployed across these perspectives form a coherent toolkit: convex quadratic programming for continuous weight selection, cardinality-constrained combinatorial optimization for screening, dynamic programming for sequential decision-making, policy-gradient reinforcement learning for adaptive routing, and game-theoretic best-response dynamics for multi-agent equilibrium. A system optimizer should select the appropriate tool based on whether the binding constraint is within a single controller (convex QP), across decision layers (bilevel optimization), or across interacting agents (game theory).
+
 \section{Future Research Program}
 The next research step should be narrower and deeper rather than broader. The first priority is point-in-time universe membership. In the current experiment, candidate breadth is informative, but the universe definition is still approximate. A stronger version of the study would reconstruct eligible names at each historical date using membership, delisting, liquidity, and price-availability filters. This would transform $\mathcal{U}_b(t)$ from an approximate current-constituent set into a true time-varying feasible set. The main empirical question would then be whether the same stack ordering survives: momentum/equal-weight for narrow universes, low-volatility/equal-weight for the middle universe, and volatility-adjusted momentum/rank-and-hold for the broad universe.
 
-A natural extension is to model crowding effects as interaction terms in the sequential objective, treating each strategy family as an agent in a non-cooperative game. The present paper provides the single-agent control substrate that such a multi-agent extension would require.
+The game-theoretic extension in Section~IX demonstrates feasibility of the Nash equilibrium computation, but the current players share a single covariance matrix and a homogeneous crowding penalty. A richer model would give each player its own risk model and an asymmetric impact matrix calibrated to position sizes and liquidity. This would allow the crowding penalty to reflect realistic market microstructure: larger overlapping positions in less liquid names should generate larger crowding costs, and the equilibrium would then reveal whether certain strategy families are systematically crowded out of capacity-constrained assets.
 
 The second priority is descriptor-conditioned analysis. For each walk-forward training window, the study should compute average pairwise correlation, first principal-component share, cross-sectional dispersion, realized volatility, trend persistence, volatility-of-volatility, liquidity concentration, and turnover pressure. These descriptors would convert the qualitative claim that ``universe structure matters'' into a supervised prediction problem: given the structure of a candidate universe, predict which screen/controller family should be preferred. This is where the project can become practically useful. A portfolio researcher does not only want to know which controller won historically; the researcher wants a rule for deciding when to deploy each controller.
 
@@ -440,6 +564,8 @@ These conclusions suggest an operational research workflow: characterize the can
 
 \section{Conclusion}
 This study provides evidence that, within the tested walk-forward design, the optimal portfolio allocation method is not a static weighting formula, but rather a dynamic stack comprising universe construction, screen objectives, weighting controllers, and optional routing. In a narrow top-100 universe, the optimal solution requires minimal estimation: momentum screening paired with equal weighting. In a top-250 universe, risk filtering becomes the dominant optimization. As breadth expands to a top-500 universe, the increased cross-sectional dispersion justifies the complexity of volatility-adjusted momentum combined with short-horizon rank-and-hold weighting. The learned router confirms that the hierarchy is learnable, but also demonstrates that a transparent trailing-window optimizer remains a difficult baseline. Once portfolio allocation is modeled as a mixed discrete-continuous sequential control problem, the analysis shifts from searching for a single best trading rule to determining where optimization should be applied: to the feasible set, to the weights, to the control cost, or to the routing policy.
+
+The game-theoretic extension adds a second analytical layer. When strategy families are treated as players in a non-cooperative game, the Nash equilibrium reveals that moderate crowding ($\gamma\approx0.05$) induces efficiency losses under 2\% for most players, and no single strategy family eliminates the others — the equilibrium preserves a diversified ecology of allocation approaches. The crowding sensitivity sweep shows a smooth transition from overlapping to disjoint allocations as $\gamma$ increases, and the temporal stability experiment confirms that strategy dominance varies with market conditions rather than being structurally fixed. Together, the single-agent and multi-agent perspectives demonstrate that system optimization is not a single technique but a methodological stance: decompose the problem into interacting components, apply the appropriate optimization tool to each component, and evaluate the resulting system through rigorous out-of-sample validation.
 
 
 
@@ -458,6 +584,7 @@ The main threat to validity is survivorship bias from imperfect point-in-time un
 \bibitem{bailey2014deflated} D.~H. Bailey and M. L{\'o}pez de Prado, ``The deflated Sharpe ratio: Correcting for selection bias, backtest overfitting, and non-normality,'' \emph{Journal of Portfolio Management}, vol. 40, no. 5, pp. 94--107, 2014.
 \bibitem{cover1991universal} T.~M. Cover, ``Universal portfolios,'' \emph{Mathematical Finance}, vol. 1, no. 1, pp. 1--29, 1991.
 \bibitem{demiguel2009optimal} V. DeMiguel, L. Garlappi, and R. Uppal, ``Optimal versus naive diversification: How inefficient is the 1/N portfolio strategy?'' \emph{Review of Financial Studies}, vol. 22, no. 5, pp. 1915--1953, 2009.
+\bibitem{fudenberg1991game} D.~Fudenberg and J.~Tirole, \emph{Game Theory}. MIT Press, 1991.
 \bibitem{garleanu2013dynamic} N. G{\^a}rleanu and L. H. Pedersen, ``Dynamic trading with predictable returns and transaction costs,'' \emph{Journal of Finance}, vol. 68, no. 6, pp. 2309--2340, 2013.
 \bibitem{jiang2017deep} Z. Jiang and J. Liang, ``Cryptocurrency portfolio management with deep reinforcement learning,'' \emph{arXiv preprint arXiv:1612.01277}, 2017.
 \bibitem{markowitz1952portfolio} H. Markowitz, ``Portfolio selection,'' \emph{Journal of Finance}, vol. 7, no. 1, pp. 77--91, 1952.

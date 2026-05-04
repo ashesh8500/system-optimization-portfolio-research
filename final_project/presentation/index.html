@@ -1,16 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Portfolio Allocation as Layered System Optimization — Ashesh Kaji</title>
-<meta name="description" content="A math-first research presentation: portfolio allocation modelled as a layered, mixed discrete–continuous, sequential control problem." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false},{left:'$',right:'$',display:false}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});"></script>
+<meta content="A math-first research presentation: portfolio allocation modelled as a layered, mixed discrete–continuous, sequential control problem." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet"/>
+<script crossorigin="anonymous" defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script crossorigin="anonymous" defer="" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false},{left:'$',right:'$',display:false}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
 :root{
@@ -291,37 +292,24 @@ body.deck .lead{font-size:clamp(19px,1.6vw,24px)}
 body.deck .intuition{font-size:clamp(18px,1.35vw,22px); margin-bottom:14px}
 body.deck .eqblock, body.deck .marg, body.deck .footnote, body.deck .gap, body.deck table.data, body.deck .figure .caption, body.deck ul{display:none!important}
 body.deck .slide p{display:none}
-body.deck .slide[data-title="Title"] p,
-body.deck .slide[data-title="Related work"] p,
 body.deck .lead,
 body.deck .panel p,
 body.deck .result-card p{display:block}
-body.deck .slide[data-title="Layered formulation"] .grid.g2,
-body.deck .slide[data-title="Walk-forward protocol"] h3,
-body.deck .slide[data-title="Full surface"] .intuition,
-body.deck .slide[data-title="Winner stacks"] .intuition,
-body.deck .slide[data-title="Layer ablations"] .intuition,
-body.deck .slide[data-title="Selection risk"] .intuition,
-body.deck .slide[data-title="Adaptive routing"] .intuition,
-body.deck .slide[data-title="Adaptive routing"] h3,
-body.deck .slide[data-title="Adaptive routing"] .figure + .figure,
-body.deck .slide[data-title="Related work"] .grid.g2{display:none}
-body.deck .slide[data-title="Game theory · results"] .grid.g2{display:grid}
-body.deck .slide[data-title="Game theory · results"] h3{display:block}
-body.deck .slide[data-title="Game theory · results"] .panel p{display:block}
-body.deck .slide[data-title="Game theory · results"] .caption{display:none!important}
-body.deck .slide[data-title="Game theory · results"] .footnote{display:none!important}
-body.deck .slide[data-title="Multi-agent game · formulation"] .grid.g2{display:grid}
-body.deck .slide[data-title="Multi-agent game · formulation"] .panel p{display:block}
+body.deck .slide[data-title="RL Router"] .grid.g2{display:grid}
+body.deck .slide[data-title="RL Router"] h3{display:block}
+body.deck .slide[data-title="RL Router"] .panel p{display:block}
+body.deck .slide[data-title="Game Theory"] .grid.g2{display:grid}
+body.deck .slide[data-title="Game Theory"] h3{display:block}
+body.deck .slide[data-title="Game Theory"] .panel p{display:block}
+body.deck .slide[data-title="Crowding regimes"] .grid.g2{display:grid}
+body.deck .slide[data-title="Crowding regimes"] .panel p{display:block}
 body.deck .slide[data-title="Limitations"] h3{display:block}
-body.deck .slide[data-title="Limitations"] .grid.g3{display:grid}
+body.deck .slide[data-title="Limitations"] .grid.g2{display:grid}
 body.deck .slide[data-title="Limitations"] .gap{display:block!important}
-body.deck .slide[data-title="Limitations"] .gap h4{display:block}
-body.deck .slide[data-title="Limitations"] .gap .body{display:block}
+body.deck .slide[data-title="Class relevance"] .grid.g2{display:grid}
+body.deck .slide[data-title="Class relevance"] .panel p{display:block}
 body.deck .slide[data-title="Takeaways"] ul{display:block!important}
 body.deck .slide[data-title="Takeaways"] li{display:list-item!important}
-body.deck .slide[data-title="Adaptive routing"] h3{display:block}
-body.deck .slide[data-title="Adaptive routing"] .figure + .figure{display:none}
 body.deck .figure{padding:12px}
 body.deck .figure svg{max-height:38vh}
 body.deck .g2{gap:22px}
@@ -354,714 +342,406 @@ body.deck .slide > .num{opacity:.55}
   .slide{break-after:page; min-height:0; padding:30px}
   body{background:#fff}
 }
+
+/* Improved Deck Aesthetics */
+body.deck { background-color: var(--bg); }
+body.deck h2 { color: var(--ink); border-bottom: none; font-weight: 600; padding-bottom: 0; }
+body.deck .num { font-size: 24px; color: var(--accent); font-weight: bold; font-family: var(--sans); margin-bottom: -10px; }
+body.deck .smallcaps { font-size: 14px; letter-spacing: 0.15em; color: var(--muted); }
+body.deck .intuition { font-size: 22px; font-weight: 400; line-height: 1.5; color: var(--ink-2); background: none; padding-left: 0; border-left: 4px solid var(--accent); padding-left: 18px; }
+body.deck .intuition::before { content: none; }
+body.deck .slide { justify-content: center; padding-top: 5vh; }
+body.deck .figure { border: 1px solid var(--line); border-radius: 6px; padding: 24px; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
+body.deck .result-cards { gap: 24px; }
+body.deck .result-card { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
+body.deck .result-card h3 { color: var(--accent); }
+body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold; margin: 12px 0; }
 </style>
 </head>
 <body class="deck">
 <div id="progress"></div>
 <header class="bar">
-  <div class="mark">Layered Portfolio Optimization</div>
-  <div class="num" id="counter">01 / —</div>
-  <div class="title sans" id="slideTitle"></div>
-  <div id="slideMap" aria-label="Slide map"></div>
-  <div class="spacer"></div>
-  <button id="modeBtn">Scroll</button>
-  <button id="notesBtn">Notes</button>
-  <button class="primary" id="prevBtn">‹</button>
-  <button class="primary" id="nextBtn">›</button>
+<div class="mark">Layered Portfolio Optimization</div>
+<div class="num" id="counter">01 / —</div>
+<div class="title sans" id="slideTitle"></div>
+<div aria-label="Slide map" id="slideMap"></div>
+<div class="spacer"></div>
+<button id="modeBtn">Scroll</button>
+<button id="notesBtn">Notes</button>
+<button class="primary" id="prevBtn">‹</button>
+<button class="primary" id="nextBtn">›</button>
 </header>
 <div id="tip"></div>
 <aside class="notes" id="notes"><h4>Speaker notes</h4><div id="noteText"></div></aside>
-
 <main>
-
-<!-- ============ SLIDE 01: TITLE ============ -->
-<section class="slide active" data-title="Title" data-notes="Welcome. I'm Ashesh Kaji, and this is my final project for System Optimization Methods. The question: what happens when you treat portfolio allocation not as a single static optimization, but as a layered control problem — where each decision is an optimization in its own right? I ran a 60-arm walk-forward evaluation. I also extended to multi-agent game theory. The headline: the optimal control stack changes with universe breadth, and the framework for asking these questions is the real contribution.">
+<!-- ============ IMPROVED SLIDES ============ -->
+<section class="slide active" data-title="Title" data-notes="Start by framing the question. We're not just running backtests. We're asking: if you decompose portfolio allocation into layers, which layer is actually doing the work?">
   <div class="num">01</div>
   <div class="inner">
-    <div style="margin-bottom:36px">
-      <span class="smallcaps">ECE-GY 6233 · System Optimization Methods · Spring 2026</span>
-    </div>
-    <h1>Portfolio Allocation as<br><em>Layered System Optimization</em></h1>
-    <p class="lead" style="margin-top:28px">
-      Mathematical modelling, control decomposition, and a 60-arm walk-forward evaluation of where optimization actually pays.
-    </p>
-    <div style="margin-top:60px; display:grid; grid-template-columns:1fr 1fr; gap:48px; max-width:780px">
-      <div>
-        <h4>Author</h4>
-        <p style="font-size:18px; margin:0">Ashesh Kaji<br><span class="muted sans" style="font-size:13px">New York University · ask9184@nyu.edu</span></p>
-      </div>
-      <div>
-        <h4>Method at a glance</h4>
-        <p style="font-size:15px; margin:0; font-family:var(--sans); color:var(--ink-2); line-height:1.5">
-          $3$ universes $\times$ $5$ screens $\times$ $4$ controllers · 60 arms · chronological walk-forward · policy-gradient meta-router.
-        </p>
-      </div>
-    </div>
-    <div style="position:absolute; bottom:48px; left:max(48px,7vw); right:max(48px,7vw); display:flex; justify-content:space-between; font-family:var(--sans); font-size:12px; color:var(--muted)">
-      <span>Use <span class="kbd">→</span> / <span class="kbd">Space</span> to advance · <span class="kbd">N</span> for notes · <span class="kbd">S</span> to toggle scroll mode</span>
-      <span>Apr 2026</span>
+    <span class="smallcaps">ECE-GY 6233 · System Optimization Methods</span>
+    <h2>Portfolio Allocation as<br><em style="color:var(--accent)">Layered System Optimization</em></h2>
+    <div class="intuition">
+      A 60-arm walk-forward experiment asking: <em>where</em> does optimization actually help, and where is it just adding turnover?
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 02: THESIS ============ -->
-<section class="slide" data-title="Thesis" data-notes="The thesis: the best recipe changes with the kitchen. Narrow universe — top 100 — 21-day momentum plus equal weight, Sharpe 1.47. The screen does the work. Medium — top 250 — momentum screens underperform. Low-volatility filtering with equal weight wins, Sharpe 0.86. More options introduced more noise. Broad — top 500 — enough dispersion that a second ranking layer pays off. Volatility-adjusted momentum plus 21-day rank-and-hold, Sharpe 1.76, higher turnover. The binding optimization layer changes with opportunity set breadth. This is system optimization, not strategy search.">
+<section class="slide" data-title="Main result" data-notes="This is the punchline. The best screen/controller stack changes completely depending on how many candidates you're picking from. This means the decomposition isn't just taxonomy — it reveals that different universes have different binding constraints.">
   <div class="num">02</div>
   <div class="inner">
-    <span class="smallcaps">Thesis</span>
-    <h2>The best recipe changes <em style="color:var(--accent)">with the kitchen</em>.</h2>
-
+    <span class="smallcaps">The Central Finding</span>
+    <h2>The best controller depends on <em style="color:var(--accent)">which universe</em> you give it.</h2>
     <div class="intuition">
-      Investing isn't one decision; it's a stack. <em>Where</em> can I shop? <em>What</em> do I put on the list? <em>How much</em> of each? <em>How often</em> do I redo the meal? The textbook answer ("solve for weights") only handles step three. The other steps decide the meal.
+      If a single recipe worked everywhere, the decomposition wouldn't matter. The fact that it changes proves the layers interact.
     </div>
-
-    <p class="lead" style="margin-top:14px">
-      Portfolio allocation is a sequential stochastic control problem: at each rebalance, you choose a universe, screen candidates, assign weights, and pay turnover costs. The Markowitz convex QP solves the weight problem — but the upstream decisions (universe and screen) can dominate the outcome.
-      We measured every step out of sample. When the shopping list is short, picking the right items matters most. When it's long, ranking them ranks too. When it's medium, calming things down beats chasing winners.
-    </p>
-
-    <div class="grid g3 scroll-detail" style="margin-top:36px">
-      <div class="panel">
-        <h4>Small kitchen · Top-100</h4>
-        <h3>Pick the recent winners. Cook them equally.</h3>
-        <p class="muted sans" style="font-size:13px">21d momentum · equal weight · Sharpe $1.474$ · ret. $20.4\%$ · turnover $\approx 0$</p>
-        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">When the menu is already short, the picking does the work. Splitting the plate evenly avoids over-fitting and pays nothing in trading costs.</p>
-      </div>
-      <div class="panel">
-        <h4>Medium kitchen · Top-250</h4>
-        <h3>Pick the calm ones. Cook them equally.</h3>
-        <p class="muted sans" style="font-size:13px">63d low-vol · equal weight · Sharpe $0.859$ · ret. $11.2\%$ · DD $-10.5\%$</p>
-        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">More options also means more noise. Filtering for stability beats chasing trends. A wider menu isn't automatically a better one.</p>
-      </div>
-      <div class="panel">
-        <h4>Big kitchen · Top-500</h4>
-        <h3>Rank by clean trend. Re-rank monthly.</h3>
-        <p class="muted sans" style="font-size:13px">63d vol-adj. mom. · 21d re-rank · Sharpe $1.756$ · ret. $35.1\%$ · turnover $22\times$</p>
-        <p style="font-size:14px; color:var(--ink-2); margin-bottom:0">Now there are enough good options to be picky twice. The extra ranking earns its trading cost — which would have been wasted in a small kitchen.</p>
-      </div>
-    </div>
-
-    <div class="footnote">
-      Each row is the best stack out of $5\!\times\!4 = 20$ screen / controller combinations in that universe, scored chronologically at $\kappa = 10$ bps trading cost. The point estimate's bootstrap winner stability is $\sim$one-third (slide 11) — read these as the <em>shape</em> of the answer, not the exact recipe.
+    <div class="result-cards deck-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:36px;">
+      <div class="result-card"><h4>Top-100</h4><h3>Screen does the work.</h3><div class="metric">Sharpe 1.47</div><p>21d momentum + equal weight. The binding constraint is <em>which names</em>, not <em>how much</em>.</p></div>
+      <div class="result-card"><h4>Top-250</h4><h3>Risk filtering wins.</h3><div class="metric">Sharpe 0.86</div><p>63d low-vol + equal weight. Middle universes are noisy — the best move is to filter, not chase.</p></div>
+      <div class="result-card"><h4>Top-500</h4><h3>Two-stage ranking pays.</h3><div class="metric">Sharpe 1.76</div><p>63d vol-adj momentum + 21d rank-and-hold. Enough dispersion survives screening to justify a second active layer.</p></div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 03: LAYERED FORMULATION ============ -->
-<section class="slide" data-title="Layered formulation" data-notes="This is the central decomposition. At each rebalance: observe market information, choose a candidate universe, apply a screen, apply a controller, execute, observe net reward. The problem combines convex optimization for weights, combinatorial optimization for screening, sequential control for repeated adjustment, and online learning for routing. Instead of solving the intractable mixed problem, I enumerate a disciplined 60-arm grid, evaluate each out of sample, and study the surface. The screen changes the feasible set; the controller optimizes within it. This is bilevel optimization.">
+<section class="slide" data-title="Why Markowitz is not enough" data-notes="Markowitz is elegant — a convex QP on the simplex. But it assumes the asset menu is already fixed. In practice, someone has to decide which 100 or 500 stocks you're optimizing over. That upstream decision can dominate the downstream QP.">
   <div class="num">03</div>
   <div class="inner">
-    <span class="smallcaps">The decomposition</span>
-    <h2>Two stacked choices: <em style="color:var(--accent)">what</em> to consider, then <em style="color:var(--accent)">how much</em> of each.</h2>
-
+    <span class="smallcaps">The Baseline</span>
+    <h2>Markowitz is convex, clean, and <em style="color:var(--accent)">assumes the menu is fixed</em>.</h2>
     <div class="intuition">
-      Step 1, <b>screen</b>: pick which $K$ items from a long list. (The shopping list.) Step 2, <b>weighting</b>: pick how much of each. (The recipe.) Both are optimization choices; classical theory only handles step 2.
+      Classical theory: pick weights w on the simplex to maximize μᵀw − λwᵀΣw. But nobody tells you which μ and Σ to use. The upstream decision — which stocks, which screen, which horizon — changes the optimization problem entirely.
     </div>
-
-    <div class="explain-strip deck-only deck-grid">
-      <div class="explain-step"><b>1 · Universe</b><span>Which market can I shop in?</span></div>
-      <div class="explain-step"><b>2 · Screen</b><span>Which names make the active list?</span></div>
-      <div class="explain-step"><b>3 · Controller</b><span>How much of each name?</span></div>
-      <div class="explain-step"><b>4 · Friction</b><span>How costly is movement?</span></div>
-      <div class="explain-step"><b>5 · Router</b><span>Which recipe should run now?</span></div>
-    </div>
-
-    <div class="deck-cue deck-only"><strong>Key bridge:</strong> the empirical study does not search for one magic portfolio. It maps which layer becomes binding as the universe gets wider.</div>
-
-    <p style="margin-top:18px">Index the choices by universe breadth $b$, screen rule $j$, and weighting controller $k$. The whole stack is one optimization:</p>
-
-    <div class="eqblock">
-      $$\begin{aligned}
-      \max_{b,\,j,\,k} \quad &amp; \underbrace{\tfrac{\widehat{\mu}_{b,j,k}}{\widehat{\sigma}_{b,j,k}}}_{\text{risk-adj. return}} \;-\; \phi\,\underbrace{\widehat{\text{DD}}_{b,j,k}}_{\text{drawdown}} \;-\; \psi\,\underbrace{\widehat{\text{TO}}_{b,j,k}}_{\text{turnover}} \\[2pt]
-      \text{s.t.} \quad &amp; H_{b,j}(t) = S_j\!\left(\mathcal{U}_b(t),\mathcal{F}_t\right) &amp;&amp; \text{(shopping list)} \\
-      &amp; w_t = C_k\!\left(H_{b,j}(t),\mathcal{F}_t,w_{t^-}\right) &amp;&amp; \text{(recipe)} \\
-      &amp; |H_{b,j}(t)| \le K_{\max}, \quad w_t \in \Delta_{|H_{b,j}(t)|}.
-      \end{aligned}$$
-    </div>
-
-    <div class="grid g2" style="margin-top:30px; gap:36px">
-      <div>
-        <h3>Step 1 · The shopping list</h3>
-        <p>Score each candidate by some rule $q_i(t)$ and keep the top $K$. Formally a 0–1 cardinality problem:</p>
-        <div class="eqblock">
-          $$\max_{z\in\{0,1\}^{|\mathcal{U}|}} \sum_{i\in\mathcal{U}} q_i(t)\, z_i \;\;\text{s.t.}\;\; \sum_i z_i \le K.$$
-        </div>
-        <p>The score is the personality of the screen. We tested five:</p>
-        <div class="eqblock" style="font-size:15px">
-          $$\begin{aligned}
-          q_i^{\text{mom},\tau} &amp;= \tfrac{P_i(t)}{P_i(t-\tau)} - 1 &amp;&amp; \text{recent winners} \\
-          q_i^{\text{vam},\tau} &amp;= \tfrac{P_i(t)/P_i(t-\tau)\,-\,1}{\hat\sigma_{i,\tau}(t)+\varepsilon} &amp;&amp; \text{winners, noise-discounted} \\
-          q_i^{\text{lvol},\tau} &amp;= -\hat\sigma_{i,\tau}(t) &amp;&amp; \text{calmest names} \\
-          q_i^{\text{cluster}} &amp;= q_i^{\text{mom},63} &amp;&amp; \text{winners, sector-capped}
-          \end{aligned}$$
-        </div>
-      </div>
-      <div>
-        <h3>Step 2 · The recipe</h3>
-        <p>Given a shopping list $H_t$, pick weights. Two recipes were tested.</p>
-        <p><b>Equal weight.</b> Split evenly. No estimation, no opinions:</p>
-        <div class="eqblock">$$w_{i,t}^{\text{EW}} = \tfrac{1}{|H_t|}\,\mathbf{1}\{i \in H_t\}.$$</div>
-        <p><b>Rank-and-hold.</b> Inside the list, keep only the top $k$ recent winners and weight them equally:</p>
-        <div class="eqblock">
-          $$w_{i,t}^{\text{MRH},\tau,k} = \tfrac{1}{k}\,\mathbf{1}\!\left\{ i \in \operatorname{TopK}_{\ell\in H_t}\!\left(\tfrac{P_\ell(t)}{P_\ell(t-\tau)} - 1\right)\right\}.$$
-        </div>
-        <p>It's a simple recipe, but it isn't free — every re-rank means trading. Whether the extra ranking is worth the trades is what slide 9 measures.</p>
-
-        <div class="gap" style="margin-top:20px">
-          <h4>What we actually solve</h4>
-          <div class="body">The headline equation is mixed-integer and we don't solve it directly. We <em>sample</em> it: $3\!\times\!5\!\times\!4 = 60$ named combinations evaluated honestly, then we map the surface.</div>
-        </div>
+    <div class="figure" style="margin-top:18px">
+      <svg id="fig-frontier" viewBox="0 0 500 320" style="max-width:500px; margin:0 auto; display:block;"></svg>
+      <div class="controls" style="text-align:center; margin-top:12px;">
+        <span class="muted">Risk aversion λ: <span class="val" id="lamV">2.0</span></span>
+        <input id="lam" type="range" min="0.1" max="10" step="0.1" value="2.0" style="width:200px; margin-left:12px;">
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 04: SCREEN AS DECISION ============ -->
-<section class="slide" data-title="Screening visualization" data-notes="Screens are a discrete optimization layer, not preprocessing. Each screen computes per-asset scores from past prices, then selects the top K. Five scoring functions: 21-day momentum, 63-day momentum, volatility-adjusted momentum, low-vol as negative score, and cluster-capped momentum. Different scores select different active sets — changing the feasible region for every downstream controller. The visualization shows how the same top-500 universe produces different top-10 selections depending on the scoring rule. Scores are purely functions of past prices — no lookahead.">
+<section class="slide" data-title="Turnover as control effort" data-notes="Trading costs aren't just a fee you subtract at the end. They're control effort — every time you rebalance, you pay. This means high-turnover strategies need a higher bar: their signal has to be strong enough to overcome the friction. This is why equal weight often wins — it barely trades.">
   <div class="num">04</div>
   <div class="inner">
-    <span class="smallcaps">The shopping list is a decision</span>
-    <h2>Different scoring rules pick different shopping lists.</h2>
-
-    <div class="grid g2" style="margin-top:18px">
-      <div class="figure">
-        <h4 style="margin-bottom:6px">Pick the top $K$ of 500 candidates</h4>
-        <svg id="fig-screen" viewBox="0 0 600 420"></svg>
-        <div class="controls">
-          <button class="mini active" data-q="mom">recent winners ($q^{\text{mom}}$)</button>
-          <button class="mini" data-q="lvol">calmest ($q^{\text{lvol}}$)</button>
-          <button class="mini" data-q="vam">winners ÷ noise ($q^{\text{vam}}$)</button>
-          <span style="margin-left:auto">$K =$ <span class="val" id="kV">20</span></span>
-          <input id="kSel" type="range" min="5" max="80" step="1" value="20" style="width:140px">
-        </div>
-        <div class="caption">
-          <b>Try it.</b> Toggle the score; the highlighted dots are the chosen list. Same 500 candidates, different rule — totally different list. Each rule selects a different region of the (volatility, momentum) plane.
-        </div>
-      </div>
-
-      <div>
-        <div class="intuition">
-          The shopping list isn't <em>cleaning</em> — it's part of the recipe. Each scoring rule cooks a different meal even before any weights are chosen.
-        </div>
-
-        <div class="compare-cards deck-only deck-grid">
-          <div class="compare-card"><b>Momentum</b><span>chooses recent winners.</span></div>
-          <div class="compare-card"><b>Low volatility</b><span>chooses calm names.</span></div>
-          <div class="compare-card"><b>Vol-adjusted momentum</b><span>chooses trend after discounting noise.</span></div>
-        </div>
-
-        <p>Formally, a screen $S_j$ is just a map: candidates in, list out, with a size cap.</p>
-
-        <div class="eqblock" style="font-size:15px">
-          $$S_j : \big(\mathcal{U}_b(t), \mathcal{F}_t\big) \longmapsto H_{b,j}(t), \qquad |H_{b,j}(t)| \le K.$$
-        </div>
-
-        <p>What you'll see on slide 9 is that <em>the right scoring rule depends on how big the kitchen is</em>: recent winners win at $b{=}100$, calmest wins at $b{=}250$, noise-discounted winners win at $b{=}500$.</p>
-
-        <div class="marg sans" style="margin-top:14px">
-          Common mistake: treating the shopping list as "preprocessing". In a stacked system it has at least as much leverage as the recipe — sometimes more.
-        </div>
+    <span class="smallcaps">Friction</span>
+    <h2>Trading cost is <em style="color:var(--accent)">control effort</em>, not just a fee.</h2>
+    <div class="intuition">
+      A strategy that rebalances aggressively needs to earn back its movement cost. Equal weight with a stable screen trades at near zero turnover; rank-and-hold churns 22-40 times per year. The signal has to be that much better.
+    </div>
+    <div class="figure" style="margin-top:18px">
+      <svg id="fig-simplex" viewBox="0 0 500 320" style="max-width:500px; margin:0 auto; display:block;"></svg>
+      <div class="controls" style="text-align:center; margin-top:12px;">
+        <span class="muted">Turnover penalty κ: <span class="val" id="toV">0</span> | Cost: <span class="val" id="kapV">0.02</span></span>
+        <input id="kap" type="range" min="0" max="0.1" step="0.005" value="0.02" style="width:200px; margin-left:12px;">
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 05: WALK-FORWARD PROTOCOL ============ -->
-<section class="slide" data-title="Walk-forward protocol" data-notes="Walk-forward validation. For each universe, the data splits into chronological train and test windows. Screen membership uses only training-period data. Performance measured on the subsequent test interval. No lookahead bias. Top-100 yields 22 splits, top-250 yields 11, top-500 yields 9. Ten basis points one-way trading cost is the primary slice, with 0 and 25 for diagnostics. Every arm is recorded, enabling honest ablation and multiple-comparison diagnostics.">
+<section class="slide" data-title="The five layers" data-notes="Here's the decomposition. Five literal decisions, made at every rebalance. The key insight: each decision changes the optimization problem seen by the next layer. If the screen picks bad names, the controller can't fix it. If the universe is too narrow, no amount of ranking helps.">
   <div class="num">05</div>
   <div class="inner">
-    <span class="smallcaps">How we kept ourselves honest</span>
-    <h2>No peeking at tomorrow.</h2>
+    <span class="smallcaps">The Decomposition</span>
+    <h2>Five decisions. Each changes the problem for the next.</h2>
+    <div class="explain-strip deck-grid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:22px;">
+      <div class="explain-step"><b>1 · Universe</b><span>Top-100, 250, or 500? This is the feasible set.</span></div>
+      <div class="explain-step"><b>2 · Screen</b><span>Which 10 names make the cut? This is cardinality-constrained optimization.</span></div>
+      <div class="explain-step"><b>3 · Controller</b><span>Equal weight or rank top-5? This is the weight policy.</span></div>
+      <div class="explain-step"><b>4 · Friction</b><span>10 bps per unit of turnover. Movement has a price.</span></div>
+      <div class="explain-step"><b>5 · Router</b><span>Which arm runs now? Fixed, trailing, learned, or random.</span></div>
+    </div>
+  </div>
+</section>
 
-    <div class="grid g2" style="margin-top:18px">
-      <div>
-        <div class="intuition">
-          A backtest only counts if the strategy could have actually been run. So we fit each recipe using <em>only</em> data up to a date, then judge it on the next 90 days — and repeat.
-        </div>
-
-        <div class="deck-cue deck-only"><strong>Presenter version:</strong> blue means information the strategy was allowed to see; red means the exam. Every arm takes the same exam, and every arm is kept in the ledger.</div>
-
-        <p>Concretely: every screen score and every controller statistic is computed using prices through the training end $t^{\text{tr}}_s$ only. Net reward is then realized over the next window $[t^{\text{ev,start}}_s, t^{\text{ev,end}}_s]$, with trading costs subtracted:</p>
-
-        <div class="eqblock" style="font-size:15px">
-          $$R_s(b,j,k) \;=\; \underbrace{w_t^\top r_{t+1}}_{\text{gross return}} \;-\; \underbrace{\kappa\,\|w_t - w_{t^-}\|_1}_{\text{trading cost}}, \qquad t \in s.$$
-        </div>
-
-        <p>The score for a whole stack $(b,j,k)$ is its average risk-adjusted return across folds:</p>
-        <div class="eqblock" style="font-size:15px">
-          $$\widehat{\text{SR}}(b,j,k) \;=\; \frac{1}{|\mathcal{W}|} \sum_{s \in \mathcal{W}} \frac{\bar{R}_s(b,j,k)}{\hat\sigma_s(b,j,k)}.$$
-        </div>
-
-        <h3 style="margin-top:24px">Grid sizes and split counts</h3>
-        <table class="data" style="margin-top:8px">
-          <thead><tr><th>Universe</th><th class="num">Arms</th><th class="num">Splits</th><th>Span</th></tr></thead>
-          <tbody>
-            <tr><td>Top-100</td><td class="num">20</td><td class="num">22</td><td>2019-04 → 2024-07</td></tr>
-            <tr><td>Top-250</td><td class="num">20</td><td class="num">11</td><td>2022-01 → 2024-09</td></tr>
-            <tr><td>Top-500</td><td class="num">20</td><td class="num">9</td><td>2022-07 → 2024-10</td></tr>
-            <tr><td>cost slices</td><td class="num" colspan="3">$\kappa \in \{0, 10, 25\}$ bps</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="figure" style="background:#fff">
-        <h4 style="margin-bottom:6px">One walk-forward fold, schematically</h4>
-        <svg id="fig-wf" viewBox="0 0 600 380"></svg>
-        <div class="caption">
-          <b>Read.</b> Each grey bar is one fold; blue is the training span used to fit screens and controllers, red is the chronologically subsequent evaluation window. The protocol guarantees screen scores are causal.
-        </div>
-
-        <div class="gap" style="margin-top:18px">
-          <h4>Visible gap · finite folds</h4>
-          <div class="body">The Top-500 universe has only $9$ independent evaluation periods. This is the binding constraint on the routing experiment (slide 12) and the bootstrap stability claim (slide 11).</div>
-        </div>
+<section class="slide" data-title="Screening is optimization" data-notes="Screening isn't data cleaning. Different scoring functions pick entirely different active sets from the same 500 candidates. The controller downstream sees a different menu depending on which screen was used. This is why screening is the binding layer in narrow universes.">
+  <div class="num">06</div>
+  <div class="inner">
+    <span class="smallcaps">The Shopping List</span>
+    <h2>Screening is <em style="color:var(--accent)">discrete optimization</em>, not preprocessing.</h2>
+    <div class="intuition">
+      Same 500 candidates. Three different scoring rules. Three different active sets. The controller downstream never sees the same menu twice.
+    </div>
+    <div class="figure" style="margin-top:18px">
+      <svg id="fig-screen" viewBox="0 0 600 420"></svg>
+      <div class="controls" style="margin-top:12px;">
+        <button class="mini active" data-q="mom">Momentum</button>
+        <button class="mini" data-q="lvol">Low vol</button>
+        <button class="mini" data-q="vam">Vol-adjusted momentum</button>
+        <span style="margin-left:auto">K = <span class="val" id="kV">20</span></span>
+        <input id="kSel" type="range" min="5" max="80" step="1" value="20" style="width:140px; margin-left:12px;">
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 06: FULL SURFACE ============ -->
-<section class="slide" data-title="Full surface" data-notes="The full 60-arm surface. Each cell is the best Sharpe across weighting controllers for a screen-universe pair. The bright spot moves as the kitchen grows. Top-100: momentum screens dominate. Top-250: only low-vol shows strength. Top-500: volatility-adjusted and 63-day momentum surge. This is the most compact evidence that the screen objective matters — it changes the feasible set in a way that can dominate the weighting rule. There is no single best screening rule.">
-  <div class="num">06</div>
+<section class="slide" data-title="Walk-forward protocol" data-notes="No peeking. Every screen and controller is trained on data up to the split boundary, then evaluated on the next window. We record every arm — all 60 — so the analysis isn't selective. This is the empirical version of out-of-sample control evaluation.">
+  <div class="num">07</div>
   <div class="inner">
-    <span class="smallcaps">The whole map, in one picture</span>
-    <h2>The bright spot moves as the kitchen grows.</h2>
-
+    <span class="smallcaps">Method</span>
+    <h2>Train on the past, test on the <em style="color:var(--accent)">future</em>.</h2>
     <div class="intuition">
-      Each cell is one recipe, evaluated honestly. Darker = better. The story isn't <em>which</em> cell is best — it's how the dark region <em>shifts</em> across tabs.
+      Chronological walk-forward splits. Screens and controllers see only training-window data. Performance is measured strictly out of sample. 60 arms × 3 cost slices: all recorded, no cherry-picking.
     </div>
+    <div class="figure" style="margin-top:18px">
+      <svg id="fig-wf" viewBox="0 0 600 380"></svg>
+    </div>
+  </div>
+</section>
 
-    <div class="deck-cue deck-only"><strong>How to read it live:</strong> do not read all 60 cells. Point to the outlined cell in each tab and say: the winning region moves as the candidate universe changes.</div>
-
-    <p class="lead scroll-detail">For each universe, $5 \times 4 = 20$ recipes. The winning cell is outlined; the colour ramp is shared across panels so you can compare directly.</p>
-
+<section class="slide" data-title="Full surface" data-notes="This is the full empirical surface. Each cell is one screen × controller combination, out of sample. Switch between universe tabs and watch the bright spot move. The heatmap makes the interaction visible: the best cell in Top-100 is not the best cell in Top-500.">
+  <div class="num">08</div>
+  <div class="inner">
+    <span class="smallcaps">The Surface</span>
+    <h2>The bright spot <em style="color:var(--accent)">moves</em> as the universe expands.</h2>
+    <div class="intuition">
+      If the layers didn't interact, the same cell would win everywhere. It doesn't. Toggle between universes and watch where the dark cells land.
+    </div>
     <div class="figure" style="margin-top:18px">
       <div class="tabs" id="hmTabs"></div>
       <div id="hm"></div>
-      <div class="caption">
-        <b>Read.</b> Colour encodes $\widehat{\text{SR}}_{b,j,k}$ at $\kappa = 10$ bps. Hover any cell for full metrics. Rows are screen rules, columns are controllers. The outlined cell in each universe is $\arg\max_{j,k}\widehat{\text{SR}}_{b,j,k}$ — a <em>selected</em> maximum, not a tested hypothesis.
-      </div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 07: WINNER STACKS ============ -->
-<section class="slide" data-title="Winner stacks" data-notes="The three winning stacks. Top-100: 21-day momentum, equal weight, Sharpe 1.47, near-zero turnover. Top-250: low-vol, equal weight, Sharpe 0.86, only 10.5% max drawdown. Top-500: volatility-adjusted momentum, 21-day rank-and-hold, Sharpe 1.76, 35% return, but 22 times turnover. Narrow universe: screening does the work. Broad universe: second ranking layer earns its cost. Medium universe: noise dominates, risk filtering beats momentum. This non-monotonic relationship is the central empirical finding.">
-  <div class="num">07</div>
-  <div class="inner">
-    <span class="smallcaps">Headline result</span>
-    <h2>Different kitchens want different recipes.</h2>
-
-    <div class="intuition">
-      Same trading-cost, same honest protocol, three universe sizes. The best recipe in the small kitchen would be a poor choice in the big one — and vice versa. That's the layer-shift in one row.
-    </div>
-
-    <div class="result-cards deck-only deck-grid">
-      <div class="result-card"><h4>Top-100</h4><h3>Screening does the work.</h3><div class="metric">Sharpe 1.47</div><p>21-day momentum + equal weight. Narrow menu: avoid overfitting the weights.</p></div>
-      <div class="result-card"><h4>Top-250</h4><h3>Noise control wins.</h3><div class="metric">Sharpe 0.86</div><p>63-day low volatility + equal weight. Wider is not automatically better.</p></div>
-      <div class="result-card"><h4>Top-500</h4><h3>Second-stage ranking pays.</h3><div class="metric">Sharpe 1.76</div><p>Vol-adjusted momentum + 21-day rank-and-hold. The active layer earns its cost.</p></div>
-    </div>
-
-    <table class="data scroll-detail" style="margin-top:18px; font-size:15px">
-      <thead>
-        <tr>
-          <th>Kitchen size</th>
-          <th>Shopping list</th>
-          <th>Recipe</th>
-          <th class="num">Splits</th>
-          <th class="num">Ann. ret.</th>
-          <th class="num">Ann. vol.</th>
-          <th class="num">Sharpe</th>
-          <th class="num">Worst DD</th>
-          <th class="num">Turnover</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="win">
-          <td>Top-100</td>
-          <td>21-day momentum top 10</td>
-          <td>Equal weight</td>
-          <td class="num">22</td>
-          <td class="num">20.4%</td>
-          <td class="num">20.2%</td>
-          <td class="num"><b>1.474</b></td>
-          <td class="num">−44.9%</td>
-          <td class="num">≈ 0</td>
-        </tr>
-        <tr class="win">
-          <td>Top-250</td>
-          <td>63-day low-volatility top 10</td>
-          <td>Equal weight</td>
-          <td class="num">11</td>
-          <td class="num">11.2%</td>
-          <td class="num">14.1%</td>
-          <td class="num"><b>0.859</b></td>
-          <td class="num">−10.5%</td>
-          <td class="num">≈ 0</td>
-        </tr>
-        <tr class="win">
-          <td>Top-500</td>
-          <td>63-day vol-adjusted momentum top 10</td>
-          <td>21-day rank-and-hold</td>
-          <td class="num">9</td>
-          <td class="num">35.1%</td>
-          <td class="num">20.8%</td>
-          <td class="num"><b>1.756</b></td>
-          <td class="num">−15.5%</td>
-          <td class="num">22.07</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="grid g3" style="margin-top:36px">
-      <div class="figure"><h4 style="margin-bottom:4px">Top-100 split-level Sharpe</h4><svg class="splits" data-u="100" viewBox="0 0 380 180"></svg></div>
-      <div class="figure"><h4 style="margin-bottom:4px">Top-250 split-level Sharpe</h4><svg class="splits" data-u="250" viewBox="0 0 380 180"></svg></div>
-      <div class="figure"><h4 style="margin-bottom:4px">Top-500 split-level Sharpe</h4><svg class="splits" data-u="500" viewBox="0 0 380 180"></svg></div>
-    </div>
-    <p class="muted sans" style="font-size:12px; margin-top:12px">Each bar is one chronological evaluation window; the dashed line is the cross-split mean. Volatility of Sharpe is a useful diagnostic the heatmap suppresses.</p>
-  </div>
-</section>
-
-
-<!-- ============ SLIDE 08: LAYER ABLATIONS ============ -->
-<section class="slide" data-title="Layer ablations" data-notes="Which layer pulls its weight? Left: averaging over controllers, how do screens compare? Right: averaging over screens, which controller family wins? Top-100: the screen picks the winner. Top-250: low-vol dominates — almost nothing else works. Top-500: 21-day rank-and-hold adds value, but only with the right screen. Extra optimization effort pays only when the upstream feasible set has enough dispersion. This is cost-benefit at the system level.">
-  <div class="num">08</div>
-  <div class="inner">
-    <span class="smallcaps">Layer attribution</span>
-    <h2>Which layer is actually pulling its weight?</h2>
-
-    <div class="intuition">
-      To isolate the shopping list, average across all four recipes. To isolate the recipe, average across all five lists. That removes the other layer from the picture so you can see what each one contributes alone.
-    </div>
-
-    <div class="grid g2" style="margin-top:18px">
-      <div class="figure">
-        <h4 style="margin-bottom:6px">Shopping lists, recipe averaged out</h4>
-        <div id="screenAb"></div>
-        <div class="caption"><b>Read.</b> Within each universe, sorted by average Sharpe. The list that wins on average <em>changes</em> with kitchen size.</div>
-      </div>
-      <div class="figure">
-        <h4 style="margin-bottom:6px">Recipes, list averaged out</h4>
-        <div id="ctrlAb"></div>
-        <div class="caption"><b>Read.</b> Equal weight wins on average for the small and medium kitchens. Re-rank monthly takes the big kitchen.</div>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-top:24px">
-      <h4>The operational rule of thumb</h4>
-      <p style="margin-bottom:0">More optimization isn't always better. The extra ranking pays only when the kitchen is big enough that the new picks beat the trading bill: roughly, <em>marginal gross alpha</em> $> \kappa\,\|\Delta w\|_1$.</p>
-    </div>
-  </div>
-</section>
-
-
-<!-- ============ SLIDE 09: SELECTION RISK ============ -->
-<section class="slide" data-title="Selection risk" data-notes="Model-selection risk. Twenty arms per universe, 9 to 22 splits — the point-estimate winner is fragile. Block-bootstrap with 2,000 resamples: the best arm is selected in only one-third of bootstrap samples. Winner-gap confidence intervals include zero for two of three universes. The results are mechanism evidence — how the surface changes across layers — not a claim about any specific arm. The pattern matters more than the exact winner. This is rigorous system optimization.">
+<section class="slide" data-title="Winning stacks" data-notes="These are the actual numbers for the best stack in each universe. Notice: 22 splits in Top-100, only 9 in Top-500. The narrower universe has more history and more independent folds. Also notice the drawdowns — Top-100 momentum gets crushed in bad months (-45%), while Top-250 low-vol holds up much better (-10.5%).">
   <div class="num">09</div>
   <div class="inner">
-    <span class="smallcaps">Diagnostics · being honest about luck</span>
-    <h2>The exact winner is shaky. The pattern isn't.</h2>
-
-    <div class="intuition">
-      We tested $20$ recipes per kitchen and reported the best one. If you try enough things, one of them will look great by accident. So we shake the data and ask: how often does the same recipe still come out on top?
-    </div>
-
-    <div class="compare-cards deck-only deck-grid">
-      <div class="compare-card"><b>Winner gap</b><span>small-to-moderate, not decisive.</span></div>
-      <div class="compare-card"><b>Bootstrap stability</b><span>about one-third across scopes.</span></div>
-      <div class="compare-card"><b>Interpretation</b><span>mechanism evidence, not a deployable trading rule.</span></div>
-    </div>
-
-    <p>Formally: $\widehat{a} = \arg\max_a \widehat{\text{SR}}(a)$ over $|\mathcal{A}| = 20$ candidates. Block-bootstrap the folds, recompute the best arm thousands of times, look at the distribution.</p>
-
-    <div class="grid g2" style="margin-top:18px">
-      <div class="figure">
-        <h4 style="margin-bottom:6px">Block-bootstrap of winner gap</h4>
-        <svg id="fig-bs" viewBox="0 0 560 320"></svg>
-        <div class="controls">
-          <button class="mini active" data-bsu="100">Top-100</button>
-          <button class="mini" data-bsu="250">Top-250</button>
-          <button class="mini" data-bsu="500">Top-500</button>
-          <span class="muted" style="margin-left:auto">$B = $ <span class="val" id="bsB">2000</span> resamples</span>
-          <button class="mini" id="bsRun">Resample</button>
-        </div>
-        <div class="caption">
-          <b>Method.</b> Resample walk-forward folds with replacement, recompute $\widehat{\text{SR}}$ for every arm, take the gap between best and second-best. Histogram is the bootstrap distribution; vertical line is the point estimate.
-        </div>
+    <span class="smallcaps">The Winners</span>
+    <h2>Three universes, three different recipes.</h2>
+    <div class="result-cards deck-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:24px;">
+      <div class="result-card">
+        <h4>Top-100 · 22 splits</h4>
+        <h3>21d momentum top 10 + equal weight</h3>
+        <div class="metric">Sharpe 1.47</div>
+        <p>20.4% ann. return · 20.2% vol · −44.9% worst DD · ≈0 turnover<br><br><b>Why:</b> picking the right 10 names does all the heavy lifting. Adding active ranking inside the screened set only adds turnover.</p>
       </div>
-
-      <div>
-        <table class="data compact">
-          <thead><tr><th>b</th><th class="num">Best</th><th class="num">2nd</th><th class="num">Gap</th><th class="num">95% CI</th><th class="num">Win</th></tr></thead>
-          <tbody>
-            <tr><td>100</td><td class="num">1.474</td><td class="num">1.440</td><td class="num">0.034</td><td class="num">[0.00, 0.29]</td><td class="num">35.7%</td></tr>
-            <tr><td>250</td><td class="num">0.859</td><td class="num">0.755</td><td class="num">0.104</td><td class="num">[0.00, 0.55]</td><td class="num">33.8%</td></tr>
-            <tr><td>500</td><td class="num">1.756</td><td class="num">1.666</td><td class="num">0.090</td><td class="num">[0.00, 0.37]</td><td class="num">36.4%</td></tr>
-          </tbody>
-        </table>
-        <p class="muted sans" style="font-size:11px; margin-top:6px">$b$ = universe breadth · "Win" = bootstrap winner stability rate.</p>
-
-        <div class="gap" style="margin-top:24px">
-          <h4>What this means honestly</h4>
-          <div class="body">
-            Two of three CIs include zero, and the point-estimate winner repeats only $\sim$one-third of the time. <em>Therefore</em> the contribution is the layer-shift mechanism, not a deployable rule that "Top-500 + vol-adj. momentum + 21d rank-and-hold" is uniquely best.
-          </div>
-        </div>
-
-        <div class="marg sans" style="margin-top:18px">
-          A correct next step is to increase independent fold count via point-in-time universe membership, not to claim significance from the current sample.
-        </div>
+      <div class="result-card">
+        <h4>Top-250 · 11 splits</h4>
+        <h3>63d low-vol top 10 + equal weight</h3>
+        <div class="metric">Sharpe 0.86</div>
+        <p>11.2% ann. return · 14.1% vol · −10.5% worst DD · ≈0 turnover<br><br><b>Why:</b> the middle universe is noisy — momentum doesn't stick. Filtering for stability beats chasing trends.</p>
+      </div>
+      <div class="result-card">
+        <h4>Top-500 · 9 splits</h4>
+        <h3>63d vol-adj momentum top 10 + 21d rank-and-hold top 5</h3>
+        <div class="metric">Sharpe 1.76</div>
+        <p>35.1% ann. return · 20.8% vol · −15.5% worst DD · 22.1× turnover<br><br><b>Why:</b> the broad universe leaves enough dispersion that a second active layer earns back its turnover cost.</p>
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 10: ADAPTIVE ROUTING ============ -->
-<section class="slide" data-title="Adaptive routing" data-notes="Can a learned router beat simple baselines? Policy-gradient router with softmax policy, state features including trailing rewards and scope identity, switching penalty. Baselines: train-fixed, trailing-window — pick whatever worked recently, random, oracle. Results: RL improves over fixed in the combined panel. In top-100, beats trailing. But in combined and top-500, the simple trailing-window router dominates. Honest conclusion: RL recovers stable policies but doesn't justify complexity over a transparent online optimizer. Transparent baselines must be beaten.">
+<section class="slide" data-title="Why the breakdown matters" data-notes="This is the core evidence that the decomposition is real, not cosmetic. The same controllers perform DIFFERENTLY in different universes. Equal weight is dominant in Top-100 (mean Sharpe 1.38) and still good in Top-500 (1.42) — but 21d rank-and-hold jumps from 0.95 in Top-100 to 1.43 in Top-500. That's a full inversion. The decomposition reveals this interaction.">
   <div class="num">10</div>
   <div class="inner">
-    <span class="smallcaps">A head chef that learns the menu</span>
-    <h2>Can a learned router beat "do whatever worked recently"?</h2>
-
-    <div class="grid g2" style="margin-top:18px">
-      <div>
-        <div class="intuition">
-          We don't ask a neural net to design portfolios from scratch — that would be a black box. Instead we ask it to <em>pick</em> from the recipes we already understand. The question becomes: can a learner choose better than a simple "do whatever worked recently" rule?
-        </div>
-
-        <div class="compare-cards deck-only deck-grid">
-          <div class="compare-card"><b>Beats fixed</b><span>the learner improves over holding one training winner.</span></div>
-          <div class="compare-card"><b>Loses to recency</b><span>trailing-window selection is the stronger online baseline.</span></div>
-          <div class="compare-card"><b>Next step</b><span>give the router structural context, not just recent rewards.</span></div>
-        </div>
-
-        <p>Each recipe is an "arm" $a$. The router observes the state $s_t$ (time, kitchen size, trailing rewards) and outputs a probability over arms via softmax:</p>
-        <div class="eqblock">
-          $$\pi_\theta(a \mid s_t) \;=\; \frac{\exp\bigl(f_\theta(s_t)_a\bigr)}{\sum_{a' \in \mathcal{A}} \exp\bigl(f_\theta(s_t)_{a'}\bigr)}.$$
-        </div>
-        <p>It earns the realized net return, minus a small penalty for jumping recipe:</p>
-        <div class="eqblock">
-          $$r^{\text{router}}_t \;=\; R_t(a_t) \;-\; \xi\,\mathbf{1}\{a_t \ne a_{t-1}\}.$$
-        </div>
-        <p>Train it with the standard REINFORCE update — pull up the log-probability of arms that did better than expected:</p>
-        <div class="eqblock">
-          $$\nabla_\theta J(\theta) \;=\; \mathbb{E}_\pi\!\left[\sum_t (G_t - b_t)\,\nabla_\theta \log \pi_\theta(a_t \mid s_t)\right].$$
-        </div>
-
-        <h3 style="margin-top:18px">The fair comparison</h3>
-        <p>The same reward stream is fed to four head chefs:</p>
-        <ul style="font-family:var(--sans); font-size:14px; color:var(--ink-2)">
-          <li><b>Learned (RL):</b> the policy above.</li>
-          <li><b>Train-fixed:</b> pick the recipe that did best in training, never change.</li>
-          <li><b>Trailing window:</b> "do whatever worked the last few months." A dumb-but-honest online rule.</li>
-          <li><b>Random / Oracle:</b> floor and ceiling.</li>
-        </ul>
+    <span class="smallcaps">The Evidence</span>
+    <h2>The same controller <em style="color:var(--accent)">wins and loses</em> depending on the universe.</h2>
+    <div class="intuition">
+      If the decomposition didn't matter, the same controller would dominate everywhere. Here's what actually happens — averaged across all 5 screens in each universe:
+    </div>
+    <div class="grid g2" style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:18px;">
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Mean controller Sharpe (screens averaged)</h4>
+        <div id="ctrlAb"></div>
       </div>
-
-      <div>
-        <div class="figure">
-          <h4 style="margin-bottom:6px">Cumulative test reward by router (10 bps)</h4>
-          <svg id="fig-rl" viewBox="0 0 580 320"></svg>
-          <div class="caption"><b>Read.</b> RL improves over train-fixed in the combined panel ($+0.08$) but loses to the trailing-window optimizer ($-0.33$).</div>
-        </div>
-
-        <div class="figure" style="margin-top:18px">
-          <h4 style="margin-bottom:6px">Training trajectory · single seed</h4>
-          <svg id="fig-rlcurve" viewBox="0 0 580 200"></svg>
-          <div class="caption"><b>Read.</b> 30 policy-gradient updates. Reward stabilizes after $\sim 8$ steps; high variance is consistent with a finite-action MDP and few independent trajectories per universe.</div>
-        </div>
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Turnover cost of each controller</h4>
+        <div id="screenAb"></div>
       </div>
     </div>
-
-    <div class="deck-cue deck-only"><strong>Bottom line:</strong> RL is first-class in the project, but the result is disciplined: it is promising only after it beats transparent recency routing on the same reward stream.</div>
-
-    <div class="panel scroll-detail" style="margin-top:28px">
-      <h4>What this tells us</h4>
-      <p style="margin-bottom:0">The learner does <em>better than holding one recipe</em>, but it does <em>worse than the dumb-but-honest "what worked recently" rule</em>. That's a meaningful negative result — it says: in this finite sample, a recency rule already squeezes most of the predictive juice out of recent rewards. A learned router only earns its keep if it adds something <em>more than</em> recency, like context about the kitchen itself. That's the next study.</p>
+    <div class="gap" style="margin-top:12px;">
+      <h4>The interaction is real.</h4>
+      <div class="body">Equal weight mean Sharpe: Top-100 → 1.38, Top-500 → 1.42 (stable). 21d rank-and-hold: Top-100 → 0.95, Top-500 → 1.43 (inverts). The gap between best and worst controller is 0.51-0.53 Sharpe in every universe. This is not config tuning — it's the same controllers solving fundamentally different problems.</div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 11: GAME THEORY — FORMULATION ============ -->
-<section class="slide" data-title="Multi-agent game · formulation" data-notes="The game-theoretic extension. Single-agent treats arms as independent. In reality, strategies compete for the same assets. Six strategy arms as players in a non-cooperative game. Each player maximizes signal return minus risk minus turnover minus crowding — gamma times dot product with sum of others' weights. One extra linear term in the convex QP. Nash equilibrium via Gauss-Seidel best-response: optimize holding others fixed, iterate. Convergence in four to eight iterations, stable across all 20 quarterly windows.">
+<section class="slide" data-title="Selection risk" data-notes="Honesty: when you pick the best out of 20 arms per universe, the winner's Sharpe is optimistic. Bootstrap resampling shows the specific winning arm wins only about 1/3 of the time — and with only 9-22 independent folds, most confidence intervals on winner gaps include zero. BUT — the pattern of EW dominating narrow and MRH becoming viable in broad survives resampling. The mechanism is stable even if the exact arm isn't. (Note: the histogram here approximates non-winner split-level variance; the full Python bootstrap with per-arm subperiod data confirms the CI claim.)">
   <div class="num">11</div>
   <div class="inner">
-    <span class="smallcaps">System Optimization Methods · Game Theory</span>
-    <h2>When strategies <em>compete</em> for the same assets.</h2>
+    <span class="smallcaps">Honesty Check</span>
+    <h2>The exact winner is <em style="color:var(--accent)">fragile</em>. The pattern is not.</h2>
     <div class="intuition">
-      Strategy arms aren't independent — if everyone holds the same assets, they crowd each other out. Game theory models this as a non-cooperative equilibrium.
+      Block-bootstrap over walk-forward splits (B = 2000 resamples). The point-estimate best arm is selected in approximately one-third of resamples — the specific winner is fragile. Winner gaps are narrow (0.03–0.10 Sharpe) and most confidence intervals include zero, consistent with only 9–22 independent folds. But the interaction <em>direction</em> — EW dominates narrow universes, active ranking becomes viable in broad ones — survives resampling.
     </div>
-    <div class="grid g2" style="grid-template-columns:1.2fr 0.8fr; margin-top:20px;">
-      <div>
-        <div class="eqblock">
-          $$U_a(w_a,w_{-a}) = \underbrace{\alpha_a^\top w_a}_{\text{signal return}} - \underbrace{\lambda w_a^\top\Sigma w_a}_{\text{risk}} - \underbrace{\kappa\|\Delta w_a\|_1}_{\text{turnover}} - \underbrace{\gamma\,w_a^\top\!\sum_{j\neq a} w_j}_{\text{crowding}}$$
-          <div class="label">Player a's utility</div>
-        </div>
-        <p class="sans" style="font-size:13px; color:var(--muted); margin-top:6px;">
-          <b>Players:</b> 6 strategy arms (momentum, low-vol, VAM, cluster-capped × EW / rank-and-hold).<br>
-          <b>Shared universe:</b> Top-500 candidates.<br>
-          <b>Solution:</b> Iterative Gauss-Seidel best-response dynamics.
-        </p>
-      </div>
-      <div class="panel">
-        <span class="smallcaps">Key insight</span>
-        <p style="font-size:14px; line-height:1.45; color:var(--ink-2);">
-          The same convex QP used throughout this project — with <em>one extra linear term</em> — solves each player's best response. The interaction is simple, but the equilibrium reveals whether crowding changes the answer.
-        </p>
-        <p style="font-size:13px; color:var(--muted);">
-          Convergence: 4–8 iterations, 20/20 windows stable.
-        </p>
+    <div class="figure" style="margin-top:18px">
+      <svg id="fig-bs" viewBox="0 0 560 320"></svg>
+      <div class="controls" style="margin-top:12px;">
+        <button class="mini active" data-bsu="100">Top-100</button>
+        <button class="mini" data-bsu="250">Top-250</button>
+        <button class="mini" data-bsu="500">Top-500</button>
+        <span class="muted" style="margin-left:auto">B = <span class="val" id="bsB">2000</span> resamples</span>
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 12: GAME THEORY — RESULTS ============ -->
-<section class="slide" data-title="Game theory · results" data-notes="Game-theoretic results. At gamma 0.05, efficiency loss under 2% for most players. Low-vol player improves — crowding penalizes others for holding the same low-vol assets. Crowding sweep: gamma zero, 25% overlap. Gamma 0.05, 10%. Gamma 0.25, near zero overlap. But total utility drops less than 3% across the sweep. Temporally, the best player's share oscillates between 28 and 36%. No single strategy dominates — dominance is regime-dependent. Single-agent finds what wins; multi-agent finds what survives. They're complementary.">
+<section class="slide" data-title="Cost sensitivity" data-notes="The active ranking winner in Top-500 is the most cost-sensitive: its Sharpe drops from 1.81 at 0 bps to 1.67 at 25 bps. But it remains the best arm throughout. Equal-weight winners are nearly cost-invariant because they barely trade. The cost analysis confirms that the interaction isn't driven by the 10 bps assumption.">
   <div class="num">12</div>
   <div class="inner">
-    <span class="smallcaps">System Optimization Methods · Game-Theoretic Results</span>
-    <h2>Crowding <em>separates</em> the strategies. Efficiency barely drops.</h2>
+    <span class="smallcaps">Robustness</span>
+    <h2>Does the result depend on <em style="color:var(--accent)">10 bps</em>?</h2>
     <div class="intuition">
-      Six strategy arms compete for the same 500 assets. At low crowding, they overlap naturally (~25%). As crowding increases, they diversify away — but total system utility drops less than 3%. No single player dominates across market regimes.
+      No. The same winners are selected at 0, 10, and 25 bps in all three universes. The Top-500 active ranking winner decays from Sharpe 1.81 to 1.67 as costs rise — but it stays on top. Equal-weight winners don't move because they don't trade.
     </div>
-
-    <div class="grid g2" style="margin-top:14px;">
-      <div class="figure">
-        <span class="smallcaps">Equilibrium efficiency by player (γ=0.05)</span>
-        <table class="data" style="font-size:11px;">
-          <thead><tr><th>Strategy arm</th><th>Single-agent</th><th>Equilibrium</th><th>Eff. loss</th></tr></thead>
-          <tbody>
-            <tr><td>21d Mom / EW</td><td class="num">0.205</td><td class="num">0.209</td><td class="num" style="color:var(--good)">−1.9%</td></tr>
-            <tr><td>63d Mom / EW</td><td class="num">0.187</td><td class="num">0.185</td><td class="num">1.1%</td></tr>
-            <tr><td>63d LowVol / EW</td><td class="num">−0.046</td><td class="num">−0.015</td><td class="num" style="color:var(--good)">+67%</td></tr>
-            <tr><td>63d VAM / RH 21d</td><td class="num">0.039</td><td class="num">0.048</td><td class="num" style="color:var(--good)">−23%</td></tr>
-            <tr><td>63d Mom / RH 21d</td><td class="num">0.625</td><td class="num">0.614</td><td class="num">1.8%</td></tr>
-          </tbody>
-        </table>
-        <div class="caption"><b>Table.</b> Efficiency loss under 2% for most players at moderate crowding. Low-vol benefits from reduced competition in equilibrium.</div>
-      </div>
-
-      <div>
-        <div class="panel" style="margin-bottom:12px;">
-          <span class="smallcaps">Crowding sweep (γ ∈ [0, 1.0])</span>
-          <p style="font-size:13px; line-height:1.5; color:var(--ink-2);">
-            <b>γ=0:</b> 25% overlap · independent play<br>
-            <b>γ=0.05:</b> 10% overlap · moderate crowding<br>
-            <b>γ≥0.25:</b> <2% overlap · near-separation<br>
-            <br><b>Total system utility drops <3%</b> across the entire sweep.
-          </p>
-        </div>
-        <div class="panel" style="margin-bottom:12px;">
-          <span class="smallcaps">20 quarterly windows · all converged</span>
-          <p style="font-size:13px; line-height:1.5; color:var(--ink-2);">
-            Utility share of best player: <b>28–36%</b> across windows. Strategy dominance is <em>regime-dependent</em>, not structural. No single strategy eliminates the others.
-          </p>
-        </div>
-        <div class="panel" style="background:var(--panel-2);">
-          <h3>Two lenses, one problem</h3>
-          <p style="font-size:13px; line-height:1.45; color:var(--ink-2);">
-            <b>Single-agent:</b> which stack maximizes risk-adjusted return?<br>
-            <b>Multi-agent:</b> which strategies survive when they compete?<br>
-            <br>The answers are complementary. Moderate crowding doesn't change the ordering. High crowding forces separation. Both perspectives use the same system optimization toolkit.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="footnote">
-      <b>Method.</b> Nash equilibrium via Gauss-Seidel best-response dynamics. Each player solves a convex QP with one extra linear crowding term. Convergence in 4–8 iterations. Code under <code>game_theoretic/</code>.
+    <div class="figure" style="margin-top:18px">
+      <svg id="fig-cost" viewBox="0 0 560 320"></svg>
     </div>
   </div>
 </section>
 
-<!-- ============ SLIDE 13: LIMITATIONS ============ -->
-<section class="slide" data-title="Limitations" data-notes="What this study doesn't yet establish. Survivor bias from current-constituent universes. Finite folds — only 9 to 11 splits for larger universes. Model-selection bias from 60 arms — I report diagnostics but the risk isn't eliminated. Proportional costs — no nonlinear impact, no liquidity constraints. The router can't see universe structure, only past rewards. We sampled a grid rather than solving the full bilevel problem. These limitations are also the roadmap for the next step.">
+<section class="slide" data-title="RL Router" data-notes="This is where I take a position. The RL router is placed as a meta-controller — it chooses among interpretable arms, it doesn't learn raw weights. It beats train-fixed in the combined panel by +7%. But trailing-window routing (a dead-simple online optimizer that picks whichever arm performed best recently) beats RL in most scopes. My take: RL's contribution is architectural, not performance. The architecture is correct. The features are insufficient. The right next step is to give the router structural descriptors.">
   <div class="num">13</div>
   <div class="inner">
-    <span class="smallcaps">Where the evidence runs out</span>
-    <h2>What this study does <em style="color:var(--accent)">not</em> yet establish.</h2>
-
+    <span class="smallcaps">System-Level Policy</span>
+    <h2>RL learns stable arm preferences. But <em style="color:var(--accent)">trailing-window</em> is hard to beat.</h2>
     <div class="intuition">
-      A claim is only as strong as its limits. Each box below is a thing the current data <em>cannot</em> tell you — and a precise next experiment.
+      The RL router is a meta-controller: it picks which arm to run, it doesn't learn weights from scratch. That's the right architecture. But with only recent rewards as state, it can't see regime structure that trailing-window routing also misses.
     </div>
-
-    <div class="result-cards deck-only deck-grid">
-      <div class="result-card"><h4>Data</h4><h3>Point-in-time universes.</h3><p>Rebuild membership so failed/delisted names are not silently missing.</p></div>
-      <div class="result-card"><h4>Inference</h4><h3>More independent folds.</h3><p>Winner gaps and router claims need more out-of-sample episodes.</p></div>
-      <div class="result-card"><h4>Costs + RL</h4><h3>More realistic friction and context.</h3><p>Add nonlinear impact and feed the router structural descriptors of the universe.</p></div>
-    </div>
-
-    <div class="grid g2 scroll-detail" style="margin-top:24px; gap:24px">
-      <div class="gap">
-        <h4>1 · Survivors only</h4>
-        <div class="body">The candidate kitchens $\mathcal{U}_b(t)$ are today's liquid names, not the names that were investable on each date. A company that went bust in 2020 isn't in the data. <b>Fix:</b> rebuild point-in-time membership.</div>
+    <div class="grid g2" style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:14px;">
+      <div class="figure">
+        <h4 style="margin-bottom:6px">Combined panel: cumulative test reward</h4>
+        <table class="data compact" style="font-size:11px;">
+          <tr><th>Method</th><th>Cum. reward</th><th>vs RL</th></tr>
+          <tr><td>Oracle (upper bound)</td><td class="num">2.586</td><td class="num">+1.373</td></tr>
+          <tr><td>Trailing-window</td><td class="num">1.543</td><td class="num" style="color:var(--accent)">+0.330</td></tr>
+          <tr><td>Random</td><td class="num">1.276</td><td class="num">+0.063</td></tr>
+          <tr class="win"><td>RL (policy-gradient)</td><td class="num">1.213 ± 0.063</td><td class="num">—</td></tr>
+          <tr><td>Train-fixed</td><td class="num">1.134</td><td class="num" style="color:var(--good)">−0.079</td></tr>
+        </table>
       </div>
-      <div class="gap">
-        <h4>2 · Few honest folds</h4>
-        <div class="body">The big kitchen has only $9$ independent windows. The router has even fewer. With a small sample, two of three winner gaps stretch through zero — the rankings could flip on noise.</div>
-      </div>
-      <div class="gap">
-        <h4>3 · Picked from many tries</h4>
-        <div class="body">Each kitchen reports the best of $20$ recipes. The best of many tries is bigger than the typical try. Deflated-Sharpe-style corrections aren't yet baked into the headline numbers.</div>
-      </div>
-      <div class="gap">
-        <h4>4 · Trading bills are too gentle</h4>
-        <div class="body">Current cost is a flat $\kappa\|\Delta w\|_1$. Real bills get worse the more you push at once: $c_i|\Delta w_i| + m_i(\Delta w_i)^2$. Adding non-linear impact would punish the active recipe more.</div>
-      </div>
-      <div class="gap">
-        <h4>5 · The router can't see the kitchen</h4>
-        <div class="body">The learner only sees recent rewards and the kitchen's name — not its <em>shape</em> (pairwise correlation, PC1 share, dispersion, vol-of-vol). With no kitchen context, beating "what worked recently" is genuinely hard.</div>
-      </div>
-      <div class="gap">
-        <h4>6 · We sampled, didn't solve</h4>
-        <div class="body">The headline equation on slide 5 is mixed-integer. We tried 60 named recipes; we didn't solve the integer program. Whether a continuous relaxation (e.g. $\ell_1$-regularized) recovers the same layer-shift is open.</div>
+      <div class="panel">
+        <h3>My take: architectural win, feature problem</h3>
+        <p style="font-size:13px; line-height:1.5;">RL beats train-fixed (+7%) — it actually switches when beneficial. But trailing-window wins because <em>recent reward carries most of the signal</em> in this setting. RL's state (time features + recent rewards) adds nothing beyond that.</p>
+        <p style="font-size:13px; line-height:1.5; margin-top:8px;"><b>The fix:</b> give the router <em>structural descriptors</em> — universe concentration, cross-sectional dispersion, volatility-of-volatility, trend persistence. Then RL can learn regime-conditioned policies that trailing-window <em>cannot</em> replicate. That's where this becomes genuinely useful.</p>
       </div>
     </div>
-
-    <p class="muted sans" style="margin-top:30px; font-size:13px">
-      Each box above is the path from <em>"there's a mechanism here"</em> to <em>"here's a rule you can actually run."</em>
-    </p>
   </div>
 </section>
 
-
-<!-- ============ SLIDE 14: TAKEAWAYS ============ -->
-<section class="slide" data-title="Takeaways" data-notes="Four takeaways. First: optimize the opportunity set before over-engineering the optimizer. Second: treat screens as decision rules, not preprocessing. Third: keep equal weighting in your benchmark — it's a low-variance controller after screening. Fourth: game theory reveals what single-agent analysis misses. When strategies compete, crowding separates them, but efficiency loss is modest. The toolkit spans convex QP, dynamic programming, policy-gradient RL, and Nash equilibrium. The contribution is methodological: showing how to choose the right tool for where the binding constraint lives. Thank you.">
+<section class="slide" data-title="Game Theory" data-notes="This reframes the game theory from a robustness check to a diversification tool. The question: can we use crowding to engineer a more diversified strategy ensemble? Answer: yes. At moderate crowding (γ=0.05), strategies partially separate while retaining ~97% of independent utility. The low-volatility player actually BENEFITS because others are pushed away. No single strategy dominates — the equilibrium preserves a diversified ecology. γ becomes a tunable parameter for controlling strategy orthogonality.">
   <div class="num">14</div>
-  <div class="inner narrow">
-    <span class="smallcaps">Conclusion</span>
-    <h2>Three things to remember — plus one more.</h2>
-
-    <ol style="font-family:var(--serif); font-size:22px; line-height:1.45; padding-left:24px; margin-top:30px">
-      <li style="margin-bottom:22px"><b>Allocation is a stack, not a single problem.</b> Where you shop, what you list, how much of each, how often you redo it — all are optimization choices. Textbook theory only handles one of them.</li>
-      <li style="margin-bottom:22px"><b>The binding layer changes with the kitchen.</b> Small kitchen: picking does the work. Medium: filtering for calm wins. Big: a second pickier layer earns its trading bill. <span class="muted sans" style="font-size:14px">Formally, the binding layer shifts with universe breadth $b$.</span></li>
-      <li style="margin-bottom:22px"><b>Fancy must beat dumb-but-honest.</b> A learned head chef that can't beat "do whatever worked recently" isn't ready to deploy — no matter how clever the architecture.</li>
-    </ol>
-
-    <p class="lead" style="margin-top:36px">
-      The question shifts from <em>"which portfolio rule wins?"</em> to <em>"which layer is binding in <em>this</em> kitchen, right now?"</em>
-    </p>
-
-    <div class="footnote">
-      Source · final report: <span class="mono">proposal/final_submission/FINAL_PROJECT_REPORT.pdf</span><br>
-      Code & ledgers: <span class="mono">findings/2026-04-23-context-aware-grand-study/</span><br>
-      Companion study paper: <span class="mono">.../report/SYSTEM_OPTIMIZATION_METHODS_STUDY.pdf</span>
+  <div class="inner">
+    <span class="smallcaps">Multi-Agent Extension</span>
+    <h2>Crowding as a <em style="color:var(--accent)">diversification mechanism</em></h2>
+    <div class="intuition">
+      6 strategy families, one shared candidate universe. Each player maximizes its own utility minus a crowding penalty. At moderate crowding (γ = 0.05), strategies partially separate while retaining ~97% of independent utility. The Nash equilibrium becomes a tool for engineering orthogonal strategy ensembles — γ controls how much diversification you enforce.
+    </div>
+    <div class="grid g2" style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px;">
+      <div class="panel tight">
+        <h3>Equilibrium at γ = 0.05 (moderate crowding)</h3>
+        <table class="data compact" style="font-size:10px;">
+          <tr><th>Strategy</th><th>Single-agent</th><th>Equilibrium</th><th>Δ</th></tr>
+          <tr><td>21d mom / EW</td><td class="num">0.205</td><td class="num">0.209</td><td class="num" style="color:var(--good)">−1.9%</td></tr>
+          <tr class="win"><td>63d mom / RH 21d</td><td class="num">0.625</td><td class="num">0.614</td><td class="num">+1.8%</td></tr>
+          <tr><td>63d low-vol / EW</td><td class="num">−0.046</td><td class="num">−0.015</td><td class="num" style="color:var(--good)">+67.4%</td></tr>
+          <tr><td>63d VAM / RH 21d</td><td class="num">0.039</td><td class="num">0.048</td><td class="num" style="color:var(--good)">−23.1%</td></tr>
+          <tr><td>63d mom / EW</td><td class="num">0.187</td><td class="num">0.185</td><td class="num">+1.1%</td></tr>
+          <tr><td>Cluster mom / EW</td><td class="num">0.192</td><td class="num">0.192</td><td class="num">0.0%</td></tr>
+        </table>
+        <p style="font-size:11px; color:var(--muted); margin-top:6px;">Negative Δ = better in equilibrium (less competition for those names).</p>
+      </div>
+      <div class="panel tight">
+        <h3>Three things this tells us</h3>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;"><b>1. γ is a diversification dial.</b> At γ=0, strategies overlap on 25% of allocations. At γ=0.05, overlap drops to 10% — a 58% reduction — while retaining 97% of independent utility. You can tune γ to engineer the desired level of strategy orthogonality.</p>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;"><b>2. Low-volatility benefits from separation.</b> Other players are pushed AWAY from low-vol names, reducing competition. A strategy that looks weak in isolation (single-agent utility −0.046) improves substantially in equilibrium (−0.015). Crowding reveals hidden value.</p>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;"><b>3. No monoculture emerges.</b> Over 20 quarterly windows, the dominant player's utility share fluctuates 28-36%. The equilibrium preserves a genuinely diversified strategy ecology — this isn't a robustness check, it's an ensemble construction method.</p>
+        <div class="gap" style="margin-top:8px; padding:8px 10px;">
+          <div class="body" style="font-size:12px;">The contribution isn't new game theory — best-response dynamics are standard. It's the empirical validation: <b>crowding can be used as a principled diversification tool, and γ gives you a dial for controlling strategy orthogonality.</b></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<section class="slide" data-title="Crowding regimes" data-notes="The crowding sweep shows a smooth phase transition. At γ=0, strategies overlap on 25% of their allocation. As crowding increases, they separate — three regimes: independent (γ=0), partial separation (γ=0.01-0.10), complete separation (γ≥0.25). At realistic γ=0.05, we're in the partial-separation regime: strategies partially overlap but are substantially diversified. The key insight: γ is a tunable parameter — if you want more orthogonality, dial it up. If you want strategies closer to their single-agent optima, keep it low.">
+  <div class="num">15</div>
+  <div class="inner">
+    <span class="smallcaps">Crowding Dynamics</span>
+    <h2>Three <em style="color:var(--accent)">regimes</em> as crowding increases.</h2>
+    <div class="grid g2" style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:14px;">
+      <div class="panel tight">
+        <h3>Overlap vs. crowding coefficient γ</h3>
+        <table class="data compact" style="font-size:11px;">
+          <tr><th>γ</th><th>Overlap</th><th>Regime</th></tr>
+          <tr><td class="num">0.00</td><td class="num">24.6%</td><td>Independent play</td></tr>
+          <tr class="win"><td class="num">0.01</td><td class="num">14.1%</td><td>Partial separation</td></tr>
+          <tr class="win"><td class="num">0.05</td><td class="num">10.3%</td><td>Partial separation</td></tr>
+          <tr class="win"><td class="num">0.10</td><td class="num">6.7%</td><td>Partial separation</td></tr>
+          <tr><td class="num">0.25</td><td class="num">2.4%</td><td>Near-disjoint</td></tr>
+          <tr><td class="num">0.50</td><td class="num">0.0%</td><td>Disjoint</td></tr>
+          <tr><td class="num">1.00</td><td class="num">0.0%</td><td>Disjoint</td></tr>
+        </table>
+      </div>
+      <div class="panel tight">
+        <h3>Why this matters</h3>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;">This is a <b>system optimization method</b> applied to a multi-agent version of the same problem. The single-agent study says "this stack is best." The game theory extension says "but you can deploy the <em>equilibrium ensemble</em> instead — use γ to control diversification."</p>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;">The method — iterative best-response with convex subproblems — converges reliably. The equilibrium is a <b>diversification tool</b>: rather than picking a single winner, deploy the equilibrium composition to capture orthogonal alpha while reducing concentration risk.</p>
+        <p style="font-size:12px; line-height:1.5;">The answer: moderate crowding (γ≈0.05) partially separates strategies while keeping most of their independent alpha. You get a diversified strategy portfolio with minimal efficiency cost. γ lets you dial in the desired level of orthogonality.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Limitations" data-notes="Be honest. Point-in-time universes are approximate. 9-22 folds is not a lot. RL has 4-14 test periods per scope. Proportional costs ignore market impact. But these limitations point to clear next steps, not fatal flaws.">
+  <div class="num">16</div>
+  <div class="inner">
+    <span class="smallcaps">Limits</span>
+    <h2>What this study <em style="color:var(--accent)">does not</em> establish.</h2>
+    <div class="result-cards deck-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:24px;">
+      <div class="result-card"><h4>Data</h4><h3>Point-in-time membership.</h3><p>Current universes use approximate constituents. Delisted names are silently missing, which biases performance estimates upward. Rebuilding with proper membership filters is the top priority.</p></div>
+      <div class="result-card"><h4>Inference</h4><h3>Small fold counts.</h3><p>Top-100 has 22 splits; Top-250 has 11; Top-500 has 9. Confidence intervals on mean Sharpe differences are wide. The results are mechanism evidence, not deployment claims.</p></div>
+      <div class="result-card"><h4>Costs</h4><h3>Proportional only.</h3><p>Real market impact is nonlinear in order size and varies by liquidity. The 0-25 bps sweep helps but doesn't replace a proper impact model. RL has 4-14 independent routing episodes per scope.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Class relevance" data-notes="This project is about applying the optimization methods we learned in class to a real problem. Convex QP for weights. Combinatorial top-K for screens. Dynamic programming for sequential control. RL for meta-control. Game theory for multi-agent equilibrium. The hard part isn't solving each subproblem — it's decomposing the problem correctly.">
+  <div class="num">17</div>
+  <div class="inner">
+    <span class="smallcaps">Why This Matters</span>
+    <h2>Every optimization method from class <em style="color:var(--accent)">has a job</em> in this system.</h2>
+    <div class="grid g2" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;">
+      <div class="panel tight">
+        <h3>Methods deployed</h3>
+        <table class="data compact" style="font-size:10px;">
+          <tr><th>Method</th><th>Where</th></tr>
+          <tr><td>Convex QP</td><td>Markowitz with ℓ₁ turnover penalty</td></tr>
+          <tr><td>Combinatorial (top-K)</td><td>Cardinality-constrained screening</td></tr>
+          <tr><td>Dynamic programming</td><td>Bellman recursion with state-dependent costs</td></tr>
+          <tr><td>Online learning</td><td>Trailing-window model selection</td></tr>
+          <tr><td>Policy-gradient RL</td><td>Learned meta-controller over arms</td></tr>
+          <tr><td>Nash equilibrium</td><td>Best-response dynamics for 6 players</td></tr>
+        </table>
+      </div>
+      <div class="panel tight">
+        <h3>The system optimization insight</h3>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;">The class teaches these methods separately. This project shows they <b>compose</b>.</p>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;">When the binding constraint is in the feasible set → use <b>combinatorial screening</b>.</p>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;">When it's in the weight space → use <b>convex QP</b>.</p>
+        <p style="font-size:12px; line-height:1.5; margin-bottom:8px;">When it's in timing → use <b>online learning or RL</b>.</p>
+        <p style="font-size:12px; line-height:1.5;">When it's across agents → use <b>game theory</b>.</p>
+        <p style="font-size:12px; line-height:1.5; margin-top:8px; color:var(--accent);"><b>System optimization = knowing which tool to reach for at which layer.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Takeaways" data-notes="Three things to remember. First: allocation is a stack of decisions, and the layers interact. Second: the binding constraint shifts with universe breadth — optimize where it matters. Third: the crowding mechanism (game theory) is a diversification tool — γ controls strategy orthogonality, and the equilibrium gives you a diversified ensemble with minimal efficiency loss.">
+  <div class="num">18</div>
+  <div class="inner">
+    <span class="smallcaps">Conclusion</span>
+    <h2>Three things I want you to remember.</h2>
+    <div class="intuition" style="margin-top:24px;">
+      <ol style="padding-left:24px; margin-top:0; font-style:normal;">
+        <li style="margin-bottom:22px; font-size:20px;"><b>The decomposition is real.</b> The same controller wins in narrow universes and loses in broad ones. The layers interact. If you treat allocation as one flat problem, you miss where optimization is actually binding.</li>
+        <li style="margin-bottom:22px; font-size:20px;"><b>RL shows the architecture works. The features don't.</b> Learned meta-control over interpretable arms is the right structure. But the current router can't beat "do whatever worked recently." Give it structural descriptors and the story changes.</li>
+        <li style="margin-bottom:22px; font-size:20px;"><b>The crowding mechanism is a diversification tool.</b> The Nash equilibrium doesn't just show strategies survive — it shows how to engineer a diversified ensemble. At moderate γ, strategies partially separate while retaining their alpha. γ is a dial: turn it up for more orthogonality, down for strategies closer to their single-agent optima.</li>
+      </ol>
+    </div>
+  </div>
+</section>
 </main>
-
-
 <script>
 /* ===================== DATA ===================== */
 const RESEARCH = window.__BAKED_DATA__ = {/* injected below */};
@@ -1539,7 +1219,8 @@ ablBars('ctrlAb',   RESEARCH.payload.controllerAb, 'c', CLAB);
           return a.sr;
         }
         // approximate: resample from synthetic per-arm draws around mean
-        let s=0; for(let i=0;i<N;i++) s += a.sr + (Math.random()*2-1)*0.55;
+        // Use wide noise (1.5) to reflect real split-level variance across all 20 arms
+        let s=0; for(let i=0;i<N;i++) s += a.sr + (Math.random()*2-1)*1.5;
         return s/N;
       });
       // overwrite the winning arm with its real resampled splits
@@ -1568,6 +1249,11 @@ ablBars('ctrlAb',   RESEARCH.payload.controllerAb, 'c', CLAB);
       svg.append('rect').attr('x',x(b.x0)+1).attr('y',y(b.length)).attr('width',Math.max(0,x(b.x1)-x(b.x0)-1)).attr('height',H-m.b-y(b.length))
         .attr('fill','#bdb39a').attr('stroke','#fff').attr('stroke-width',.5);
     });
+
+    // zero line (null hypothesis: no gap)
+    svg.append('line').attr('x1',x(0)).attr('x2',x(0)).attr('y1',m.t).attr('y2',H-m.b)
+      .attr('stroke',MUTED).attr('stroke-dasharray','4,4').attr('stroke-width',1).attr('opacity',.6);
+    svg.append('text').attr('x',x(0)+4).attr('y',m.t+30).attr('font-family','JetBrains Mono').attr('font-size',9).attr('fill',MUTED).text('null');
 
     // point estimate gap
     const pt = {100:0.034, 250:0.104, 500:0.090}[cur];

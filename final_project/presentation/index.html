@@ -438,17 +438,68 @@ body.deck .metric { font-family: var(--mono); font-size: 20px; font-weight: bold
   </div>
 </section>
 
-<section class="slide" data-title="The five layers" data-notes="Here's the decomposition. Five literal decisions, made at every rebalance. The key insight: each decision changes the optimization problem seen by the next layer. If the screen picks bad names, the controller can't fix it. If the universe is too narrow, no amount of ranking helps.">
+<section class="slide" data-title="The five layers" data-notes="This is the central decomposition. At each rebalance: observe market information, choose a candidate universe, apply a screen, apply a controller, execute, observe net reward. The problem combines convex optimization for weights, combinatorial optimization for screening, sequential control for repeated adjustment, and online learning for routing. Instead of solving the intractable mixed problem, I enumerate a disciplined 60-arm grid, evaluate each out of sample, and study the surface.">
   <div class="num">05</div>
   <div class="inner">
-    <span class="smallcaps">The Decomposition</span>
-    <h2>Five decisions. Each changes the problem for the next.</h2>
-    <div class="explain-strip deck-grid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:22px;">
-      <div class="explain-step"><b>1 · Universe</b><span>Top-100, 250, or 500? This is the feasible set.</span></div>
-      <div class="explain-step"><b>2 · Screen</b><span>Which 10 names make the cut? This is cardinality-constrained optimization.</span></div>
-      <div class="explain-step"><b>3 · Controller</b><span>Equal weight or rank top-5? This is the weight policy.</span></div>
-      <div class="explain-step"><b>4 · Friction</b><span>10 bps per unit of turnover. Movement has a price.</span></div>
-      <div class="explain-step"><b>5 · Router</b><span>Which arm runs now? Fixed, trailing, learned, or random.</span></div>
+    <span class="smallcaps">The decomposition</span>
+    <h2>Two stacked choices: <em style="color:var(--accent)">what</em> to consider, then <em style="color:var(--accent)">how much</em> of each.</h2>
+
+    <div class="intuition">
+      Step 1, <b>screen</b>: pick which K items from a long list. (The shopping list.) Step 2, <b>weighting</b>: pick how much of each. (The recipe.) Both are optimization choices; classical theory only handles step 2.
+    </div>
+
+    <div class="explain-strip deck-grid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:16px;">
+      <div class="explain-step"><b>1 · Universe</b><span>Which market can I shop in?</span></div>
+      <div class="explain-step"><b>2 · Screen</b><span>Which names make the active list?</span></div>
+      <div class="explain-step"><b>3 · Controller</b><span>How much of each name?</span></div>
+      <div class="explain-step"><b>4 · Friction</b><span>How costly is movement?</span></div>
+      <div class="explain-step"><b>5 · Router</b><span>Which recipe should run now?</span></div>
+    </div>
+
+    <p style="margin-top:16px">Index the choices by universe breadth b, screen rule j, and weighting controller k. The whole stack is one optimization:</p>
+
+    <div class="eqblock">
+      $$\begin{aligned}
+      \max_{b,\,j,\,k} \quad & \underbrace{\tfrac{\widehat{\mu}_{b,j,k}}{\widehat{\sigma}_{b,j,k}}}_{\text{risk-adj. return}} \;-\; \phi\,\underbrace{\widehat{\text{DD}}_{b,j,k}}_{\text{drawdown}} \;-\; \psi\,\underbrace{\widehat{\text{TO}}_{b,j,k}}_{\text{turnover}} \\[2pt]
+      \text{s.t.} \quad & H_{b,j}(t) = S_j\!\left(\mathcal{U}_b(t),\mathcal{F}_t\right) && \text{(shopping list)} \\
+      & w_t = C_k\!\left(H_{b,j}(t),\mathcal{F}_t,w_{t^-}\right) && \text{(recipe)} \\
+      & |H_{b,j}(t)| \le K_{\max}, \quad w_t \in \Delta_{|H_{b,j}(t)|}.
+      \end{aligned}$$
+    </div>
+
+    <div class="grid g2" style="margin-top:24px; gap:30px">
+      <div>
+        <h3>Step 1 · The shopping list (screen)</h3>
+        <p>Score each candidate by a rule q_i(t) and keep the top K. A 0–1 cardinality problem:</p>
+        <div class="eqblock">
+          $$\max_{z\in\{0,1\}^{|\mathcal{U}|}} \sum_{i\in\mathcal{U}} q_i(t)\, z_i \;\;\text{s.t.}\;\; \sum_i z_i \le K.$$
+        </div>
+        <p>The score is the personality of the screen. Five were tested:</p>
+        <div class="eqblock" style="font-size:15px">
+          $$\begin{aligned}
+          q_i^{\text{mom},\tau} &= \tfrac{P_i(t)}{P_i(t-\tau)} - 1 && \text{recent winners} \\
+          q_i^{\text{vam},\tau} &= \tfrac{P_i(t)/P_i(t-\tau)\,-\,1}{\hat\sigma_{i,\tau}(t)+\varepsilon} && \text{winners, noise-discounted} \\
+          q_i^{\text{lvol},\tau} &= -\hat\sigma_{i,\tau}(t) && \text{calmest names} \\
+          q_i^{\text{cluster}} &= q_i^{\text{mom},63} && \text{winners, sector-capped}
+          \end{aligned}$$
+        </div>
+      </div>
+      <div>
+        <h3>Step 2 · The recipe (controller)</h3>
+        <p>Given a shopping list H_t, pick weights. Two families tested.</p>
+        <p><b>Equal weight.</b> Split evenly — no estimation, no opinions:</p>
+        <div class="eqblock">$$w_{i,t}^{\text{EW}} = \tfrac{1}{|H_t|}\,\mathbf{1}\{i \in H_t\}.$$</div>
+        <p><b>Rank-and-hold.</b> Inside the list, keep only the top k recent winners:</p>
+        <div class="eqblock">
+          $$w_{i,t}^{\text{MRH},\tau,k} = \tfrac{1}{k}\,\mathbf{1}\!\left\{ i \in \operatorname{TopK}_{\ell\in H_t}\!\left(\tfrac{P_\ell(t)}{P_\ell(t-\tau)} - 1\right)\right\}.$$
+        </div>
+        <p>It's a simple recipe, but it isn't free — every re-rank means trading. Whether the extra ranking earns back its cost is what slide 9 measures.</p>
+
+        <div class="gap" style="margin-top:18px">
+          <h4>What we actually solve</h4>
+          <div class="body">The headline equation is mixed-integer and we don't solve it directly. We <em>sample</em> it: 3×5×4 = 60 named combinations evaluated honestly, then we map the surface.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
